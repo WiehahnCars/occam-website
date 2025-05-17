@@ -5,10 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OCCAM | Simplicity-Driven Solutions</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <style>
+    .prosto {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .client-logo {
+      /* height: 80px; */
+      width: 150px;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(200%);
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+    .client-logo:hover {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body class="bg-black text-gray-100 flex items-center justify-center min-h-screen">
   <div class="text-center">
-    <h1 class="text-4xl font-semibold mb-4">Occam</h1>
+    <a href="https://www.occamco.com" class="prosto text-[70px] leading-none transform transition-transform duration-200 hover:scale-95">occam</a>
     <p class="text-lg text-gray-400">Coming soon</p>
   </div>
 </body>
