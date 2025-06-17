@@ -59,11 +59,21 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      if (passwordInput.value === correctPassword) {
-        window.location.href = 'occam-site-updated.html';
-      } else {
-        errorText.classList.remove('hidden');
-      }
+    if (passwordInput.value === correctPassword) {
+      window.location.href = 'occam-site-updated.html';
+    } else {
+      errorText.classList.remove('hidden');
+      errorText.classList.add('opacity-100');
+    
+      setTimeout(() => {
+        errorText.classList.add('opacity-0');
+        setTimeout(() => {
+          errorText.classList.add('hidden');
+          errorText.classList.remove('opacity-0', 'opacity-100');
+        }, 500); // fade-out transition duration
+      }, 3000);
+    }
+
     });
   </script>
 </body>
