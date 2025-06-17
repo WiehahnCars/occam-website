@@ -8,13 +8,12 @@
   <link rel="icon" href="./favicon.ico" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
       background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #2a2a2a, #0f0f0f);
       background-size: 300% 300%;
-      animation: gradientShift 20s ease infinite;
+      animation: gradientShift 30s ease infinite;
     }
 
     @keyframes gradientShift {
@@ -46,7 +45,7 @@
     }
 
     @keyframes pulse-up {
-      0%, 100% { transform: scale(1)) translateY(0); }
+      0%, 100% { transform: scale(1) translateY(0); }
       50% { transform: scale(1.03) translateY(-1px); }
     }
 
@@ -55,8 +54,8 @@
     }
 
     .glass {
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-radius: 12px;
@@ -72,7 +71,6 @@
     }
   </style>
 </head>
-
 <body class="text-gray-100 flex items-center justify-center min-h-screen px-4">
 
   <div class="glass animate-fade-in w-full max-w-sm text-center">
@@ -83,28 +81,24 @@
 
     <p class="text-lg text-gray-400 mt-2 mb-6"> </p>
 
-    <form id="login-form" class="space-y-4 relative">
+    <form id="login-form" class="space-y-4">
       <div class="relative">
         <input
           id="password"
           type="password"
           placeholder="Enter password"
-          class="text-center w-full px-4 py-2 rounded-md bg-gray-800 border border-gray-600
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+          class="text-center w-full pr-10 px-4 py-2 rounded-md bg-gray-800 border border-gray-600 text-gray-100
+                focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition"
         />
-        <button
-          type="button"
-          id="togglePassword"
-          class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-white"
-          tabindex="-1"
-        >
+        <button type="button" id="togglePassword" tabindex="-1"
+          class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-200">
           <i class="ph ph-eye" id="eyeIcon"></i>
         </button>
       </div>
 
       <button
         type="submit"
-        class="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md font-medium btn-animate"
+        class="w-full bg-gray-700 hover:bg-gray-600 text-gray-100 px-4 py-2 rounded-md font-medium btn-animate"
       >
         Access
       </button>
@@ -116,16 +110,10 @@
     const form = document.getElementById('login-form');
     const passwordInput = document.getElementById('password');
     const errorText = document.getElementById('error');
-    const toggleBtn = document.getElementById('togglePassword');
+    const togglePassword = document.getElementById('togglePassword');
     const eyeIcon = document.getElementById('eyeIcon');
 
-    const correctPassword = 'kjbnj7bJjkl%$#'; // Update as needed
-
-    toggleBtn.addEventListener('click', () => {
-      const isHidden = passwordInput.type === 'password';
-      passwordInput.type = isHidden ? 'text' : 'password';
-      eyeIcon.className = isHidden ? 'ph ph-eye-slash' : 'ph ph-eye';
-    });
+    const correctPassword = 'kjbnj7bJjkl%$#';
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -139,6 +127,12 @@
           errorText.classList.add('error-hidden');
         }, 3000);
       }
+    });
+
+    togglePassword.addEventListener('click', () => {
+      const isHidden = passwordInput.type === 'password';
+      passwordInput.type = isHidden ? 'text' : 'password';
+      eyeIcon.className = isHidden ? 'ph ph-eye-slash' : 'ph ph-eye';
     });
   </script>
 
