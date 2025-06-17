@@ -13,13 +13,23 @@
     .prosto {
       font-family: 'Montserrat', sans-serif;
     }
-    .client-logo {
+    .logo-box {
       width: 200px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .client-logo {
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
       filter: grayscale(100%) brightness(200%);
       opacity: 0.8;
       transition: opacity 0.3s ease;
     }
+
     .client-logo:hover {
       opacity: 1;
     }
@@ -103,20 +113,36 @@
 
 
 
-  <!-- Logos -->
-  <section class="bg-black text-white text-center py-32 px-4">
+  <!-- <section class="bg-black text-white text-center py-32 px-4">
     <div class="w-full px-4">
       <h2 class="text-3xl font-semibold mb-4">Some of the teams we've worked alongside</h2>
-      <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-12 mt-10" data-aos="fade-up">
-        <img src="./planet42_logo.png" alt="Client 1" class="client-logo" />
-        <img src="./wcm_logo.png" alt="Client 2" class="client-logo" />
-        <img src="./ithemba_logo.png" alt="Client 3" class="client-logo" />
-        <img src="./abacus_logo.png" alt="Client 4" class="client-logo" />
-        <img src="./root_logo.png" alt="Client 5" class="client-logo" />
+        <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-10 mt-5" data-aos="fade-up">
+          <div class="logo-container scale-100"><img src="./planet42_logo.png" alt="Planet42" class="client-logo" /></div>
+          <div class="logo-container scale-100 pt-2"><img src="./studytrust-logo.png" alt="StudyTrust" class="client-logo" /></div>
+          <div class="logo-container scale-95 pt-1"><img src="./wcm_logo.png" alt="WCM" class="client-logo" /></div>
+          <div class="logo-container scale-100 pt-1"><img src="./ithemba_logo.png" alt="Ithemba" class="client-logo h-[6px]" /></div>
+          <div class="logo-container scale-95"><img src="./abacus_logo.png" alt="Abacus" class="client-logo" /></div>
+          <div class="logo-container scale-100"><img src="./root_logo.png" alt="Root" class="client-logo" /></div>
+        </div>
+    </div>
+  </section> -->
+
+  <section class="bg-black text-white text-center py-32 px-4">
+    <div class="w-full px-4">
+      <h2 class="text-3xl font-semibold mb-10">Some of the teams we've worked alongside</h2>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-10 gap-y-12 items-center justify-items-center" data-aos="fade-up">
+
+        <div class="logo-box"><img src="./planet42_logo.png" alt="Planet42" class="client-logo" /></div>
+        <div class="logo-box"><img src="./studytrust-logo.png" alt="StudyTrust" class="client-logo" /></div>
+        <div class="logo-box"><img src="./wcm_logo.png" alt="WCM" class="client-logo" /></div>
+        <div class="logo-box"><img src="./ithemba_logo.png" alt="Ithemba" class="client-logo" /></div>
+        <div class="logo-box"><img src="./abacus_logo.png" alt="Abacus" class="client-logo" /></div>
+        <div class="logo-box"><img src="./root_logo.png" alt="Root" class="client-logo" /></div>
+
       </div>
     </div>
   </section>
-
 
 
 
