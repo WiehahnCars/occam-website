@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCCAM | Ideas Made Simple</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <style>
+    .prosto {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .client-logo {
+      width: 150px;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(200%);
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+    .client-logo:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="bg-black text-gray-100 flex items-center justify-center min-h-screen">
+  <div class="text-center">
+    <a href="https://www.occamco.com" class="prosto text-[70px] leading-none transform transition-transform duration-200 hover:scale-95">occam</a>
+    <p class="text-lg text-gray-400 mb-6">Coming soon</p>
+
+    <form id="login-form" class="flex flex-col items-center space-y-4">
+      <input
+        id="password"
+        type="password"
+        placeholder="Enter password"
+        class="px-4 py-2 w-64 rounded-md bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+        <button
+            type="submit"
+            class="bg-gray-700 text-white hover:bg-gray-600 text-white px-4 py-2 rounded-md transition"
+        >
+            Access
+        </button>
+      <p id="error" class="text-red-500 text-sm hidden">Incorrect password. Try again.</p>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const passwordInput = document.getElementById('password');
+    const errorText = document.getElementById('error');
+
+    const correctPassword = 'kjbnj7bJjkl%$#'; // Change this to your desired password
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (passwordInput.value === correctPassword) {
+        window.location.href = 'occam-site-updated.html';
+      } else {
+        errorText.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
