@@ -21,6 +21,11 @@
     .client-logo:hover {
       opacity: 1;
     }
+
+    /* Animate focus changes */
+    .input-transition {
+      transition: border 0.2s ease, box-shadow 0.2s ease, ring 0.2s ease;
+    }
   </style>
 </head>
 <body class="bg-black text-gray-100 flex items-center justify-center min-h-screen">
@@ -33,13 +38,14 @@
         id="password"
         type="password"
         placeholder="Enter password"
-        class="px-4 py-2 w-64 rounded-md bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        <button
-            type="submit"
-            class="bg-gray-700 text-white hover:bg-gray-600 text-white px-4 py-2 rounded-md transition"
-        >
-            Access
-        </button>
+        class="px-4 py-2 w-64 rounded-md bg-gray-800 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:shadow-md input-transition"
+      />
+      <button
+        type="submit"
+        class="bg-gray-700 text-white hover:bg-gray-600 text-white px-4 py-2 rounded-md transition"
+      >
+        Access
+      </button>
       <p id="error" class="text-red-500 text-sm hidden">Incorrect password. Try again.</p>
     </form>
   </div>
