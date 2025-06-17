@@ -22,7 +22,6 @@
       opacity: 1;
     }
 
-    /* Animate focus changes */
     .input-transition {
       transition: border 0.2s ease, box-shadow 0.2s ease, ring 0.2s ease;
     }
@@ -42,11 +41,13 @@
       />
       <button
         type="submit"
-        class="bg-gray-700 text-white hover:bg-gray-600 text-white px-4 py-2 rounded-md transition"
+        class="bg-gray-700 text-white hover:bg-gray-600 px-4 py-2 rounded-md transition"
       >
         Access
       </button>
-      <p id="error" class="text-red-500 text-sm hidden opacity-0 transition-opacity duration-500">Incorrect password. Try again.</p>
+      <p id="error" class="text-red-500 text-sm hidden opacity-100 transition-opacity duration-500">
+        Incorrect password. Try again.
+      </p>
     </form>
   </div>
 
@@ -59,21 +60,21 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-    if (passwordInput.value === correctPassword) {
-      window.location.href = 'occam-site-updated.html';
-    } else {
-      errorText.classList.remove('hidden');
-      errorText.classList.add('opacity-100');
-    
-      setTimeout(() => {
-        errorText.classList.add('opacity-0');
-        setTimeout(() => {
-          errorText.classList.add('hidden');
-          errorText.classList.remove('opacity-0', 'opacity-100');
-        }, 500); // fade-out transition duration
-      }, 3000);
-    }
 
+      if (passwordInput.value === correctPassword) {
+        window.location.href = 'occam-site-updated.html';
+      } else {
+        errorText.classList.remove('hidden', 'opacity-0');
+        errorText.classList.add('opacity-100');
+
+        setTimeout(() => {
+          errorText.classList.remove('opacity-100');
+          errorText.classList.add('opacity-0');
+          setTimeout(() => {
+            errorText.classList.add('hidden');
+          }, 500); // fade-out duration
+        }, 3000); // visible for 3 seconds
+      }
     });
   </script>
 </body>
