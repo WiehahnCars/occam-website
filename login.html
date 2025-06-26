@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -136,5 +136,125 @@
     });
   </script>
 
+</body>
+</html>
+
+ -->
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCCAM | Ideas Made Simple</title>
+  <script>
+    tailwind.config = {
+      darkMode: false
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #ffffff;
+    }
+
+    .input-transition {
+      transition: border 0.2s ease, box-shadow 0.2s ease, ring 0.2s ease;
+    }
+
+    .pulse-text {
+      animation: pulse-up 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-up {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+  </style>
+</head>
+<body class="text-gray-800 flex items-center justify-center min-h-screen">
+  <div class="text-center w-full max-w-sm px-4">
+    <a href="https://www.occamco.com"
+       class="text-[70px] font-light text-gray-900 leading-none transition-transform duration-200 hover:scale-95 pulse-text block">
+      occam
+    </a>
+    <p class="text-lg text-gray-500 mb-6">Coming soon</p>
+
+    <form id="login-form" class="flex flex-col items-center space-y-4 relative">
+      <div class="relative w-full">
+        <input
+          id="password"
+          type="password"
+          placeholder="Enter password"
+          class="px-4 py-2 pr-10 w-full rounded-md bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:shadow-md input-transition text-center"
+        />
+        <button
+          type="button"
+          id="togglePassword"
+          class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          tabindex="-1"
+        >
+          <i class="ph ph-eye" id="eyeIcon"></i>
+        </button>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md transition font-medium"
+      >
+        Access
+      </button>
+      <p id="error" class="text-red-500 text-sm hidden opacity-100 transition-opacity duration-500">
+        Incorrect password. Try again.
+      </p>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const passwordInput = document.getElementById('password');
+    const errorText = document.getElementById('error');
+    const toggleBtn = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    const correctPassword = 'kjbnj7bJjkl%$'; // Change this to your actual password
+
+    toggleBtn.addEventListener('click', () => {
+      const isHidden = passwordInput.type === 'password';
+      passwordInput.type = isHidden ? 'text' : 'password';
+      eyeIcon.className = isHidden ? 'ph ph-eye-slash' : 'ph ph-eye';
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      if (passwordInput.value === correctPassword) {
+        window.location.href = 'occam-site-updated.html';
+      } else {
+        errorText.classList.remove('hidden', 'opacity-0');
+        errorText.classList.add('opacity-100');
+
+        setTimeout(() => {
+          errorText.classList.remove('opacity-100');
+          errorText.classList.add('opacity-0');
+          setTimeout(() => {
+            errorText.classList.add('hidden');
+          }, 500);
+        }, 3000);
+      }
+    });
+  </script>
 </body>
 </html>

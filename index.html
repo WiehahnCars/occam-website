@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="./favicon.ico" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
@@ -22,6 +21,94 @@
       100% { background-position: 0% 50%; }
     }
 
+    @keyframes pulse-up {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.03) translateY(-1px); }
+    }
+
+    .pulse-text {
+      animation: pulse-up 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="text-gray-100 flex flex-col items-center justify-center min-h-screen px-4 text-center">
+
+  <a href="https://www.occamco.com" aria-hidden="true"
+    class="text-[60px] sm:text-[70px] font-medium leading-none pulse-text block transition-transform duration-200 hover:scale-95">
+    occam
+  </a>
+  <p class="text-lg text-gray-400 mt-4">Coming soon</p>
+
+</body>
+</html>
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCCAM | Ideas Made Simple</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    .gradient-dark {
+      background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #2a2a2a, #0f0f0f);
+      background-size: 300% 300%;
+      animation: gradientShift 30s ease infinite;
+      color: #f3f4f6;
+    }
+
+    .gradient-light {
+      background: linear-gradient(-45deg, #ffffff, #f3f4f6, #e5e7eb, #ffffff);
+      background-size: 300% 300%;
+      animation: gradientShift 30s ease infinite;
+      color: #111827;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .glass {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+      transition: background-color 0.4s ease, border 0.4s ease;
+    }
+
+    .glass-dark {
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-light {
+      background-color: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .pulse-text {
+      animation: pulse-up 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-up {
+      0%, 100% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.03) translateY(-1px); }
+    }
+
     .fade {
       transition: opacity 0.4s ease;
     }
@@ -34,52 +121,22 @@
       opacity: 0;
       pointer-events: none;
     }
-
-    @keyframes fade-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .animate-fade-in {
-      animation: fade-in 0.8s ease-out forwards;
-    }
-
-    @keyframes pulse-up {
-      0%, 100% { transform: scale(1) translateY(0); }
-      50% { transform: scale(1.03) translateY(-1px); }
-    }
-
-    .pulse-text {
-      animation: pulse-up 3s ease-in-out infinite;
-    }
-
-    .glass {
-      background-color: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-radius: 12px;
-      padding: 2rem;
-    }
-
-    .btn-animate {
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-
-    .btn-animate:hover {
-      transform: scale(1.03);
-    }
   </style>
 </head>
-<body class="text-gray-100 flex items-center justify-center min-h-screen px-4">
+<body class="gradient-dark min-h-screen flex items-center justify-center px-4 transition-colors duration-500">
 
-  <div class="glass animate-fade-in w-full max-w-sm text-center">
+  Toggle
+  <button id="toggleTheme" class="absolute top-4 right-4 text-lg text-white hover:text-yellow-300 transition" title="Toggle theme">
+    ◐
+  </button>
+
+  <div id="loginBox" class="glass glass-dark animate-fade-in w-full max-w-sm text-center text-white">
     <a href="https://www.occamco.com" tabindex="-1" aria-hidden="true"
-      class="text-[60px] sm:text-[70px] font-medium leading-none pulse-text block transition-transform duration-200 hover:scale-95">
+      class="text-[60px] sm:text-[70px] font-light leading-none pulse-text block transition-transform duration-200 hover:scale-95">
       occam
     </a>
 
-    <p class="text-lg text-gray-400 mt-2 mb-6"> </p>
+    <p class="text-lg mt-2 mb-6 text-gray-400"></p>
 
     <form id="login-form" class="space-y-4">
       <div class="relative">
@@ -87,7 +144,7 @@
           id="password"
           type="password"
           placeholder="Enter password"
-          class="text-center w-full pr-10 px-4 py-2 rounded-md bg-gray-800 border border-gray-600 text-gray-100
+          class="text-center font-light w-full pr-10 px-4 py-2 rounded-md bg-gray-800 border border-gray-600 text-white
                 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition"
         />
         <button type="button" id="togglePassword" tabindex="-1"
@@ -98,7 +155,7 @@
 
       <button
         type="submit"
-        class="w-full bg-gray-700 hover:bg-gray-600 text-gray-100 px-4 py-2 rounded-md font-medium btn-animate"
+        class="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-md font-light transition"
       >
         Access
       </button>
@@ -112,6 +169,21 @@
     const errorText = document.getElementById('error');
     const togglePassword = document.getElementById('togglePassword');
     const eyeIcon = document.getElementById('eyeIcon');
+    const toggleThemeBtn = document.getElementById('toggleTheme');
+    const body = document.body;
+    const loginBox = document.getElementById('loginBox');
+
+    let isDark = true;
+
+    toggleThemeBtn.addEventListener('click', () => {
+      isDark = !isDark;
+      body.className = isDark ? 'gradient-dark min-h-screen flex items-center justify-center px-4' : 'gradient-light min-h-screen flex items-center justify-center px-4';
+      loginBox.className = isDark ? 'glass glass-dark animate-fade-in w-full max-w-sm text-center text-white'
+                                  : 'glass glass-light animate-fade-in w-full max-w-sm text-center text-gray-900';
+      toggleThemeBtn.textContent = isDark ? '◐' : '◑';
+      toggleThemeBtn.classList.toggle('text-white', isDark);
+      toggleThemeBtn.classList.toggle('text-gray-800', !isDark);
+    });
 
     const correctPassword = 'kjbnj7bJjkl%$#';
 
@@ -135,6 +207,7 @@
       eyeIcon.className = isHidden ? 'ph ph-eye-slash' : 'ph ph-eye';
     });
   </script>
-
 </body>
 </html>
+
+
