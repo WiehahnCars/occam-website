@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OCCAM | Ideas Made Simply</title>
+  <title>OCCAM | Ideas Made Simple</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -36,6 +36,14 @@
     html {
       scroll-behavior: smooth;
     }
+        @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+      animation: fade-in 1s ease-out forwards;
+    }
   </style>
 
 
@@ -48,13 +56,13 @@
       <div class="flex items-center space-x-3">
         <a href="https://www.occamco.com" class="text-[40px] leading-none transform transition-transform duration-300 hover:scale-95 font-light">occam</a>
       </div>
-      <div class="flex items-center space-x-6 text-sm">
+      <!-- <div class="flex items-center space-x-6 text-sm">
         <a href="#what-we-do" class="hover:underline">What we do</a>
         <a href="#contact" class="hover:underline">Contact</a>
         <button id="signInBtn" class="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition">
           Sign In
         </button>
-      </div>
+      </div> -->
     </div>
   </header>
 
@@ -84,29 +92,34 @@
 
 
   
-  <section id="what-we-do" class="bg-white py-24 px-6">
-  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    
-    <!-- Left: Text -->
-    <div>
-      <h2 class="text-4xl font-semibold mb-6">What we do</h2>
-      <p class="text-gray-700 leading-relaxed text-lg mb-6">
-        We help organisations uncover clarity and deliver value across three areas:
-      </p>
-      <ul class="space-y-4 text-gray-600">
-        <li><span class="font-semibold text-black">Strategy</span> – identifying where to play and how to win</li>
-        <li><span class="font-semibold text-black">Operations</span> – designing processes that work better</li>
-        <li><span class="font-semibold text-black">Software</span> – building tools that scale and adapt</li>
-      </ul>
-    </div>
+<section id="what-we-do" class="bg-gray-50 py-28 px-6">
+  <div class="max-w-2xl mx-auto text-center transition-opacity duration-1000 ease-in opacity-0 animate-fade-in">
 
-    <!-- Right: Image -->
-    <div class="flex justify-center">
-      <img src="https://source.unsplash.com/600x400/?technology,design" alt="Visual representation" class="rounded-lg shadow-lg w-full max-w-md">
-    </div>
+    <p class="text-sm font-mono tracking-widest text-gray-500 uppercase mb-4">
+      Ideas Made Simple
+    </p>
+
+    <h2 class="text-5xl font-bold text-gray-900 mb-10">
+      What we do
+    </h2>
+
+    <p class="text-gray-700 text-lg leading-relaxed mb-8">
+      We work with mid-market teams to solve operational friction - fast. Our model is simple: drop into the mess, find the leverage, and deliver solutions that actually stick.
+    </p>
+
+    <p class="text-gray-700 text-lg leading-relaxed mb-8">
+      First, we diagnose where strategy, systems, and execution are out of sync. Then we design targeted interventions to unlock momentum—streamlined processes, sharper decisions, better tooling.
+    </p>
+
+    <p class="text-gray-700 text-lg leading-relaxed">
+      Finally, we build AI-accelerated software that automates what matters, adapts as you grow, and creates long-term leverage without the enterprise price tag.
+    </p>
 
   </div>
 </section>
+
+
+
 
 
 
@@ -149,14 +162,19 @@
   <!-- Contact Modal -->
   <div id="contactModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 flex transition-opacity duration-300">
     <div class="bg-white p-6 rounded-lg max-w-md w-full relative transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-      <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">&times;</button>
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl leading-none">&times;</button>
       <h3 class="text-xl font-semibold mb-4 text-center">Get in touch</h3>
-      <form class="space-y-4">
-        <input type="text" placeholder="Your name" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
-        <input type="email" placeholder="Your email" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
-        <input type="text" placeholder="Your company" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
-        <textarea placeholder="Your message" class="w-full border border-gray-300 px-4 py-2 rounded-md" rows="4" required></textarea>
-        <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800">Send</button>
+      <form action="https://formspree.io/f/xblypvkb" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-sm mb-1 text-gray-700">Your email</label>
+          <input type="email" name="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
+        </div>
+        <!-- <div>
+          <label class="block text-sm mb-1 text-gray-700">Your message</label>
+          <textarea name="message" rows="4" class="w-full border border-gray-300 px-4 py-2 rounded-md" required></textarea>
+        </div> -->
+        <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 w-full">Send</button>
+        <p class="text-xs text-gray-500 text-center mt-2">No spam. Just the occasional update on new insights, tools, and our thinking.</p>
       </form>
     </div>
   </div>
@@ -166,21 +184,11 @@
     <div class="bg-white text-black rounded-lg p-8 max-w-md w-full relative">
       <button id="closeModalBtn" class="absolute top-2 right-3 text-xl font-bold text-gray-600 hover:text-black">&times;</button>
       <h2 class="text-xl font-semibold mb-4 text-center">Sign In</h2>
-      <form>
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Email</label>
+        <form class="space-y-4">
           <input type="email" placeholder="Your email" class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-black" />
-        </div>
-        <div class="mb-6">
-          <label class="block text-sm font-medium mb-1">Password</label>
           <input type="password" placeholder="Your password" class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-black" />
-        </div>
-        <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">Sign In</button>
-        <!-- Alert Message -->
-        <div id="signInAlert" class="mt-4 hidden text-sm text-red-600 text-center">
-          You do not have an account. Speak to your contact at Occam.
-        </div>
-      </form>
+          <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">Sign In</button>
+        </form>
     </div>
   </div>
 
@@ -194,16 +202,17 @@
 <!-- Footer -->
 <footer class="bg-gray-100 py-10 px-6 border-t border-gray-200 text-gray-600 text-sm font-light tracking-wide">
   <div class="max-w-6xl mx-auto space-y-8">
-    
+
     <!-- Footer grid -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
       <!-- Branding -->
       <div>
         <div class="text-2xl font-light text-black mb-2">occam</div>
-        <p class="text-gray-500">Simplicity-driven solutions</p>
+        <p class="text-gray-500">Ideas Made Simple</p>
       </div>
 
-      <!-- Quick Links -->
+      <!-- (Optional) Quick Links -->
+      <!-- 
       <div>
         <h4 class="text-gray-800 font-medium mb-3">Quick Links</h4>
         <ul class="space-y-2">
@@ -213,10 +222,11 @@
           <li><a href="#" onclick="document.getElementById('signInModal').classList.remove('hidden')" class="hover:underline">Sign In</a></li>
         </ul>
       </div>
+      -->
     </div>
 
-    <!-- Copyright -->
-    <div class="text-sm text-gray-300 sm:text-center">
+    <!-- Bottom copyright -->
+    <div class="pt-8 border-t border-gray-200 text-center text-gray-400">
       &copy; 2025 Occam Holdings. All rights reserved.
     </div>
 
@@ -224,96 +234,138 @@
 </footer>
 
 
+
 </footer>
+
+<div id="thankYouModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 flex">
+  <div class="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800 w-full max-w-sm">
+    <h3 class="text-xl font-semibold mb-2">Thanks!</h3>
+    <p>Your message has been sent.</p>
+  </div>
+</div>
 
 
   <!-- Scripts -->
-  <script>
-    // Contact Modal Animation
-    function closeModal() {
-      const modal = document.getElementById('contactModal');
-      const content = document.getElementById('modalContent');
-      content.classList.remove('scale-100', 'opacity-100');
-      content.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 300);
-    }
-
-    document.getElementById('contactModal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
-
-    document.querySelector("button[onclick*='contactModal']").addEventListener('click', function () {
-      const modal = document.getElementById('contactModal');
-      const content = document.getElementById('modalContent');
-      modal.classList.remove('hidden');
-      setTimeout(() => {
-        content.classList.remove('scale-95', 'opacity-0');
-        content.classList.add('scale-100', 'opacity-100');
-      }, 10);
-    });
-
-    // Header Scroll Animation
-    let lastScroll = 0;
-    const header = document.getElementById('main-header');
-
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-
-      if (currentScroll <= 0) {
-        header.style.transform = 'translateY(0)';
-        return;
+    <script>
+      // Contact Modal Animation
+      function closeModal() {
+        const modal = document.getElementById('contactModal');
+        const content = document.getElementById('modalContent');
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+          modal.classList.add('hidden');
+        }, 300);
       }
 
-      if (currentScroll > lastScroll) {
-        header.style.transform = 'translateY(-100%)';
-      } else {
-        header.style.transform = 'translateY(0)';
-      }
+      document.getElementById('contactModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+      });
 
-      lastScroll = currentScroll;
-    });
+      document.querySelector("button[onclick*='contactModal']").addEventListener('click', function () {
+        const modal = document.getElementById('contactModal');
+        const content = document.getElementById('modalContent');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          content.classList.remove('scale-95', 'opacity-0');
+          content.classList.add('scale-100', 'opacity-100');
+        }, 10);
+      });
 
-    // Sign In Modal
-    const signInBtn = document.getElementById('signInBtn');
-    const signInModal = document.getElementById('signInModal');
-    const closeSignInBtn = document.getElementById('closeModalBtn');
-    const signInAlert = document.getElementById('signInAlert');
-    const form = signInModal.querySelector('form');
+      // Header Scroll Animation
+      let lastScroll = 0;
+      const header = document.getElementById('main-header');
 
-    signInBtn.addEventListener('click', () => {
-      signInModal.classList.remove('hidden');
-    });
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
 
-    closeSignInBtn.addEventListener('click', () => {
-      signInModal.classList.add('hidden');
-      signInAlert.classList.add('hidden');
-    });
+        if (currentScroll <= 0) {
+          header.style.transform = 'translateY(0)';
+          return;
+        }
 
-    signInModal.addEventListener('click', (e) => {
-      if (e.target === signInModal) {
+        if (currentScroll > lastScroll) {
+          header.style.transform = 'translateY(-100%)';
+        } else {
+          header.style.transform = 'translateY(0)';
+        }
+
+        lastScroll = currentScroll;
+      });
+
+      // Sign In Modal
+      const signInBtn = document.getElementById('signInBtn');
+      const signInModal = document.getElementById('signInModal');
+      const closeSignInBtn = document.getElementById('closeModalBtn');
+      const signInAlert = document.getElementById('signInAlert');
+      const form = signInModal.querySelector('form');
+
+      signInBtn.addEventListener('click', () => {
+        signInModal.classList.remove('hidden');
+      });
+
+      closeSignInBtn.addEventListener('click', () => {
         signInModal.classList.add('hidden');
         signInAlert.classList.add('hidden');
-      }
-    });
+      });
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      signInAlert.classList.remove('hidden');
+      signInModal.addEventListener('click', (e) => {
+        if (e.target === signInModal) {
+          signInModal.classList.add('hidden');
+          signInAlert.classList.add('hidden');
+        }
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        signInAlert.classList.remove('hidden');
+        setTimeout(() => {
+          signInAlert.classList.add('hidden');
+        }, 6000);
+      });
+    </script>
+
+    <script>
+      AOS.init({
+        duration: 800, // Animation duration
+        easing: 'ease-in-out', // Animation easing
+        once: true, // Whether animation should happen only once
+      });
+    </script>
+
+    <script>
+    // Thank You modal trigger after form submission
+    const contactForm = document.querySelector('#contactModal form');
+    contactForm.addEventListener('submit', function (e) {
+      // Allow form to submit normally
       setTimeout(() => {
-        signInAlert.classList.add('hidden');
-      }, 6000);
+        const thankYouModal = document.getElementById('thankYouModal');
+        const contactModal = document.getElementById('contactModal');
+        const modalContent = document.getElementById('modalContent');
+
+        // Hide the contact modal
+        modalContent.classList.remove('scale-100', 'opacity-100');
+        modalContent.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+          contactModal.classList.add('hidden');
+        }, 300);
+
+        // Show thank you modal
+        thankYouModal.classList.remove('hidden');
+
+        // Auto-close after 3 seconds
+        setTimeout(() => {
+          thankYouModal.classList.add('hidden');
+        }, 3000);
+      }, 100); // slight delay to allow Formspree to handle
     });
   </script>
 
-  <script>
-    AOS.init({
-      duration: 800, // Animation duration
-      easing: 'ease-in-out', // Animation easing
-      once: true, // Whether animation should happen only once
-    });
-  </script>
 
 </body>
 </html>
+
+
+
+
+
