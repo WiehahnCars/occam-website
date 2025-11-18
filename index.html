@@ -114,60 +114,61 @@
   </section> -->
 
     <!-- Client Logos -->
-    <section class="bg-black text-white text-center py-32 px-4 relative">
-      <div class="w-full max-w-7xl mx-auto px-6">
-        <h2 class="text-3xl font-semibold mb-10">
+    <section class="bg-black text-white text-center py-32 px-0 relative overflow-hidden">
+    
+      <!-- Heading stays centered, not full-width -->
+      <div class="max-w-4xl mx-auto px-6 mb-12">
+        <h2 class="text-3xl font-semibold">
           Some of the teams we've worked alongside
         </h2>
+      </div>
     
-        <div class="relative">
+      <!-- Full-width scroll wrapper -->
+      <div class="relative w-full">
     
-          <!-- Left Button -->
-          <button 
-            onclick="scrollLogos(-300)" 
-            class="hidden md:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 items-center justify-center backdrop-blur transition"
-          >
-            <span class="text-2xl leading-none">&lsaquo;</span>
-          </button>
-          
-          <!-- Right Button -->
-          <button 
-            onclick="scrollLogos(300)" 
-            class="hidden md:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 items-center justify-center backdrop-blur transition"
-          >
-            <span class="text-2xl leading-none">&rsaquo;</span>
-          </button>
+        <!-- Left Button -->
+        <button 
+          onclick="scrollLogos(-350)" 
+          class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 items-center justify-center backdrop-blur transition"
+        >
+          <span class="text-2xl leading-none">&lsaquo;</span>
+        </button>
     
-          <!-- Horizontal scroll container -->
-          <div
-            id="logoScroll"
-            class="hide-scrollbar flex overflow-x-auto space-x-12 items-center justify-start snap-x snap-mandatory px-10 md:px-20 py-4 scroll-smooth"
-            data-aos="fade-up"
-          >
-            <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
-              <img src="./cleaned_logos/planet42_logo.png" alt="Planet42" class="client-logo" />
-            </a>
+        <!-- Right Button -->
+        <button 
+          onclick="scrollLogos(350)" 
+          class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 items-center justify-center backdrop-blur transition"
+        >
+          <span class="text-2xl leading-none">&rsaquo;</span>
+        </button>
     
-            <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
-              <img src="./cleaned_logos/studytrust-logo.png" alt="StudyTrust" class="client-logo" />
-            </a>
+        <!-- FULL-WIDTH horizontal scroll container -->
+        <div
+          id="logoScroll"
+          class="hide-scrollbar flex overflow-x-auto space-x-16 items-center snap-x snap-mandatory px-10 py-4 scroll-smooth w-full"
+        >
+          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/planet42_logo.png" class="client-logo" />
+          </div>
     
-            <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
-              <img src="./cleaned_logos/wcm_logo.png" alt="WCM" class="client-logo" />
-            </a>
+          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/studytrust-logo.png" class="client-logo" />
+          </div>
     
-            <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
-              <img src="./cleaned_logos/ithemba_logo.png" alt="Ithemba" class="client-logo" style="margin-top: -40px;" />
-            </a>
+          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/wcm_logo.png" class="client-logo" />
+          </div>
     
-            <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
-              <img src="./cleaned_logos/root_logo.png" alt="Root" class="client-logo" />
-            </a>
+          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/ithemba_logo.png" class="client-logo" />
+          </div>
     
-            <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
-              <img src="./cleaned_logos/wafunda_logo.png" alt="Wafunda" class="client-logo" />
-            </a>
+          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/root_logo.png" class="client-logo" />
+          </div>
     
+          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/wafunda_logo.png" class="client-logo" />
           </div>
         </div>
       </div>
@@ -307,6 +308,11 @@
 
     AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
 
+    function scrollLogos(amount) {
+      const container = document.getElementById('logoScroll');
+      container.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+   
     function scrollLogos(amount) {
       const container = document.getElementById('logoScroll');
       container.scrollBy({ left: amount, behavior: 'smooth' });
