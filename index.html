@@ -50,6 +50,10 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+    .logo-box {
+      cursor: default;
+    }
+
   </style>
 </head>
 
@@ -147,27 +151,27 @@
           id="logoScroll"
           class="hide-scrollbar flex overflow-x-auto space-x-16 items-center snap-x snap-mandatory px-10 py-4 scroll-smooth w-full"
         >
-          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+          <div class="logo-box flex-shrink-0 snap-start">
             <img src="./cleaned_logos/planet42_logo.png" class="client-logo" />
           </div>
     
-          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+          <div class="logo-box flex-shrink-0 snap-start">
             <img src="./cleaned_logos/studytrust-logo.png" class="client-logo" />
           </div>
     
-          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+          <div class="logo-box flex-shrink-0 snap-start">
             <img src="./cleaned_logos/wcm_logo.png" class="client-logo" />
           </div>
     
-          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+          <div class="logo-box flex-shrink-0 snap-start">
             <img src="./cleaned_logos/ithemba_logo.png" class="client-logo" />
           </div>
     
-          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+          <div class="logo-box flex-shrink-0 snap-start">
             <img src="./cleaned_logos/root_logo.png" class="client-logo" />
           </div>
     
-          <div class="logo-box flex-shrink-0 snap-start pointer-events-none">
+          <div class="logo-box flex-shrink-0 snap-start">
             <img src="./cleaned_logos/wafunda_logo.png" class="client-logo" />
           </div>
         </div>
@@ -308,11 +312,6 @@
 
     AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
 
-    function scrollLogos(amount) {
-      const container = document.getElementById('logoScroll');
-      container.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-   
     function scrollLogos(amount) {
       const container = document.getElementById('logoScroll');
       container.scrollBy({ left: amount, behavior: 'smooth' });
