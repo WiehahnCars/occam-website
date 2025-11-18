@@ -42,6 +42,16 @@
     .animate-fade-in {
       animation: fade-in 1s ease-out forwards;
     }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .hide-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
   </style>
 </head>
 
@@ -115,7 +125,7 @@
 
       <!-- Horizontal scroll container -->
       <div
-        class="flex overflow-x-auto space-x-10 items-center justify-start md:justify-center snap-x snap-mandatory"
+        class="hide-scrollbar flex overflow-x-auto space-x-10 items-center justify-start md:justify-center snap-x snap-mandatory"
         data-aos="fade-up"
       >
         <a href="#" class="logo-box flex-shrink-0 snap-start">
