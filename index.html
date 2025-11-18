@@ -42,15 +42,13 @@
     .animate-fade-in {
       animation: fade-in 1s ease-out forwards;
     }
-        /* Hide scrollbar for Chrome, Safari and Opera */
+    /* Hide scrollbars cleanly */
     .hide-scrollbar::-webkit-scrollbar {
       display: none;
     }
-    
-    /* Hide scrollbar for IE, Edge and Firefox */
     .hide-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;     /* Firefox */
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
@@ -117,43 +115,45 @@
 
 
     <!-- Client Logos -->
+    <!-- Client Logos -->
     <section class="bg-black text-white text-center py-32 px-4">
       <div class="w-full max-w-7xl mx-auto px-6">
         <h2 class="text-3xl font-semibold mb-10">
           Some of the teams we've worked alongside
         </h2>
-
-      <!-- Horizontal scroll container -->
-      <div
-        class="hide-scrollbar flex overflow-x-auto space-x-10 items-center justify-start md:justify-center snap-x snap-mandatory"
-        data-aos="fade-up"
-      >
-        <a href="#" class="logo-box flex-shrink-0 snap-start">
-          <img src="./cleaned_logos/planet42_logo.png" alt="Planet42" class="client-logo" />
-        </a>
-
-        <a href="#" class="logo-box flex-shrink-0 snap-start">
-          <img src="./cleaned_logos/studytrust-logo.png" alt="StudyTrust" class="client-logo" />
-        </a>
-
-        <a href="#" class="logo-box flex-shrink-0 snap-start">
-          <img src="./cleaned_logos/wcm_logo.png" alt="WCM" class="client-logo" />
-        </a>
-
-        <a href="#" class="logo-box flex-shrink-0 snap-start">
-          <img src="./cleaned_logos/ithemba_logo.png" alt="Ithemba" class="client-logo" style="margin-top: -40px;" />
-        </a>
-
-        <a href="#" class="logo-box flex-shrink-0 snap-start">
-          <img src="./cleaned_logos/root_logo.png" alt="Root" class="client-logo" />
-        </a>
-
-        <a href="#" class="logo-box flex-shrink-0 snap-start">
-          <img src="./cleaned_logos/wafunda_logo.png" alt="Root" class="client-logo" />
-        </a>
+    
+        <!-- Horizontal scroll container -->
+        <div
+          class="hide-scrollbar flex overflow-x-auto space-x-12 items-center justify-start snap-x snap-mandatory px-10 md:px-20 py-4"
+          data-aos="fade-up"
+        >
+          <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/planet42_logo.png" alt="Planet42" class="client-logo" />
+          </a>
+    
+          <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/studytrust-logo.png" alt="StudyTrust" class="client-logo" />
+          </a>
+    
+          <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/wcm_logo.png" alt="WCM" class="client-logo" />
+          </a>
+    
+          <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/ithemba_logo.png" alt="Ithemba" class="client-logo" style="margin-top: -40px;" />
+          </a>
+    
+          <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/root_logo.png" alt="Root" class="client-logo" />
+          </a>
+    
+          <a class="logo-box flex-shrink-0 snap-start pointer-events-none">
+            <img src="./cleaned_logos/wafunda_logo.png" alt="Wafunda" class="client-logo" />
+          </a>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
 
 
 
