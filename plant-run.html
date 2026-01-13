@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Occam | Plant run</title>
+
+  <!-- Font to match your current look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #0b0d10;
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.10);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --faint: rgba(255,255,255,0.55);
+      --border: rgba(255,255,255,0.14);
+      --shadow: 0 12px 40px rgba(0,0,0,0.55);
+      --radius: 18px;
+      --max: 1120px;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.55;
+    }
+
+    a{ color: inherit; text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+
+    /* Top nav */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand{
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      font-weight: 600;
+      opacity: 0.95;
+    }
+    .navlinks{
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .navlinks a{
+      font-size: 14px;
+      color: var(--muted);
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+    .navlinks a.active{
+      color: var(--text);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.10);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn:hover{
+      background: rgba(255,255,255,0.14);
+      text-decoration: none;
+    }
+    .btn.primary{
+      background: rgba(255,255,255,0.92);
+      color: #0b0d10;
+      border-color: rgba(255,255,255,0.92);
+    }
+    .btn.primary:hover{
+      background: rgba(255,255,255,0.82);
+      border-color: rgba(255,255,255,0.82);
+    }
+
+    /* Hero */
+    .hero{
+      position: relative;
+      min-height: 72vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .hero::before{
+      content: "";
+      position: absolute;
+      inset: 0;
+      /* Replace with your existing hero image path if you want exact parity */
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0.78)),
+        url("assets/hero-ocean.jpg");
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.03);
+      filter: contrast(1.05) saturate(0.95);
+    }
+    .hero::after{
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(800px 450px at 50% 35%, rgba(255,255,255,0.10), transparent 60%),
+        radial-gradient(900px 600px at 10% 30%, rgba(255,255,255,0.08), transparent 55%),
+        radial-gradient(900px 600px at 90% 60%, rgba(255,255,255,0.06), transparent 55%);
+      pointer-events: none;
+    }
+    .hero-inner{
+      position: relative;
+      z-index: 1;
+      max-width: var(--max);
+      width: 100%;
+      padding: 72px 20px 46px;
+      text-align: center;
+    }
+    .kicker{
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.25);
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+    .kicker strong{
+      color: var(--text);
+      font-weight: 700;
+    }
+    h1{
+      margin: 0 0 12px;
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+    }
+    .subtitle{
+      margin: 0 auto 26px;
+      max-width: 820px;
+      font-size: 18px;
+      color: var(--muted);
+    }
+    .hero-cta{
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+    .hero-note{
+      margin-top: 18px;
+      color: var(--faint);
+      font-size: 13px;
+    }
+
+    /* Page sections */
+    .section{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 64px 20px;
+    }
+    .section h2{
+      font-size: 28px;
+      margin: 0 0 14px;
+      letter-spacing: -0.01em;
+    }
+    .section p{
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .grid-3{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .card h3{
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .card p{
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .split{
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+      align-items: center;
+      margin-top: 18px;
+    }
+    .split.reverse{
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+    .list{
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .list li{
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .bullet{
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10);
+      margin-top: 2px;
+    }
+
+    /* Screenshot frames */
+    .shot{
+      position: relative;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(0,0,0,0.20);
+      overflow: hidden;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+    }
+    .shot img{
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      background: rgba(255,255,255,0.06);
+    }
+    .shot .cap{
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(0,0,0,0.55);
+      color: rgba(255,255,255,0.88);
+      font-size: 13px;
+    }
+    .shot .cap strong{
+      color: rgba(255,255,255,0.96);
+      font-weight: 700;
+    }
+
+    /* Big CTA */
+    .cta{
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+    .cta h2{ margin: 0 0 10px; }
+    .cta p{ margin: 0; }
+    .cta .actions{
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    footer{
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 34px 20px;
+      color: var(--faint);
+    }
+    footer .inner{
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .small{ font-size: 12px; }
+
+    /* Responsive */
+    @media (max-width: 920px){
+      .grid-3{ grid-template-columns: 1fr; }
+      .split, .split.reverse{ grid-template-columns: 1fr; }
+      .cta{ grid-template-columns: 1fr; }
+      .cta .actions{ justify-content: flex-start; }
+      .hero{ min-height: 64vh; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="nav">
+      <div class="brand">occam</div>
+      <div class="navlinks">
+        <!-- Replace these with your real site links -->
+        <a href="#" aria-label="Home">Home</a>
+        <a href="#" class="active" aria-label="Plant run">Plant run</a>
+        <a href="#" aria-label="Contact">Contact</a>
+        <a class="btn" href="#demo">Request a demo</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="kicker"><strong>Plant run</strong> A digital operations layer for wheat milling</div>
+      <h1>plant run</h1>
+      <p class="subtitle">
+        Real-time visibility into extraction, milling performance, downtime, and production across multiple products.
+        Built for foremen and managers who need operational truth, fast.
+      </p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#demo">Request a demo</a>
+        <a class="btn" href="#features">See what it does</a>
+      </div>
+      <div class="hero-note">No heavy rollout. Start with the data you have, then expand.</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" id="why">
+      <h2>What it solves</h2>
+      <p>
+        Milling operations often run with fragmented data, delayed reporting, and limited downtime visibility.
+        Plant run brings the key metrics and the operational context into one place, so teams can act with confidence.
+      </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>Operational visibility</h3>
+          <p>Extraction, milling rates, shift performance, and production totals in a single view.</p>
+        </div>
+        <div class="card">
+          <h3>Downtime clarity</h3>
+          <p>Track stoppages by event count and minutes, tied to specific equipment and causes.</p>
+        </div>
+        <div class="card">
+          <h3>Decision support</h3>
+          <p>Daily, weekly, and monthly reporting with AI-driven summaries to highlight what matters.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="split">
+        <div>
+          <h2>Core capabilities</h2>
+          <p>
+            Everything is designed to answer two questions: how is the mill running, and what needs attention next.
+          </p>
+          <ul class="list">
+            <li><span class="bullet"></span><span><strong>Live dashboard</strong> with extraction rates, milling rates, recent shift downtime, and production totals across products.</span></li>
+            <li><span class="bullet"></span><span><strong>Downtime analytics</strong> showing events and minutes down, with drill-down by equipment and cause.</span></li>
+            <li><span class="bullet"></span><span><strong>Shift module</strong> for foremen to log what happened, when it happened, and which equipment was affected.</span></li>
+            <li><span class="bullet"></span><span><strong>Maintenance event logging</strong> for planned and unplanned work, including comments and supporting context.</span></li>
+            <li><span class="bullet"></span><span><strong>Daily, weekly, and monthly reports</strong> with clear visuals and control-limit style views where relevant.</span></li>
+            <li><span class="bullet"></span><span><strong>AI analysis</strong> that summarises key patterns and exceptions so management can scan and move.</span></li>
+            <li><span class="bullet"></span><span><strong>Data export</strong> of shift-level detail to CSV for audits, deeper analysis, or integration.</span></li>
+          </ul>
+        </div>
+
+        <div class="shot">
+          <!-- Replace with a real screenshot -->
+          <img src="assets/screenshot-dashboard.png" alt="Plant run dashboard screenshot placeholder">
+          <div class="cap"><strong>Dashboard</strong> Extraction, milling rate, downtime, and production totals.</div>
+        </div>
+      </div>
+
+      <div class="split reverse" style="margin-top: 34px;">
+        <div class="shot">
+          <!-- Replace with a real screenshot -->
+          <img src="assets/screenshot-shifts.png" alt="Shift module screenshot placeholder">
+          <div class="cap"><strong>Shifts</strong> Foreman capture with event logging by equipment and time.</div>
+        </div>
+
+        <div>
+          <h2>Reporting that people actually use</h2>
+          <p>
+            Reports are built to be shared, acted on, and traced back to source. Each report includes the metrics,
+            the narrative, and the underlying data when needed.
+          </p>
+          <ul class="list">
+            <li><span class="bullet"></span><span><strong>Daily report</strong> covering extraction and milling performance, downtime, and key exceptions.</span></li>
+            <li><span class="bullet"></span><span><strong>Weekly and monthly views</strong> to track trends and improvement over time.</span></li>
+            <li><span class="bullet"></span><span><strong>Control-limit style monitoring</strong> to spot drift early and reduce reactive firefighting.</span></li>
+            <li><span class="bullet"></span><span><strong>AI summary</strong> that highlights what changed, why it matters, and where to look.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <h2>How it fits into a multi-product mill</h2>
+      <p>
+        Plant run is designed for mills producing multiple product lines. Production totals, extraction metrics,
+        and reporting can be segmented by product, model, shift, and time window.
+      </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>Multi-product production</h3>
+          <p>Track product outputs side by side and understand what each shift delivered.</p>
+        </div>
+        <div class="card">
+          <h3>Extraction context</h3>
+          <p>Monitor total flour, total wheat milled, and extraction trends over time.</p>
+        </div>
+        <div class="card">
+          <h3>Operational truth</h3>
+          <p>Every metric links back to shift capture and equipment-level events for traceability.</p>
+        </div>
+      </div>
+
+      <div class="split" style="margin-top: 30px;">
+        <div>
+          <h2>Built for action, not just dashboards</h2>
+          <p>
+            You already send a daily report. The next step is exception-based communication so the right people know
+            when something is off, immediately.
+          </p>
+          <ul class="list">
+            <li><span class="bullet"></span><span><strong>Threshold alerts</strong> when extraction, milling rate, downtime, or other key metrics exceed agreed limits.</span></li>
+            <li><span class="bullet"></span><span><strong>WhatsApp-style notifications</strong> to notify relevant roles when action is required.</span></li>
+            <li><span class="bullet"></span><span><strong>Escalation rules</strong> to route persistent issues to the right level.</span></li>
+          </ul>
+          <p class="small" style="margin-top: 14px; color: var(--faint);">
+            Note: the alerting module can be enabled only where it makes operational sense, and tuned with your team.
+          </p>
+        </div>
+
+        <div class="shot">
+          <!-- Replace with a real screenshot -->
+          <img src="assets/screenshot-reports.png" alt="Reports screenshot placeholder">
+          <div class="cap"><strong>Reports</strong> Daily, weekly, and monthly views with summaries and exports.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="demo">
+      <div class="cta">
+        <div>
+          <h2>Want to see it with your data?</h2>
+          <p>
+            We will walk you through the platform, map it to your process, and show what a rollout could look like.
+            If it is not a fit, you will know quickly.
+          </p>
+          <p class="small" style="margin-top: 12px; color: var(--faint);">
+            Typical first session: 30 to 45 minutes. No hard sell, just an honest view of value and effort.
+          </p>
+        </div>
+        <div class="actions">
+          <!-- Replace the email address with the correct one -->
+          <a class="btn primary" href="mailto:hello@occamco.com?subject=Plant%20run%20demo%20request">Email us</a>
+          <a class="btn" href="#features">Review features</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="inner">
+      <div>
+        <div style="font-weight: 700; letter-spacing: 0.06em; text-transform: lowercase;">occam</div>
+        <div class="small">Purpose-built, high-quality operational software.</div>
+      </div>
+      <div class="small">© <span id="year"></span> Occam. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script>
+    // Set footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
