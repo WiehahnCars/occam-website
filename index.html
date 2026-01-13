@@ -233,22 +233,20 @@
   </div>
 
 <!-- Footer -->
-<footer class="bg-gray-100 py-10 px-6 border-t border-gray-200 text-gray-600 text-sm font-light tracking-wide">
-  <div class="max-w-6xl mx-auto space-y-8">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left">
-      <div>
-        <a href="https://www.occamco.com" class="text-2xl font-light text-black mb-2">occam</a>
-        <p class="text-gray-500">IDEAS MADE SIMPLE</p>
-      </div>
-      <div>
-        <div class="text-lg font-medium text-black mb-2">Legal</div>
-        <ul class="space-y-1">
-          <li><a href="/privacy-policy" class="text-gray-500 hover:text-gray-700 transition">Privacy Policy</a></li>
-        </ul>
+<footer class="border-t border-gray-200 bg-white">
+  <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-6 text-gray-500">
+    <div>
+      <div class="font-semibold tracking-widest lowercase text-gray-900">occam</div>
+      <div class="text-sm">Purpose-built, high-quality operational software.</div>
+      <div class="mt-2 text-sm">
+        <a href="/privacy-policy" class="hover:text-gray-800 transition">
+          Privacy policy
+        </a>
       </div>
     </div>
-    <div class="pt-8 border-t border-gray-200 text-center text-gray-400">
-      &copy; 2025 Occam Holdings. All rights reserved.
+
+    <div class="text-sm text-gray-400">
+      © <span id="year"></span> Occam. All rights reserved.
     </div>
   </div>
 </footer>
@@ -337,6 +335,9 @@
       const container = document.getElementById('logoScroll');
       container.scrollBy({ left: amount, behavior: 'smooth' });
     }
+
+
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
