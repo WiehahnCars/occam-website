@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Occam | PlantRun</title>
+  <title>OCCAM | PlantRun</title>
 
   <!-- Font to match your current look -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -354,7 +354,6 @@
         <!-- Replace these with your real site links -->
         <a href="#" aria-label="Home">Home</a>
         <a href="#" class="active" aria-label="Plant run">PlantRun</a>
-        <a href="#" aria-label="Contact">Contact</a>
         <a class="btn" href="#demo">Request a demo</a>
       </div>
     </div>
@@ -509,12 +508,48 @@
         </div>
         <div class="actions">
           <!-- Replace the email address with the correct one -->
-          <a class="btn primary" href="mailto:hello@occamco.com?subject=Plant%20run%20demo%20request">Email us</a>
+          <button
+            id="emailUsBtn"
+            class="btn primary"
+            type="button"
+          >
+            Email us
+          </button>
           <a class="btn" href="#features">Review features</a>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- Contact Modal (same behaviour as main site) -->
+  <div id="contactModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg max-w-md w-full relative transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+      <button id="closeContactModalBtn" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl leading-none">&times;</button>
+      <h3 class="text-xl font-semibold mb-4 text-center" style="color:#111827;">Get in touch</h3>
+
+      <form action="https://formspree.io/f/xblypvkb" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-sm mb-1" style="color:#374151;">Your email</label>
+          <input type="email" name="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
+        </div>
+
+        <!-- Optional: include context so you know it came from PlantRun -->
+        <input type="hidden" name="source" value="PlantRun page" />
+
+        <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 w-full">Send</button>
+        <p class="text-xs text-gray-500 text-center mt-2">No spam. Just the occasional update on new insights, tools, and our thinking.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Thank You Modal -->
+  <div id="thankYouModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800 w-full max-w-sm">
+      <h3 class="text-xl font-semibold mb-2">Thanks!</h3>
+      <p>Your message has been sent.</p>
+    </div>
+  </div>
+
 
   <footer>
     <div class="inner">
@@ -526,9 +561,77 @@
     </div>
   </footer>
 
-  <script>
-    // Set footer year
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+<script>
+  // Set footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // --- Contact modal behaviour (matches main site) ---
+  const contactModal = document.getElementById('contactModal');
+  const modalContent = document.getElementById('modalContent');
+  const emailUsBtn = document.getElementById('emailUsBtn');
+  const closeContactModalBtn = document.getElementById('closeContactModalBtn');
+
+  function openContactModal() {
+    contactModal.classList.remove('hidden');
+    contactModal.style.display = 'flex';
+    setTimeout(() => {
+      modalContent.classList.remove('scale-95', 'opacity-0');
+      modalContent.classList.add('scale-100', 'opacity-100');
+    }, 10);
+  }
+
+  function openContactModal() {
+    contactModal.classList.remove('hidden');
+    setTimeout(() => {
+      modalContent.classList.remove('scale-95', 'opacity-0');
+      modalContent.classList.add('scale-100', 'opacity-100');
+    }, 10);
+  }
+
+  function closeContactModal() {
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    modalContent.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      contactModal.classList.add('hidden');
+    }, 300);
+  }
+
+
+  if (emailUsBtn) emailUsBtn.addEventListener('click', openContactModal);
+  if (closeContactModalBtn) closeContactModalBtn.addEventListener('click', closeContactModal);
+
+  // Click outside closes
+  contactModal.addEventListener('click', (e) => {
+    if (e.target === contactModal) closeContactModal();
+  });
+
+  // Thank you modal
+  const thankYouModal = document.getElementById('thankYouModal');
+  const contactForm = contactModal.querySelector('form');
+
+  contactForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    fetch(contactForm.action, {
+      method: "POST",
+      body: new FormData(contactForm),
+      headers: { "Accept": "application/json" }
+    }).then(() => {
+      closeContactModal();
+      thankYouModal.classList.remove('hidden');
+      thankYouModal.style.display = 'flex';
+      setTimeout(() => {
+        thankYouModal.classList.add('hidden');
+        thankYouModal.style.display = 'none';
+      }, 3000);
+
+      contactForm.reset();
+    }).catch(() => {
+      // If Formspree is down, fall back to mailto as a safety net:
+      window.location.href = "mailto:hello@occamco.com?subject=PlantRun%20demo%20request";
+    });
+  });
+</script>
+
 </body>
 </html>
