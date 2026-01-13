@@ -1,16 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OCCAM | PlantRun</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCCAM | plantrun</title>
 
-  <!-- Font to match your current look -->
+  <!-- Keep existing deps -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+
+  <!-- plantrun dark style (applies to main content only) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
+    .prosto { font-family: 'Montserrat', sans-serif; }
+    html { scroll-behavior: smooth; }
+    /* Hide scrollbars cleanly */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Dark product page styling */
     :root{
       --bg: #0b0d10;
       --panel: rgba(255,255,255,0.06);
@@ -24,92 +38,16 @@
       --max: 1120px;
     }
 
-    *{ box-sizing: border-box; }
-    html, body{ height: 100%; }
-    body{
-      margin: 0;
+    /* Main wrapper keeps header/footer unchanged */
+    .pr-wrap{
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
       background: var(--bg);
-      line-height: 1.55;
     }
 
-    a{ color: inherit; text-decoration: none; }
-    a:hover{ text-decoration: underline; }
+    /* Give the fixed header some breathing room */
+    .pr-top-spacer{ height: 76px; }
 
-    /* Top nav */
-    .topbar{
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(0,0,0,0.65);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .nav{
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-    }
-    .brand{
-      letter-spacing: 0.08em;
-      text-transform: lowercase;
-      font-weight: 600;
-      opacity: 0.95;
-    }
-    .navlinks{
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .navlinks a{
-      font-size: 14px;
-      color: var(--muted);
-      padding: 8px 10px;
-      border-radius: 10px;
-    }
-    .navlinks a.active{
-      color: var(--text);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-
-    .btn{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.10);
-      color: var(--text);
-      font-weight: 600;
-      font-size: 14px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .btn:hover{
-      background: rgba(255,255,255,0.14);
-      text-decoration: none;
-    }
-    .btn.primary{
-      background: rgba(255,255,255,0.92);
-      color: #0b0d10;
-      border-color: rgba(255,255,255,0.92);
-    }
-    .btn.primary:hover{
-      background: rgba(255,255,255,0.82);
-      border-color: rgba(255,255,255,0.82);
-    }
-
-    /* Hero */
     .hero{
       position: relative;
       min-height: 72vh;
@@ -121,7 +59,6 @@
       content: "";
       position: absolute;
       inset: 0;
-      /* Replace with your existing hero image path if you want exact parity */
       background:
         linear-gradient(180deg, rgba(0,0,0,0.65), rgba(0,0,0,0.78)),
         url("assets/hero-ocean.jpg");
@@ -160,11 +97,9 @@
       font-size: 13px;
       margin-bottom: 18px;
     }
-    .kicker strong{
-      color: var(--text);
-      font-weight: 700;
-    }
-    h1{
+    .kicker strong{ color: var(--text); font-weight: 700; }
+
+    .pr-h1{
       margin: 0 0 12px;
       font-size: clamp(40px, 6vw, 72px);
       font-weight: 700;
@@ -184,13 +119,35 @@
       flex-wrap: wrap;
       margin-top: 22px;
     }
-    .hero-note{
-      margin-top: 18px;
-      color: var(--faint);
-      font-size: 13px;
+    .hero-note{ margin-top: 18px; color: var(--faint); font-size: 13px; }
+
+    .btnx{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.10);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btnx:hover{ background: rgba(255,255,255,0.14); text-decoration: none; }
+    .btnx.primary{
+      background: rgba(255,255,255,0.92);
+      color: #0b0d10;
+      border-color: rgba(255,255,255,0.92);
+    }
+    .btnx.primary:hover{
+      background: rgba(255,255,255,0.82);
+      border-color: rgba(255,255,255,0.82);
     }
 
-    /* Page sections */
     .section{
       max-width: var(--max);
       margin: 0 auto;
@@ -201,10 +158,7 @@
       margin: 0 0 14px;
       letter-spacing: -0.01em;
     }
-    .section p{
-      margin: 0 0 14px;
-      color: var(--muted);
-    }
+    .section p{ margin: 0 0 14px; color: var(--muted); }
 
     .grid-3{
       display: grid;
@@ -219,17 +173,8 @@
       box-shadow: var(--shadow);
       padding: 18px;
     }
-    .card h3{
-      margin: 0 0 8px;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .card p{
-      margin: 0;
-      font-size: 14px;
-      color: var(--muted);
-    }
+    .card h3{ margin: 0 0 8px; font-size: 16px; font-weight: 700; color: var(--text); }
+    .card p{ margin: 0; font-size: 14px; color: var(--muted); }
 
     .split{
       display: grid;
@@ -238,9 +183,8 @@
       align-items: center;
       margin-top: 18px;
     }
-    .split.reverse{
-      grid-template-columns: 0.9fr 1.1fr;
-    }
+    .split.reverse{ grid-template-columns: 0.9fr 1.1fr; }
+
     .list{
       margin: 14px 0 0;
       padding: 0;
@@ -265,7 +209,6 @@
       margin-top: 2px;
     }
 
-    /* Screenshot frames */
     .shot{
       position: relative;
       border-radius: 22px;
@@ -293,12 +236,8 @@
       color: rgba(255,255,255,0.88);
       font-size: 13px;
     }
-    .shot .cap strong{
-      color: rgba(255,255,255,0.96);
-      font-weight: 700;
-    }
+    .shot .cap strong{ color: rgba(255,255,255,0.96); font-weight: 700; }
 
-    /* Big CTA */
     .cta{
       border-radius: 26px;
       border: 1px solid rgba(255,255,255,0.14);
@@ -319,23 +258,8 @@
       flex-wrap: wrap;
     }
 
-    footer{
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 34px 20px;
-      color: var(--faint);
-    }
-    footer .inner{
-      max-width: var(--max);
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
     .small{ font-size: 12px; }
 
-    /* Responsive */
     @media (max-width: 920px){
       .grid-3{ grid-template-columns: 1fr; }
       .split, .split.reverse{ grid-template-columns: 1fr; }
@@ -346,292 +270,301 @@
   </style>
 </head>
 
-<body>
-  <div class="topbar">
-    <div class="nav">
-      <div class="brand">occam</div>
-      <div class="navlinks">
-        <!-- Replace these with your real site links -->
-        <a href="#" aria-label="Home">Home</a>
-        <a href="#" class="active" aria-label="Plant run">PlantRun</a>
-        <a class="btn" href="#demo">Request a demo</a>
-      </div>
-    </div>
-  </div>
+<body class="bg-white text-gray-800 font-sans min-h-screen flex flex-col">
 
-  <header class="hero">
-    <div class="hero-inner">
-      <div class="kicker"><strong>PlantRun</strong> A digital operations layer for wheat milling</div>
-      <h1>PlantRun</h1>
-      <p class="subtitle">
-        Real-time visibility into extraction, milling performance, downtime, and production across multiple products.
-        Built for foremen and managers who need operational truth, fast.
-      </p>
-      <div class="hero-cta">
-        <a class="btn primary" href="#demo">Request a demo</a>
-        <a class="btn" href="#features">See what it does</a>
+  <!-- Navigation (KEEP AS IS) -->
+  <header id="main-header" class="fixed top-0 left-0 w-full bg-black text-gray-100 z-50 transition-transform duration-500">
+    <div class="max-w-6xl mx-auto py-4 px-6 flex items-center justify-between">
+      <a href="https://www.occamco.com" class="text-[40px] leading-none transform transition-transform duration-300 hover:scale-95 font-light">occam</a>
+
+      <!-- Toolbar buttons -->
+      <div class="flex items-center gap-3">
+        <a
+          href="./plant-run.html"
+          class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/20 hover:bg-white/25 transition"
+          aria-current="page"
+        >
+          plantrun
+        </a>
+
+        <button
+          id="openDemoBtn"
+          class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
+        >
+          Request a demo
+        </button>
       </div>
-      <div class="hero-note">No heavy rollout. Start with the data you have, then expand.</div>
     </div>
   </header>
 
-  <main>
-    <section class="section" id="why">
-      <h2>What it solves</h2>
-      <p>
-        Milling operations often run with fragmented data, delayed reporting, and limited downtime visibility.
-        PlantRun brings the key metrics and the operational context into one place, so teams can act with confidence.
-      </p>
+  <!-- Dark product content -->
+  <div class="pr-wrap">
+    <div class="pr-top-spacer"></div>
 
-      <div class="grid-3">
-        <div class="card">
-          <h3>Operational visibility</h3>
-          <p>Extraction, milling rates, shift performance, and production totals in a single view.</p>
+    <section class="hero" data-aos="fade-up">
+      <div class="hero-inner">
+        <div class="kicker"><strong>plantrun</strong> a digital operations layer for wheat milling</div>
+        <h1 class="pr-h1">plantrun</h1>
+        <p class="subtitle">
+          Real-time visibility into extraction, milling performance, downtime, and production across multiple products.
+          Built for foremen and managers who need operational truth, fast.
+        </p>
+        <div class="hero-cta">
+          <button class="btnx primary" type="button" onclick="openContactModal()">Request a demo</button>
+          <a class="btnx" href="#features">See what it does</a>
         </div>
-        <div class="card">
-          <h3>Downtime clarity</h3>
-          <p>Track stoppages by event count and minutes, tied to specific equipment and causes.</p>
-        </div>
-        <div class="card">
-          <h3>Decision support</h3>
-          <p>Daily, weekly, and monthly reporting with AI-driven summaries to highlight what matters.</p>
-        </div>
+        <div class="hero-note">No heavy rollout. Start with the data you have, then expand.</div>
       </div>
     </section>
 
-    <section class="section" id="features">
-      <div class="split">
-        <div>
-          <h2>Core capabilities</h2>
-          <p>
-            Everything is designed to answer two questions: how is the mill running, and what needs attention next.
-          </p>
-          <ul class="list">
-            <li><span class="bullet"></span><span><strong>Live dashboard</strong> with extraction rates, milling rates, recent shift downtime, and production totals across products.</span></li>
-            <li><span class="bullet"></span><span><strong>Downtime analytics</strong> showing events and minutes down, with drill-down by equipment and cause.</span></li>
-            <li><span class="bullet"></span><span><strong>Shift module</strong> for foremen to log what happened, when it happened, and which equipment was affected.</span></li>
-            <li><span class="bullet"></span><span><strong>Maintenance event logging</strong> for planned and unplanned work, including comments and supporting context.</span></li>
-            <li><span class="bullet"></span><span><strong>Daily, weekly, and monthly reports</strong> with clear visuals and control-limit style views where relevant.</span></li>
-            <li><span class="bullet"></span><span><strong>AI analysis</strong> that summarises key patterns and exceptions so management can scan and move.</span></li>
-            <li><span class="bullet"></span><span><strong>Data export</strong> of shift-level detail to CSV for audits, deeper analysis, or integration.</span></li>
-          </ul>
+    <main>
+      <section class="section" id="why">
+        <h2>What it solves</h2>
+        <p>
+          Milling operations often run with fragmented data, delayed reporting, and limited downtime visibility.
+          plantrun brings the key metrics and the operational context into one place, so teams can act with confidence.
+        </p>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3>Operational visibility</h3>
+            <p>Extraction, milling rates, shift performance, and production totals in a single view.</p>
+          </div>
+          <div class="card">
+            <h3>Downtime clarity</h3>
+            <p>Track stoppages by event count and minutes, tied to specific equipment and causes.</p>
+          </div>
+          <div class="card">
+            <h3>Decision support</h3>
+            <p>Daily, weekly, and monthly reporting with AI-driven summaries to highlight what matters.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="features">
+        <div class="split">
+          <div>
+            <h2>Core capabilities</h2>
+            <p>Everything is designed to answer two questions: how is the mill running, and what needs attention next.</p>
+            <ul class="list">
+              <li><span class="bullet"></span><span><strong>Live dashboard</strong> with extraction rates, milling rates, recent shift downtime, and production totals across products.</span></li>
+              <li><span class="bullet"></span><span><strong>Downtime analytics</strong> showing events and minutes down, with drill-down by equipment and cause.</span></li>
+              <li><span class="bullet"></span><span><strong>Shift module</strong> for foremen to log what happened, when it happened, and which equipment was affected.</span></li>
+              <li><span class="bullet"></span><span><strong>Maintenance event logging</strong> for planned and unplanned work, including comments and supporting context.</span></li>
+              <li><span class="bullet"></span><span><strong>Daily, weekly, and monthly reports</strong> with clear visuals and control-limit style views where relevant.</span></li>
+              <li><span class="bullet"></span><span><strong>AI analysis</strong> that summarises key patterns and exceptions so management can scan and move.</span></li>
+              <li><span class="bullet"></span><span><strong>Data export</strong> of shift-level detail to CSV for audits, deeper analysis, or integration.</span></li>
+            </ul>
+          </div>
+
+          <div class="shot">
+            <img src="assets/screenshot-dashboard.png" alt="Plant run dashboard screenshot">
+            <div class="cap"><strong>Dashboard</strong> Extraction, milling rate, downtime, and production totals.</div>
+          </div>
         </div>
 
-        <div class="shot">
-          <!-- Replace with a real screenshot -->
-          <img src="assets/screenshot-dashboard.png" alt="Plant run dashboard screenshot placeholder">
-          <div class="cap"><strong>Dashboard</strong> Extraction, milling rate, downtime, and production totals.</div>
+        <div class="split reverse" style="margin-top: 34px;">
+          <div class="shot">
+            <img src="assets/screenshot-shifts.png" alt="Shift module screenshot">
+            <div class="cap"><strong>Shifts</strong> Foreman capture with event logging by equipment and time.</div>
+          </div>
+
+          <div>
+            <h2>Reporting that people actually use</h2>
+            <p>
+              Reports are built to be shared, acted on, and traced back to source. Each report includes the metrics,
+              the narrative, and the underlying data when needed.
+            </p>
+            <ul class="list">
+              <li><span class="bullet"></span><span><strong>Daily report</strong> covering extraction and milling performance, downtime, and key exceptions.</span></li>
+              <li><span class="bullet"></span><span><strong>Weekly and monthly views</strong> to track trends and improvement over time.</span></li>
+              <li><span class="bullet"></span><span><strong>Control-limit style monitoring</strong> to spot drift early and reduce reactive firefighting.</span></li>
+              <li><span class="bullet"></span><span><strong>AI summary</strong> that highlights what changed, why it matters, and where to look.</span></li>
+            </ul>
+          </div>
         </div>
+      </section>
+
+      <section class="section" id="how">
+        <h2>How it fits into a multi-product mill</h2>
+        <p>
+          plantrun is designed for mills producing multiple product lines. Production totals, extraction metrics,
+          and reporting can be segmented by product, model, shift, and time window.
+        </p>
+
+        <div class="grid-3">
+          <div class="card">
+            <h3>Multi-product production</h3>
+            <p>Track product outputs side by side and understand what each shift delivered.</p>
+          </div>
+          <div class="card">
+            <h3>Extraction context</h3>
+            <p>Monitor total flour, total wheat milled, and extraction trends over time.</p>
+          </div>
+          <div class="card">
+            <h3>Operational truth</h3>
+            <p>Every metric links back to shift capture and equipment-level events for traceability.</p>
+          </div>
+        </div>
+
+        <div class="split" style="margin-top: 30px;">
+          <div>
+            <h2>Built for action, not just dashboards</h2>
+            <p>
+              You already send a daily report. The next step is exception-based communication so the right people know
+              when something is off, immediately.
+            </p>
+            <ul class="list">
+              <li><span class="bullet"></span><span><strong>Threshold alerts</strong> when extraction, milling rate, downtime, or other key metrics exceed agreed limits.</span></li>
+              <li><span class="bullet"></span><span><strong>WhatsApp-style notifications</strong> to notify relevant roles when action is required.</span></li>
+              <li><span class="bullet"></span><span><strong>Escalation rules</strong> to route persistent issues to the right level.</span></li>
+            </ul>
+            <p class="small" style="margin-top: 14px; color: var(--faint);">
+              Note: the alerting module can be enabled only where it makes operational sense, and tuned with your team.
+            </p>
+          </div>
+
+          <div class="shot">
+            <img src="assets/screenshot-reports.png" alt="Reports screenshot">
+            <div class="cap"><strong>Reports</strong> Daily, weekly, and monthly views with summaries and exports.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="demo">
+        <div class="cta">
+          <div>
+            <h2>Want to see it with your data?</h2>
+            <p>
+              We will walk you through the platform, map it to your process, and show what a rollout could look like.
+              If it is not a fit, you will know quickly.
+            </p>
+            <p class="small" style="margin-top: 12px; color: var(--faint);">
+              Typical first session: 30 to 45 minutes. No hard sell, just an honest view of value and effort.
+            </p>
+          </div>
+          <div class="actions">
+            <button id="emailUsBtn" class="btnx primary" type="button">Get in touch</button>
+            <a class="btnx" href="#features">Review features</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Contact Modal (same behaviour as main site) -->
+    <div id="contactModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg max-w-md w-full relative transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+        <button id="closeContactModalBtn" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl leading-none">&times;</button>
+        <h3 class="text-xl font-semibold mb-4 text-center" style="color:#111827;">Get in touch</h3>
+
+        <form id="contactForm" action="https://formspree.io/f/xblypvkb" method="POST" class="space-y-4">
+          <div>
+            <label class="block text-sm mb-1" style="color:#374151;">Your email</label>
+            <input type="email" name="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
+          </div>
+          <input type="hidden" name="source" value="Plant run page" />
+          <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 w-full">Send</button>
+          <p class="text-xs text-gray-500 text-center mt-2">No spam. Just the occasional update on new insights, tools, and our thinking.</p>
+        </form>
       </div>
+    </div>
 
-      <div class="split reverse" style="margin-top: 34px;">
-        <div class="shot">
-          <!-- Replace with a real screenshot -->
-          <img src="assets/screenshot-shifts.png" alt="Shift module screenshot placeholder">
-          <div class="cap"><strong>Shifts</strong> Foreman capture with event logging by equipment and time.</div>
-        </div>
-
-        <div>
-          <h2>Reporting that people actually use</h2>
-          <p>
-            Reports are built to be shared, acted on, and traced back to source. Each report includes the metrics,
-            the narrative, and the underlying data when needed.
-          </p>
-          <ul class="list">
-            <li><span class="bullet"></span><span><strong>Daily report</strong> covering extraction and milling performance, downtime, and key exceptions.</span></li>
-            <li><span class="bullet"></span><span><strong>Weekly and monthly views</strong> to track trends and improvement over time.</span></li>
-            <li><span class="bullet"></span><span><strong>Control-limit style monitoring</strong> to spot drift early and reduce reactive firefighting.</span></li>
-            <li><span class="bullet"></span><span><strong>AI summary</strong> that highlights what changed, why it matters, and where to look.</span></li>
-          </ul>
-        </div>
+    <!-- Thank You Modal -->
+    <div id="thankYouModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800 w-full max-w-sm">
+        <h3 class="text-xl font-semibold mb-2">Thanks!</h3>
+        <p>Your message has been sent.</p>
       </div>
-    </section>
-
-    <section class="section" id="how">
-      <h2>How it fits into a multi-product mill</h2>
-      <p>
-        PlantRun is designed for mills producing multiple product lines. Production totals, extraction metrics,
-        and reporting can be segmented by product, model, shift, and time window.
-      </p>
-
-      <div class="grid-3">
-        <div class="card">
-          <h3>Multi-product production</h3>
-          <p>Track product outputs side by side and understand what each shift delivered.</p>
-        </div>
-        <div class="card">
-          <h3>Extraction context</h3>
-          <p>Monitor total flour, total wheat milled, and extraction trends over time.</p>
-        </div>
-        <div class="card">
-          <h3>Operational truth</h3>
-          <p>Every metric links back to shift capture and equipment-level events for traceability.</p>
-        </div>
-      </div>
-
-      <div class="split" style="margin-top: 30px;">
-        <div>
-          <h2>Built for action, not just dashboards</h2>
-          <p>
-            You already send a daily report. The next step is exception-based communication so the right people know
-            when something is off, immediately.
-          </p>
-          <ul class="list">
-            <li><span class="bullet"></span><span><strong>Threshold alerts</strong> when extraction, milling rate, downtime, or other key metrics exceed agreed limits.</span></li>
-            <li><span class="bullet"></span><span><strong>WhatsApp-style notifications</strong> to notify relevant roles when action is required.</span></li>
-            <li><span class="bullet"></span><span><strong>Escalation rules</strong> to route persistent issues to the right level.</span></li>
-          </ul>
-          <p class="small" style="margin-top: 14px; color: var(--faint);">
-            Note: the alerting module can be enabled only where it makes operational sense, and tuned with your team.
-          </p>
-        </div>
-
-        <div class="shot">
-          <!-- Replace with a real screenshot -->
-          <img src="assets/screenshot-reports.png" alt="Reports screenshot placeholder">
-          <div class="cap"><strong>Reports</strong> Daily, weekly, and monthly views with summaries and exports.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="demo">
-      <div class="cta">
-        <div>
-          <h2>Want to see it with your data?</h2>
-          <p>
-            We will walk you through the platform, map it to your process, and show what a rollout could look like.
-            If it is not a fit, you will know quickly.
-          </p>
-          <p class="small" style="margin-top: 12px; color: var(--faint);">
-            Typical first session: 30 to 45 minutes. No hard sell, just an honest view of value and effort.
-          </p>
-        </div>
-        <div class="actions">
-          <!-- Replace the email address with the correct one -->
-          <button
-            id="emailUsBtn"
-            class="btn primary"
-            type="button"
-          >
-            Email us
-          </button>
-          <a class="btn" href="#features">Review features</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Contact Modal (same behaviour as main site) -->
-  <div id="contactModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg max-w-md w-full relative transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-      <button id="closeContactModalBtn" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl leading-none">&times;</button>
-      <h3 class="text-xl font-semibold mb-4 text-center" style="color:#111827;">Get in touch</h3>
-
-      <form action="https://formspree.io/f/xblypvkb" method="POST" class="space-y-4">
-        <div>
-          <label class="block text-sm mb-1" style="color:#374151;">Your email</label>
-          <input type="email" name="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
-        </div>
-
-        <!-- Optional: include context so you know it came from PlantRun -->
-        <input type="hidden" name="source" value="PlantRun page" />
-
-        <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 w-full">Send</button>
-        <p class="text-xs text-gray-500 text-center mt-2">No spam. Just the occasional update on new insights, tools, and our thinking.</p>
-      </form>
     </div>
   </div>
 
-  <!-- Thank You Modal -->
-  <div id="thankYouModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800 w-full max-w-sm">
-      <h3 class="text-xl font-semibold mb-2">Thanks!</h3>
-      <p>Your message has been sent.</p>
-    </div>
-  </div>
-
-
-  <footer>
-    <div class="inner">
+  <!-- Footer (KEEP AS IS) -->
+  <footer class="border-t border-gray-200 bg-white">
+    <div class="max-w-6xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-6 text-gray-500">
       <div>
-        <div style="font-weight: 700; letter-spacing: 0.06em; text-transform: lowercase;">occam</div>
-        <div class="small">Purpose-built, high-quality operational software.</div>
+        <div class="font-semibold tracking-widest lowercase text-gray-900">occam</div>
+        <div class="text-sm">Purpose-built, high-quality operational software.</div>
+        <div class="mt-2 text-sm">
+          <a href="/privacy-policy" class="hover:text-gray-800 transition">Privacy policy</a>
+        </div>
       </div>
-      <div class="small">© <span id="year"></span> Occam. All rights reserved.</div>
+
+      <div class="text-sm text-gray-400">
+        © <span id="year"></span> Occam. All rights reserved.
+      </div>
     </div>
   </footer>
 
-<script>
-  // Set footer year
-  document.getElementById('year').textContent = new Date().getFullYear();
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-  // --- Contact modal behaviour (matches main site) ---
-  const contactModal = document.getElementById('contactModal');
-  const modalContent = document.getElementById('modalContent');
-  const emailUsBtn = document.getElementById('emailUsBtn');
-  const closeContactModalBtn = document.getElementById('closeContactModalBtn');
-
-  function openContactModal() {
-    contactModal.classList.remove('hidden');
-    contactModal.style.display = 'flex';
-    setTimeout(() => {
-      modalContent.classList.remove('scale-95', 'opacity-0');
-      modalContent.classList.add('scale-100', 'opacity-100');
-    }, 10);
-  }
-
-  function openContactModal() {
-    contactModal.classList.remove('hidden');
-    setTimeout(() => {
-      modalContent.classList.remove('scale-95', 'opacity-0');
-      modalContent.classList.add('scale-100', 'opacity-100');
-    }, 10);
-  }
-
-  function closeContactModal() {
-    modalContent.classList.remove('scale-100', 'opacity-100');
-    modalContent.classList.add('scale-95', 'opacity-0');
-    setTimeout(() => {
-      contactModal.classList.add('hidden');
-    }, 300);
-  }
-
-
-  if (emailUsBtn) emailUsBtn.addEventListener('click', openContactModal);
-  if (closeContactModalBtn) closeContactModalBtn.addEventListener('click', closeContactModal);
-
-  // Click outside closes
-  contactModal.addEventListener('click', (e) => {
-    if (e.target === contactModal) closeContactModal();
-  });
-
-  // Thank you modal
-  const thankYouModal = document.getElementById('thankYouModal');
-  const contactForm = contactModal.querySelector('form');
-
-  contactForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    fetch(contactForm.action, {
-      method: "POST",
-      body: new FormData(contactForm),
-      headers: { "Accept": "application/json" }
-    }).then(() => {
-      closeContactModal();
-      thankYouModal.classList.remove('hidden');
-      thankYouModal.style.display = 'flex';
-      setTimeout(() => {
-        thankYouModal.classList.add('hidden');
-        thankYouModal.style.display = 'none';
-      }, 3000);
-
-      contactForm.reset();
-    }).catch(() => {
-      // If Formspree is down, fall back to mailto as a safety net:
-      window.location.href = "mailto:hello@occamco.com?subject=PlantRun%20demo%20request";
+    // Header Scroll Hide (KEEP)
+    let lastScroll = 0;
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll <= 0) {
+        header.style.transform = 'translateY(0)';
+        return;
+      }
+      header.style.transform = currentScroll > lastScroll ? 'translateY(-100%)' : 'translateY(0)';
+      lastScroll = currentScroll;
     });
-  });
-</script>
 
+    // Modal behaviour (single source of truth)
+    const contactModal = document.getElementById('contactModal');
+    const modalContent = document.getElementById('modalContent');
+    const emailUsBtn = document.getElementById('emailUsBtn');
+    const openDemoBtn = document.getElementById('openDemoBtn');
+    const closeContactModalBtn = document.getElementById('closeContactModalBtn');
+    const thankYouModal = document.getElementById('thankYouModal');
+    const contactForm = document.getElementById('contactForm');
+
+    function openContactModal() {
+      contactModal.classList.remove('hidden');
+      setTimeout(() => {
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeContactModal() {
+      modalContent.classList.remove('scale-100', 'opacity-100');
+      modalContent.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        contactModal.classList.add('hidden');
+      }, 300);
+    }
+
+    if (emailUsBtn) emailUsBtn.addEventListener('click', openContactModal);
+    if (openDemoBtn) openDemoBtn.addEventListener('click', openContactModal);
+    if (closeContactModalBtn) closeContactModalBtn.addEventListener('click', closeContactModal);
+
+    contactModal.addEventListener('click', (e) => {
+      if (e.target === contactModal) closeContactModal();
+    });
+
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      fetch(contactForm.action, {
+        method: "POST",
+        body: new FormData(contactForm),
+        headers: { "Accept": "application/json" }
+      }).then(() => {
+        closeContactModal();
+        thankYouModal.classList.remove('hidden');
+        setTimeout(() => {
+          thankYouModal.classList.add('hidden');
+        }, 3000);
+        contactForm.reset();
+      }).catch(() => {
+        window.location.href = "mailto:hello@occamco.com?subject=Plant%20run%20demo%20request";
+      });
+    });
+
+    AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+  </script>
 </body>
 </html>
