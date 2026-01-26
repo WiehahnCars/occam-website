@@ -67,18 +67,25 @@
       <!-- Toolbar buttons -->
       <div class="flex items-center gap-3">
         <a
+          href="./insights.html"
+          class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition"
+        >
+          insights
+        </a>
+
+        <a
           href="./plant-run.html"
           class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition"
         >
           plantrun
         </a>
-  
+
         <button
-          onclick="document.getElementById('contactModal').classList.remove('hidden')"
-          class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
+          class="open-contact-modal inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
         >
           Want to be a customer?
         </button>
+
       </div>
     </div>
   </header>
@@ -96,10 +103,11 @@
 
           
         <button
-          onclick="document.getElementById('contactModal').classList.remove('hidden')"
-          class="inline-block bg-white text-gray-900 px-6 py-3 rounded-md text-base sm:text-lg font-medium hover:bg-gray-100 transition">
+          class="open-contact-modal inline-block bg-white text-gray-900 px-6 py-3 rounded-md text-base sm:text-lg font-medium hover:bg-gray-100 transition"
+        >
           Want to be a customer?
         </button>
+
       </div>
     </div>
   </section>
@@ -160,8 +168,7 @@
         </a>
 
         <button
-          onclick="document.getElementById('contactModal').classList.remove('hidden')"
-          class="inline-flex items-center justify-center px-6 py-3 rounded-md text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 transition"
+          class="open-contact-modal inline-flex items-center justify-center px-6 py-3 rounded-md text-base font-medium bg-gray-100 text-gray-900 hover:bg-gray-200 transition"
         >
           Request a demo
         </button>
@@ -341,15 +348,22 @@
       if (e.target === this) closeModal();
     });
 
-    document.querySelector("button[onclick*='contactModal']").addEventListener('click', function () {
-      const modal = document.getElementById('contactModal');
-      const content = document.getElementById('modalContent');
+    // Open modal (single source of truth)
+    const modal = document.getElementById('contactModal');
+    const content = document.getElementById('modalContent');
+
+    function openModal() {
       modal.classList.remove('hidden');
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         content.classList.remove('scale-95', 'opacity-0');
         content.classList.add('scale-100', 'opacity-100');
-      }, 10);
+      });
+    }
+
+    document.querySelectorAll('.open-contact-modal').forEach(btn => {
+      btn.addEventListener('click', openModal);
     });
+
 
     // Header Scroll Hide
     let lastScroll = 0;
@@ -388,7 +402,7 @@
     const contactForm = document.querySelector('#contactModal form');
     contactForm.addEventListener('submit', function (e) {
       setTimeout(() => {
-        document.getElementById('contactModal').classList.add('hidden');
+        closeModal();
         document.getElementById('thankYouModal').classList.remove('hidden');
         setTimeout(() => {
           document.getElementById('thankYouModal').classList.add('hidden');
