@@ -418,6 +418,11 @@
 
   <!-- Scripts -->
   <script>
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById("mobileMenu").classList.toggle("hidden");
+    }
+
     // Contact Modal
     function closeModal() {
       const modal = document.getElementById('contactModal');
@@ -431,7 +436,6 @@
       if (e.target === this) closeModal();
     });
 
-    // Open modal (single source of truth)
     const modal = document.getElementById('contactModal');
     const content = document.getElementById('modalContent');
 
@@ -447,8 +451,7 @@
       btn.addEventListener('click', openModal);
     });
 
-
-    // Header Scroll Hide
+    // Header hide on scroll (desktop + mobile)
     let lastScroll = 0;
     const header = document.getElementById('main-header');
     window.addEventListener('scroll', () => {
@@ -461,29 +464,9 @@
       lastScroll = currentScroll;
     });
 
-    // Sign In Modal
-    const signInBtn = document.getElementById('signInBtn');
-    const signInModal = document.getElementById('signInModal');
-    const closeSignInBtn = document.getElementById('closeModalBtn');
-    const form = signInModal.querySelector('form');
-
-    if (signInBtn) {
-      signInBtn.addEventListener('click', () => signInModal.classList.remove('hidden'));
-    }
-
-    closeSignInBtn.addEventListener('click', () => signInModal.classList.add('hidden'));
-
-    signInModal.addEventListener('click', (e) => {
-      if (e.target === signInModal) signInModal.classList.add('hidden');
-    });
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-    });
-
     // Thank You Modal Trigger
     const contactForm = document.querySelector('#contactModal form');
-    contactForm.addEventListener('submit', function (e) {
+    contactForm.addEventListener('submit', function () {
       setTimeout(() => {
         closeModal();
         document.getElementById('thankYouModal').classList.remove('hidden');
@@ -493,33 +476,17 @@
       }, 100);
     });
 
+    // AOS
     AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
 
+    // Logos scroll
     function scrollLogos(amount) {
       const container = document.getElementById('logoScroll');
       container.scrollBy({ left: amount, behavior: 'smooth' });
     }
 
-
+    // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
-
-
-    
-
-    const toolsBtn = document.getElementById('toolsBtn');
-    const toolsMenu = document.getElementById('toolsMenu');
-
-    if (toolsBtn && toolsMenu) {
-    toolsBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toolsMenu.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', () => {
-        toolsMenu.classList.add('hidden');
-    });
-    }
-
   </script>
 </body>
 </html>

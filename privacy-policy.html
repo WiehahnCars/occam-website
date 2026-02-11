@@ -235,8 +235,41 @@
     </div>
   </footer>
 
-  <script>
-    // Header Scroll Hide
+<script>
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById("mobileMenu").classList.toggle("hidden");
+    }
+
+    // Contact Modal
+    function closeModal() {
+      const modal = document.getElementById('contactModal');
+      const content = document.getElementById('modalContent');
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    document.getElementById('contactModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    const modal = document.getElementById('contactModal');
+    const content = document.getElementById('modalContent');
+
+    function openModal() {
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+      });
+    }
+
+    document.querySelectorAll('.open-contact-modal').forEach(btn => {
+      btn.addEventListener('click', openModal);
+    });
+
+    // Header hide on scroll (desktop + mobile)
     let lastScroll = 0;
     const header = document.getElementById('main-header');
     window.addEventListener('scroll', () => {
@@ -248,6 +281,30 @@
       header.style.transform = currentScroll > lastScroll ? 'translateY(-100%)' : 'translateY(0)';
       lastScroll = currentScroll;
     });
+
+    // Thank You Modal Trigger
+    const contactForm = document.querySelector('#contactModal form');
+    contactForm.addEventListener('submit', function () {
+      setTimeout(() => {
+        closeModal();
+        document.getElementById('thankYouModal').classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('thankYouModal').classList.add('hidden');
+        }, 3000);
+      }, 100);
+    });
+
+    // AOS
+    AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+
+    // Logos scroll
+    function scrollLogos(amount) {
+      const container = document.getElementById('logoScroll');
+      container.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
