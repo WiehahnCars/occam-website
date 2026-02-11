@@ -25,71 +25,85 @@
 </head>
 <body class="bg-white text-gray-800 font-sans min-h-screen flex flex-col">
 
-<!-- Navigation -->
-    <header id="main-header" class="fixed top-0 left-0 w-full bg-black text-gray-100 z-50 transition-transform duration-500">
-      <div class="max-w-6xl mx-auto py-4 px-6 flex items-center justify-between">
-        <a href="https://www.occamco.com" class="text-[40px] leading-none transform transition-transform duration-300 hover:scale-95 font-light">occam</a>
+  <!-- Header -->
+  <header id="main-header" class="fixed top-0 left-0 w-full bg-black text-gray-100 z-50 transition-transform duration-500">
+    <div class="max-w-6xl mx-auto py-4 px-6 flex items-center justify-between">
 
-          <div class="flex items-center gap-3">
-          
-          <a
-          href="./what-we-do"
-          class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition"
-          >
+      <a href="https://www.occamco.com" class="text-[36px] sm:text-[40px] leading-none transform transition-transform duration-300 hover:scale-95 font-light">
+        occam
+      </a>
+
+      <!-- Desktop nav -->
+      <div class="hidden md:flex items-center gap-3">
+        <a href="/what-we-do" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
           What we do
-          </a>
-
-          <a
-          href="./our-team"
-          class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition"
-          >
+        </a>
+        <a href="/our-team" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
           Our team
-          </a>
-          
-          <a
-              href="./insights"
-              class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition"
-          >
-              Insights
-          </a>
-
-          <!-- Tools dropdown -->
-          <!-- <div class="relative">
-          <button
-              id="toolsBtn"
-              class="inline-flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition"
-          >
-              our tools
-              <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-          </button>
-
-          <div
-          id="toolsMenu"
-          class="absolute right-0 mt-2 w-44 rounded-lg bg-black border border-white/10 shadow-lg hidden"
-          onclick="event.stopPropagation()"
-          >
-          <a
-              href="./plant-run.html"
-                          class="block px-4 py-3 text-sm text-gray-200 hover:bg-white/20 hover:text-white transition-all duration-200"
-          >
-              plantrun milling software
-          </a>
-          </div>
-
-          </div> -->
-
-
-          <button
-              class="open-contact-modal inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
-          >
-              Start a conversation
-          </button>
-          </div>
-
+        </a>
+        <a href="/insights" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
+          Insights
+        </a>
+        <button class="open-contact-modal inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition">
+          Start a conversation
+        </button>
       </div>
-    </header>
+
+      <!-- Mobile actions -->
+      <div class="md:hidden flex items-center gap-2">
+        <button
+          class="open-contact-modal inline-flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
+        >
+          Contact
+        </button>
+
+        <button
+          class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 hover:bg-white/20 transition"
+          aria-label="Open menu"
+          onclick="toggleMobileMenu()"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="fixed inset-0 z-40 hidden bg-black text-white">
+    <div class="max-w-6xl mx-auto px-6 pt-24 pb-10">
+      <div class="flex items-center justify-between">
+        <div class="text-xl font-light">Menu</div>
+        <button
+          class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 hover:bg-white/20 transition"
+          aria-label="Close menu"
+          onclick="toggleMobileMenu()"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-8 space-y-5 text-lg">
+        <a href="/what-we-do" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">What we do</a>
+        <a href="/our-team" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">Our team</a>
+        <a href="/insights" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">Insights</a>
+        <a href="/privacy-policy" class="block text-gray-300 hover:text-gray-200 transition" onclick="toggleMobileMenu()">Privacy policy</a>
+
+        <div class="pt-6 border-t border-white/15">
+          <button class="open-contact-modal w-full py-3 rounded-md bg-white text-gray-900 font-medium hover:bg-gray-100 transition" onclick="toggleMobileMenu()">
+            Start a conversation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
   <!-- Page content -->
   <main class="mt-32 px-6 max-w-3xl mx-auto animate-fade-in leading-relaxed">
 
