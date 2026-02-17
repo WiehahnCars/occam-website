@@ -5,6 +5,7 @@
     { "source": "/our-team", "destination": "/our-team.html" },
     { "source": "/insights", "destination": "/insights.html" },
     { "source": "/plant-run", "destination": "/plant-run.html" },
-    { "source": "/login", "destination": "/login.html" }
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/building-is-no-longer-the-constraint", "destination": "/building-is-no-longer-the-constraint.html" }
   ]
 }
