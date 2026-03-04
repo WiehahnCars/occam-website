@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intechem × Occam — Order-to-Cash Initiative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f5f0;
+    --cyan: #00c8e0;
+    --cyan-dim: rgba(0,200,224,0.12);
+    --cyan-border: rgba(0,200,224,0.3);
+    --grey-dark: #141414;
+    --grey-mid: #1e1e1e;
+    --grey-light: #2a2a2a;
+    --grey-text: #888;
+    --grey-muted: #555;
+    --gold: #c9a84c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 3rem;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,10,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s;
+  }
+  .nav-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .nav-links a {
+    color: var(--grey-text);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+    border: 1px solid var(--cyan-border);
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(0,200,224,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
+      var(--black);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title em { font-style: italic; color: var(--cyan); }
+  .hero-sub {
+    font-size: 1.1rem; color: var(--grey-text);
+    max-width: 560px; line-height: 1.7;
+    margin-bottom: 2.5rem;
+    opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-meta {
+    display: flex; gap: 3rem; align-items: center;
+    opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+  }
+  .hero-meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
+  .hero-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--grey-muted);
+  }
+  .hero-meta-value { font-size: 0.9rem; color: var(--white); }
+
+  .scroll-hint {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fadeIn 1s 1.4s forwards;
+  }
+  .scroll-hint span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--grey-muted);
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--cyan), transparent);
+    animation: scrollPulse 1.5s ease-in-out infinite;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 3rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 60px;
+    height: 1px; background: var(--cyan-border);
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .section-title em { font-style: italic; color: var(--cyan); }
+  .section-body {
+    font-size: 1rem; color: var(--grey-text);
+    max-width: 680px; line-height: 1.8;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin: 0 3rem;
+  }
+
+  /* ── PROBLEM CARDS ── */
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.06);
+    margin-top: 3rem;
+  }
+  .problem-card {
+    background: var(--grey-dark);
+    padding: 2.5rem;
+    transition: background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .problem-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--cyan);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .problem-card:hover { background: var(--grey-mid); }
+  .problem-card:hover::before { transform: scaleX(1); }
+  .problem-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    color: var(--grey-muted); margin-bottom: 1.2rem;
+  }
+  .problem-title {
+    font-size: 1.05rem; font-weight: 500;
+    margin-bottom: 0.75rem; color: var(--white);
+  }
+  .problem-body { font-size: 0.875rem; color: var(--grey-text); line-height: 1.7; }
+
+  /* ── FINANCIAL IMPACT ── */
+  #impact { background: var(--grey-dark); }
+  .impact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 3rem; margin-top: 3rem;
+  }
+  .impact-number-block {
+    padding: 2.5rem;
+    border: 1px solid var(--cyan-border);
+    background: var(--cyan-dim);
+    position: relative;
+  }
+  .impact-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 1rem;
+  }
+  .impact-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1; letter-spacing: -0.03em;
+    color: var(--white); margin-bottom: 0.5rem;
+  }
+  .impact-sub { font-size: 0.85rem; color: var(--grey-text); }
+  .assumptions-list { list-style: none; }
+  .assumptions-list li {
+    padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.875rem; color: var(--grey-text);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .assumptions-list li:last-child { border-bottom: none; }
+  .assumptions-list .val {
+    font-family: 'DM Mono', monospace; font-size: 0.8rem;
+    color: var(--white); letter-spacing: 0.05em;
+  }
+  .assumptions-note {
+    margin-top: 1.5rem; font-size: 0.75rem;
+    color: var(--grey-muted); font-style: italic;
+  }
+
+  /* ── APPROACH TIMELINE ── */
+  #approach { }
+  .timeline {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 3rem;
+    position: relative;
+  }
+  .timeline::before {
+    content: ''; position: absolute;
+    top: 2rem; left: 0; right: 0; height: 1px;
+    background: rgba(255,255,255,0.08);
+    z-index: 0;
+  }
+  .timeline-step {
+    padding: 0 1.5rem 2rem;
+    position: relative; z-index: 1;
+    transition: all 0.3s;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .timeline-step:last-child { border-right: none; }
+  .timeline-step.active .step-dot { background: var(--cyan); box-shadow: 0 0 20px var(--cyan); }
+  .timeline-step.active .step-num { color: var(--cyan); }
+  .step-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--grey-muted);
+    margin-bottom: 1.5rem; position: relative;
+    transition: all 0.4s;
+  }
+  .step-dot::before {
+    content: ''; position: absolute;
+    inset: -4px; border-radius: 50%;
+    border: 1px solid rgba(0,200,224,0); transition: border-color 0.4s;
+  }
+  .timeline-step.active .step-dot::before { border-color: var(--cyan-border); }
+  .step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.12em;
+    color: var(--grey-muted); margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+  .step-title {
+    font-size: 1rem; font-weight: 500; margin-bottom: 0.75rem;
+    color: var(--white);
+  }
+  .step-body { font-size: 0.8rem; color: var(--grey-text); line-height: 1.7; }
+  .step-tag {
+    display: inline-block; margin-top: 1rem;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.08em; padding: 0.3rem 0.6rem;
+    border: 1px solid rgba(255,255,255,0.1); color: var(--grey-text);
+  }
+  .step-tag.focus {
+    border-color: var(--cyan-border); color: var(--cyan);
+    background: var(--cyan-dim);
+  }
+
+  /* ── DELIVERABLES ── */
+  #deliverables { background: var(--grey-dark); }
+  .deliverables-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: rgba(255,255,255,0.06);
+    margin-top: 3rem;
+  }
+  .deliverable-block {
+    background: var(--grey-dark); padding: 2.5rem;
+    transition: background 0.3s;
+  }
+  .deliverable-block:hover { background: #1a1a1a; }
+  .deliverable-icon {
+    width: 40px; height: 40px; margin-bottom: 1.5rem;
+    border: 1px solid var(--cyan-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .deliverable-title {
+    font-size: 0.95rem; font-weight: 500; margin-bottom: 1rem;
+    color: var(--white);
+  }
+  .deliverable-items { list-style: none; }
+  .deliverable-items li {
+    font-size: 0.8rem; color: var(--grey-text);
+    padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .deliverable-items li::before {
+    content: '→'; color: var(--cyan); font-size: 0.7rem; flex-shrink: 0;
+  }
+
+  /* ── WHY DESIGN FIRST ── */
+  #why {  }
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
+  .why-col h3 {
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.05em;
+    text-transform: uppercase; margin-bottom: 1.5rem;
+    padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .why-col.risk h3 { color: #e05050; }
+  .why-col.preferred h3 { color: var(--cyan); }
+  .why-list { list-style: none; }
+  .why-list li {
+    font-size: 0.875rem; color: var(--grey-text);
+    padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; gap: 0.75rem; align-items: flex-start;
+  }
+  .why-list li .bullet { flex-shrink: 0; margin-top: 0.1rem; }
+  .risk .bullet { color: #e05050; }
+  .preferred .bullet { color: var(--cyan); }
+  .conclusion-box {
+    margin-top: 3rem; padding: 2rem 2.5rem;
+    background: var(--cyan-dim); border: 1px solid var(--cyan-border);
+    display: flex; align-items: center; gap: 2rem;
+  }
+  .conclusion-box p { font-size: 1rem; line-height: 1.6; color: var(--white); }
+  .conclusion-box strong { color: var(--cyan); }
+
+  /* ── COMMERCIAL ── */
+  #commercial { background: var(--grey-dark); }
+  .fee-table {
+    width: 100%; margin-top: 2rem; border-collapse: collapse;
+  }
+  .fee-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--grey-muted); text-align: left;
+    padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .fee-table td {
+    padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.9rem; color: var(--grey-text); vertical-align: top;
+  }
+  .fee-table tr.total td {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem; color: var(--white); border-bottom: none;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .fee-total-num { font-size: 2rem; color: var(--cyan); }
+  .commercial-meta {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    margin-top: 2.5rem;
+  }
+  .commercial-meta-item {
+    padding: 1.5rem; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .commercial-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--grey-muted); margin-bottom: 0.5rem;
+  }
+  .commercial-meta-value { font-size: 0.9rem; color: var(--white); }
+
+  /* ── PROCESS FLOW ── */
+  #process { }
+  .process-flow {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 3rem; position: relative;
+  }
+  .process-step {
+    padding: 2rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-right: none; position: relative;
+    transition: all 0.3s;
+  }
+  .process-step:last-child { border-right: 1px solid rgba(255,255,255,0.06); }
+  .process-step:hover { background: var(--grey-mid); }
+  .process-step-num {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.1em; color: var(--grey-muted); margin-bottom: 1rem;
+  }
+  .process-step-title {
+    font-size: 0.9rem; font-weight: 500; margin-bottom: 0.75rem;
+    color: var(--white);
+  }
+  .process-step-items { list-style: none; }
+  .process-step-items li {
+    font-size: 0.75rem; color: var(--grey-text);
+    padding: 0.3rem 0; line-height: 1.5;
+  }
+  .process-step.problem { border-top: 2px solid #e05050; }
+  .process-step.problem .process-step-num { color: #e05050; }
+  .process-arrow {
+    position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%);
+    z-index: 2; font-size: 0.6rem; color: var(--grey-muted);
+  }
+
+  /* ── MATURITY ── */
+  #maturity { background: var(--grey-dark); }
+  .maturity-ladder {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 3rem;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .maturity-level {
+    padding: 2rem; border-right: 1px solid rgba(255,255,255,0.06);
+    position: relative; transition: all 0.3s;
+  }
+  .maturity-level:last-child { border-right: none; }
+  .maturity-level.current { background: rgba(201,168,76,0.06); }
+  .maturity-level.target { background: var(--cyan-dim); border-top: 2px solid var(--cyan); }
+  .maturity-level.target .maturity-num { color: var(--cyan); }
+  .maturity-num {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.1em; color: var(--grey-muted); margin-bottom: 0.75rem;
+  }
+  .maturity-title {
+    font-size: 0.95rem; font-weight: 500; margin-bottom: 1rem; color: var(--white);
+  }
+  .maturity-items { list-style: none; }
+  .maturity-items li {
+    font-size: 0.75rem; color: var(--grey-text);
+    padding: 0.3rem 0; line-height: 1.5;
+  }
+  .maturity-badge {
+    margin-top: 1.5rem; font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.1em;
+    padding: 0.3rem 0.6rem; display: inline-block;
+  }
+  .current .maturity-badge { border: 1px solid rgba(201,168,76,0.3); color: var(--gold); background: rgba(201,168,76,0.08); }
+  .target .maturity-badge { border: 1px solid var(--cyan-border); color: var(--cyan); background: var(--cyan-dim); }
+
+  /* ── CASE STUDIES ── */
+  #cases { }
+  .cases-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .case-card {
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem; transition: all 0.3s;
+    cursor: default;
+  }
+  .case-card:hover {
+    border-color: var(--cyan-border);
+    background: var(--cyan-dim);
+  }
+  .case-tag {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--grey-muted); margin-bottom: 1rem;
+  }
+  .case-title { font-size: 0.95rem; font-weight: 500; margin-bottom: 1rem; color: var(--white); }
+  .case-items { list-style: none; }
+  .case-items li {
+    font-size: 0.8rem; color: var(--grey-text);
+    padding: 0.35rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; gap: 0.5rem;
+  }
+  .case-items li::before { content: '—'; color: var(--grey-muted); flex-shrink: 0; }
+
+  /* ── CTA ── */
+  #cta {
+    background: var(--grey-dark);
+    text-align: center; padding: 8rem 3rem;
+  }
+  .cta-inner { max-width: 700px; margin: 0 auto; }
+  .cta-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .cta-title em { font-style: italic; color: var(--cyan); }
+  .cta-body { font-size: 1rem; color: var(--grey-text); margin-bottom: 3rem; line-height: 1.7; }
+  .cta-button {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    background: var(--cyan); color: var(--black);
+    text-decoration: none; font-weight: 500; font-size: 0.9rem;
+    letter-spacing: 0.05em; transition: all 0.2s;
+  }
+  .cta-button:hover { background: #00ddf5; transform: translateY(-2px); }
+  .cta-validity {
+    margin-top: 1.5rem; font-family: 'DM Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em; color: var(--grey-muted);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-logo { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 300; letter-spacing: 0.05em; }
+  .footer-legal { font-size: 0.7rem; color: var(--grey-muted); max-width: 500px; line-height: 1.5; }
+
+  /* ── LOGO GRID ── */
+  .client-logos {
+    display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; align-items: center;
+  }
+  .client-logo-pill {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.08em; padding: 0.4rem 0.9rem;
+    border: 1px solid rgba(255,255,255,0.1); color: var(--grey-muted);
+    text-transform: uppercase;
+  }
+
+  /* ── REVEAL ANIMATION ── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ── KEYFRAMES ── */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(20px); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; } from { opacity: 0; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50% { opacity: 0.4; transform: scaleY(0.7); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    #hero { padding: 0 1.5rem 4rem; }
+    .impact-grid, .why-grid { grid-template-columns: 1fr; }
+    .timeline, .process-flow, .maturity-ladder, .deliverables-grid { grid-template-columns: 1fr; }
+    .cases-grid { grid-template-columns: 1fr; }
+    .commercial-meta { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+    .divider { margin: 0 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">occam</a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#impact">Impact</a></li>
+    <li><a href="#approach">Approach</a></li>
+    <li><a href="#deliverables">Deliverables</a></li>
+    <li><a href="#commercial">Commercial</a></li>
+  </ul>
+  <span class="nav-tag">Confidential · 2026-03-04</span>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Prepared for Intechem · Order-to-Cash Initiative</p>
+    <h1 class="hero-title">Design the<br><em>right solution</em><br>before you build.</h1>
+    <p class="hero-sub">A focused design sprint to remove ambiguity, validate the workflow, and price the implementation accurately — before a single line of code is written.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Proposed by</span>
+        <span class="hero-meta-value">Occam Holdings</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Date</span>
+        <span class="hero-meta-value">4 March 2026</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Engagement fee</span>
+        <span class="hero-meta-value">R69,600 ex VAT</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Duration</span>
+        <span class="hero-meta-value">2 weeks</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-inner">
+    <p class="section-label reveal">The problem</p>
+    <h2 class="section-title reveal">Your operating model<br>is constraining <em>cash velocity.</em></h2>
+    <p class="section-body reveal">Your current processes have supported growth to this point — but fragmented systems, manual handoffs, and delayed proof-of-delivery are now locking up working capital and limiting your ability to invoice on time.</p>
+
+    <div class="problem-grid reveal">
+      <div class="problem-card">
+        <div class="problem-num">01 — Visibility</div>
+        <div class="problem-title">Fragmented execution visibility</div>
+        <p class="problem-body">No single end-to-end view from commercial intent through to physical delivery. Purchase Orders, Purchase Requisitions, and Collection Notes operate across disconnected layers.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02 — Documentation</div>
+        <div class="problem-title">Manual proof-of-delivery flow</div>
+        <p class="problem-body">POD documents are returned manually and asynchronously, delaying reconciliation and blocking timely invoicing after loads are physically completed.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03 — Working capital</div>
+        <div class="problem-title">Invoicing delayed up to 10 days</div>
+        <p class="problem-body">Invoicing is blocked until the full POD pack is received. Despite loads being physically complete, capital remains tied up for up to 10 days — an avoidable drag.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">04 — Margin control</div>
+        <div class="problem-title">Commercial control gaps</div>
+        <p class="problem-body">Quoted margins are not systematically enforced at commitment. Execution realities (transport, split loads, route changes) mean margin outcomes are only understood after the fact.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CURRENT STATE PROCESS -->
+<section id="process">
+  <div class="section-inner">
+    <p class="section-label reveal">Current state</p>
+    <h2 class="section-title reveal">A load-driven operation<br>running across <em>fragmented systems.</em></h2>
+
+    <div class="process-flow reveal">
+      <div class="process-step">
+        <div class="process-step-num">Step 01</div>
+        <div class="process-step-title">Quote to Order</div>
+        <ul class="process-step-items">
+          <li>Sales issues a quote to customer</li>
+          <li>Customer accepts and provides PO</li>
+          <li>Captured in sales system</li>
+          <li style="color: #e05050;">Not yet connected to execution</li>
+        </ul>
+        <div class="process-arrow">▶</div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-num">Step 02</div>
+        <div class="process-step-title">Internal Handover & Procurement</div>
+        <ul class="process-step-items">
+          <li>Procurement creates Purchase Requisition</li>
+          <li>Supplier Purchase Order raised</li>
+          <li style="color: #e05050;">Relies heavily on Excel & manual coordination</li>
+        </ul>
+        <div class="process-arrow">▶</div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-num">Step 03</div>
+        <div class="process-step-title">Load Execution</div>
+        <ul class="process-step-items">
+          <li>Logistics prepares Collection Note</li>
+          <li>Transport company collects from supplier</li>
+          <li>Load delivered to customer</li>
+          <li style="color: #e05050;">Margin assumed, not enforced</li>
+        </ul>
+        <div class="process-arrow">▶</div>
+      </div>
+      <div class="process-step problem">
+        <div class="process-step-num">Step 04 — ⚠ Bottleneck</div>
+        <div class="process-step-title">Proof of Delivery & Invoicing</div>
+        <ul class="process-step-items">
+          <li>POD returned manually</li>
+          <li>Finance waits for full POD pack</li>
+          <li style="color: #e05050;">Delay of up to 10 days</li>
+          <li style="color: #e05050;">Working capital locked until resolved</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FINANCIAL IMPACT -->
+<section id="impact">
+  <div class="section-inner">
+    <p class="section-label reveal">Financial opportunity</p>
+    <h2 class="section-title reveal">Reducing the delay unlocks<br><em>immediate working capital.</em></h2>
+
+    <div class="impact-grid reveal">
+      <div>
+        <div class="impact-number-block" style="margin-bottom: 1.5rem;">
+          <div class="impact-label">Working capital released</div>
+          <div class="impact-number">R6.7m – R13.3m</div>
+          <div class="impact-sub">Immediate release upon invoicing acceleration</div>
+        </div>
+        <div class="impact-number-block">
+          <div class="impact-label">Annual financing cost reduction</div>
+          <div class="impact-number">R0.7m – R1.3m</div>
+          <div class="impact-sub">Per annum at ~10% cost of capital</div>
+        </div>
+      </div>
+      <div>
+        <div style="margin-bottom: 1rem; font-size: 0.75rem; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-muted);">Illustrative assumptions</div>
+        <ul class="assumptions-list">
+          <li><span>Monthly revenue (ICSP)</span> <span class="val">~R40m</span></li>
+          <li><span>Daily revenue</span> <span class="val">~R1.3m</span></li>
+          <li><span>Average invoicing delay</span> <span class="val">5 – 10 days</span></li>
+          <li><span>Cost of capital</span> <span class="val">~10% p.a.</span></li>
+          <li><span>Low case improvement</span> <span class="val">5 days</span></li>
+          <li><span>High case improvement</span> <span class="val">10 days</span></li>
+        </ul>
+        <p class="assumptions-note">Estimates based on independent research and prior project experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- APPROACH -->
+<section id="approach">
+  <div class="section-inner">
+    <p class="section-label reveal">Our approach</p>
+    <h2 class="section-title reveal">Design first.<br><em>Build once.</em></h2>
+    <p class="section-body reveal">We separate design from build so that scope is clear, risk is reduced, and implementation is predictable. This proposal focuses on the Detailed Design phase.</p>
+
+    <div class="timeline reveal">
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-num">Phase 01 — Complete</div>
+        <div class="step-title">Concept Validation</div>
+        <p class="step-body">Validate the problem and constraints. Confirm the operational bottleneck and align on the desired outcome.</p>
+        <span class="step-tag">95% done — see Section C</span>
+      </div>
+      <div class="timeline-step active">
+        <div class="step-dot"></div>
+        <div class="step-num">Phase 02 — This proposal</div>
+        <div class="step-title">Detailed Design</div>
+        <p class="step-body">Map the exact workflow end-to-end. Confirm system integrations. Define the production-ready system design. Remove ambiguity before development.</p>
+        <span class="step-tag focus">2 weeks · R69,600</span>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-num">Phase 03</div>
+        <div class="step-title">Implementation</div>
+        <p class="step-body">Build, integrate, test, and deploy. A production-ready system that removes the delivery-to-invoice delay. Scoped and priced after Phase 2.</p>
+        <span class="step-tag">2 – 3 months</span>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot"></div>
+        <div class="step-num">Phase 04</div>
+        <div class="step-title">Support</div>
+        <p class="step-body">Post-go-live refinement. Monitor performance, resolve issues, capture new requirements from real usage.</p>
+        <span class="step-tag">Ongoing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- WHY NOT POC -->
+<section id="why">
+  <div class="section-inner">
+    <p class="section-label reveal">Why not a PoC?</p>
+    <h2 class="section-title reveal">A PoC is not commercially<br><em>realistic for this problem.</em></h2>
+
+    <div class="why-grid reveal">
+      <div class="why-col risk">
+        <h3>Building a production system immediately</h3>
+        <ul class="why-list">
+          <li><span class="bullet">✕</span><span>Key assumptions remain unvalidated, risking rework mid-build</span></li>
+          <li><span class="bullet">✕</span><span>Scope changes and cost escalation become likely outcomes</span></li>
+          <li><span class="bullet">✕</span><span>Operational disruption if the system doesn't match actual workflows</span></li>
+          <li><span class="bullet">✕</span><span>A "low-cost PoC" would be either overly simplified or insufficient to validate the real workflow</span></li>
+          <li><span class="bullet">✕</span><span>Technical effort (integration, security, workflow logic) cannot be meaningfully reduced</span></li>
+        </ul>
+      </div>
+      <div class="why-col preferred">
+        <h3>Design sprint first — the preferred path</h3>
+        <ul class="why-list">
+          <li><span class="bullet">✓</span><span>Lock down requirements precisely before committing to build</span></li>
+          <li><span class="bullet">✓</span><span>Validate technical feasibility with your actual systems (Sage, Dynamics)</span></li>
+          <li><span class="bullet">✓</span><span>Confirm integration complexity so there are no surprises at implementation</span></li>
+          <li><span class="bullet">✓</span><span>Price the implementation accurately — one quote, no change orders</span></li>
+          <li><span class="bullet">✓</span><span>Intechem retains the blueprint regardless of who builds it</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="conclusion-box reveal">
+      <div style="font-size: 2rem; flex-shrink: 0;">→</div>
+      <p><strong>At the end of the Design phase,</strong> we confirm the final implementation scope and cost before proceeding. You have full visibility and full control before any significant investment is made.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- DELIVERABLES -->
+<section id="deliverables">
+  <div class="section-inner">
+    <p class="section-label reveal">What you receive</p>
+    <h2 class="section-title reveal">A build-ready blueprint<br>with <em>full commercial certainty.</em></h2>
+
+    <div class="deliverables-grid reveal">
+      <div class="deliverable-block">
+        <div class="deliverable-icon">📐</div>
+        <div class="deliverable-title">Technical Blueprint</div>
+        <ul class="deliverable-items">
+          <li>Functional specification</li>
+          <li>Integration architecture design</li>
+          <li>Data mapping design</li>
+          <li>End-to-end workflow diagrams</li>
+        </ul>
+      </div>
+      <div class="deliverable-block">
+        <div class="deliverable-icon">🔍</div>
+        <div class="deliverable-title">Operational Clarity</div>
+        <ul class="deliverable-items">
+          <li>Validated current-state map</li>
+          <li>Defined and quantified bottlenecks</li>
+          <li>Confirmed ownership model</li>
+          <li>Defined success metrics</li>
+        </ul>
+      </div>
+      <div class="deliverable-block">
+        <div class="deliverable-icon">💼</div>
+        <div class="deliverable-title">Commercial Certainty</div>
+        <ul class="deliverable-items">
+          <li>Implementation roadmap</li>
+          <li>Refined and confirmed build cost</li>
+          <li>Confirmed timeline and phasing</li>
+          <li>Risk register and assumptions log</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COMMERCIAL -->
+<section id="commercial">
+  <div class="section-inner">
+    <p class="section-label reveal">Commercials</p>
+    <h2 class="section-title reveal">One fee. Two weeks.<br><em>Everything you need to build.</em></h2>
+
+    <table class="fee-table reveal">
+      <thead>
+        <tr>
+          <th>Line item</th>
+          <th>Description</th>
+          <th>Fee (ex VAT)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color: var(--white);">Workshop & design development</td>
+          <td>In-person facilitation at Intechem's Johannesburg office, solution mapping, and technical specification building. Followed by focused remote sessions.</td>
+          <td style="color: var(--white); font-weight: 500;">R69,600</td>
+        </tr>
+        <tr>
+          <td style="color: var(--white);">Travel & consumables</td>
+          <td>Will not be charged for this engagement.</td>
+          <td style="color: var(--grey-muted);">R0.00</td>
+        </tr>
+        <tr class="total">
+          <td>Total</td>
+          <td></td>
+          <td><span class="fee-total-num">R69,600</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="commercial-meta reveal">
+      <div class="commercial-meta-item">
+        <div class="commercial-meta-label">Delivery model</div>
+        <div class="commercial-meta-value">In-person workshop (JHB) + remote follow-on</div>
+      </div>
+      <div class="commercial-meta-item">
+        <div class="commercial-meta-label">Duration</div>
+        <div class="commercial-meta-value">2 weeks from kick-off</div>
+      </div>
+      <div class="commercial-meta-item">
+        <div class="commercial-meta-label">Terms validity</div>
+        <div class="commercial-meta-value">30 days from date of issue</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- MATURITY -->
+<section id="maturity">
+  <div class="section-inner">
+    <p class="section-label reveal">Strategic context</p>
+    <h2 class="section-title reveal">This is a first step on a<br><em>longer digital journey.</em></h2>
+    <p class="section-body reveal">Given Intechem's operating landscape and growth ambitions, structured digital enablement will increasingly become necessary. This engagement is the controlled first step.</p>
+
+    <div class="maturity-ladder reveal">
+      <div class="maturity-level current">
+        <div class="maturity-num">Level 01 → 02</div>
+        <div class="maturity-title">Foundational / Developing</div>
+        <ul class="maturity-items">
+          <li>Core systems in place</li>
+          <li>Processes mostly undocumented</li>
+          <li>Data exists but sits in silos</li>
+          <li>Partial system integration</li>
+          <li>Manual handoffs remain embedded</li>
+        </ul>
+        <span class="maturity-badge">You are here</span>
+      </div>
+      <div class="maturity-level target">
+        <div class="maturity-num">Level 03</div>
+        <div class="maturity-title">Integrated</div>
+        <ul class="maturity-items">
+          <li>Systems fully aligned</li>
+          <li>Workflows digitised end-to-end</li>
+          <li>Event-driven processes</li>
+          <li>Real-time operational visibility</li>
+        </ul>
+        <span class="maturity-badge">Where we want to get you</span>
+      </div>
+      <div class="maturity-level">
+        <div class="maturity-num">Level 04</div>
+        <div class="maturity-title">Optimised</div>
+        <ul class="maturity-items">
+          <li>Performance continuously measured</li>
+          <li>Data drives proactive decisions</li>
+          <li>Bottlenecks identified automatically</li>
+          <li>Digital capability supports growth strategy</li>
+        </ul>
+        <span class="maturity-badge" style="border: 1px solid rgba(255,255,255,0.1); color: var(--grey-muted); background: transparent;">Not commercially justified yet</span>
+      </div>
+      <div class="maturity-level" style="background: var(--cyan-dim);">
+        <div class="maturity-num">The journey</div>
+        <div class="maturity-title">Long-Term Partnership</div>
+        <p style="font-size: 0.8rem; color: var(--grey-text); line-height: 1.7;">We want to partner with Intechem beyond this engagement — supporting incremental digital maturity as the business scales.</p>
+        <p style="font-size: 0.8rem; color: var(--cyan); margin-top: 1rem; font-style: italic;">This proposal is how that journey starts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CASE STUDIES -->
+<section id="cases">
+  <div class="section-inner">
+    <p class="section-label reveal">Our experience</p>
+    <h2 class="section-title reveal">We have done this before,<br>across <em>complex operations.</em></h2>
+
+    <div class="cases-grid reveal">
+      <div class="case-card">
+        <div class="case-tag">Vehicle Leasing · Transformation Roadmap</div>
+        <div class="case-title">Defining the path to a modern platform and operating model</div>
+        <ul class="case-items">
+          <li>In-depth process workshops with all department heads</li>
+          <li>Mapped current-state processes and system interactions</li>
+          <li>Target operating model and technical architecture</li>
+          <li>Strategic alignment across leadership teams</li>
+        </ul>
+      </div>
+      <div class="case-card">
+        <div class="case-tag">Vehicle Leasing · Platform Build</div>
+        <div class="case-title">End-to-end platform across the full leasing lifecycle</div>
+        <ul class="case-items">
+          <li>Lead onboarding, KYC, contract management with e-signature</li>
+          <li>WhatsApp bot for first-line customer support</li>
+          <li>GPS tracking, accounting, credit bureau integrations</li>
+          <li>Scaled operations from manual to automated</li>
+        </ul>
+      </div>
+      <div class="case-card">
+        <div class="case-tag">Milling Company · Operations Platform</div>
+        <div class="case-title">Real-time production reporting and shift management</div>
+        <ul class="case-items">
+          <li>Integrated live data from mills for near real-time tracking</li>
+          <li>Production dashboards: extraction, output, throughput</li>
+          <li>Shift reporting replacing fully manual processes</li>
+          <li>Foundation laid for broader digital transformation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem;" class="reveal">
+      <div style="font-size: 0.75rem; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-muted); margin-bottom: 1rem;">Some of the companies our team has worked with</div>
+      <div class="client-logos">
+        <span class="client-logo-pill">Investec</span>
+        <span class="client-logo-pill">Planet42</span>
+        <span class="client-logo-pill">Nedbank</span>
+        <span class="client-logo-pill">Sasol</span>
+        <span class="client-logo-pill">Europcar</span>
+        <span class="client-logo-pill">DHL</span>
+        <span class="client-logo-pill">MTN</span>
+        <span class="client-logo-pill">Exxaro</span>
+        <span class="client-logo-pill">Anglo American</span>
+        <span class="client-logo-pill">Mr Price</span>
+        <span class="client-logo-pill">Bayport</span>
+        <span class="client-logo-pill">Debswana</span>
+        <span class="client-logo-pill">OfferZen</span>
+        <span class="client-logo-pill">Total</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <p class="section-label reveal" style="justify-content: center;">Next step</p>
+    <h2 class="cta-title reveal">Ready to<br><em>define the solution?</em></h2>
+    <p class="cta-body reveal">Upon acceptance, we will finalise the delivery plan and confirm the workshop date. The engagement will be completed within two weeks — from workshop through to final deliverable.</p>
+    <div class="reveal">
+      <a href="mailto:hello@occamco.com" class="cta-button">
+        Start a conversation →
+      </a>
+    </div>
+    <p class="cta-validity reveal">Commercial terms valid for 30 days from 4 March 2026</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">occam</span>
+  <p class="footer-legal">OCCAM HOLDINGS (PTY) LTD. Registered in South Africa: 2024/102148/07. 241 High-Level Road, Sea Point, Cape Town, 8005. This document is strictly confidential and may contain privileged information. Do not disclose, copy or distribute without prior consent.</p>
+</footer>
+
+<script>
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), 60);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => observer.observe(el));
+
+// Stagger children within grids
+document.querySelectorAll('.problem-grid, .deliverables-grid, .cases-grid, .timeline, .maturity-ladder').forEach(grid => {
+  const children = grid.children;
+  Array.from(children).forEach((child, i) => {
+    child.style.transitionDelay = `${i * 80}ms`;
+    child.classList.add('reveal');
+    observer.observe(child);
+  });
+});
+
+// Nav active state
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--cyan)' : '';
+  });
+});
+
+// Counter animation for impact numbers
+function animateCounter(el, target, prefix = '', suffix = '') {
+  let start = 0;
+  const duration = 1500;
+  const step = (timestamp) => {
+    if (!start) start = timestamp;
+    const progress = Math.min((timestamp - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = prefix + Math.round(eased * target).toLocaleString() + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+</script>
+</body>
+</html>
