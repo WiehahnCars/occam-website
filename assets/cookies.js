@@ -1,3 +1,14 @@
+var GA_ID = 'G-52W0F5S3TM';
+
+function applyGaOptOut() {
+  window['ga-disable-' + GA_ID] = true;
+}
+
+// On every page load, enforce opt-out if previously declined
+if (localStorage.getItem('cookieConsent') === 'declined') {
+  applyGaOptOut();
+}
+
 (function () {
   if (localStorage.getItem('cookieConsent')) return;
 
@@ -36,6 +47,7 @@
 
   document.getElementById('cookie-decline').addEventListener('click', function () {
     localStorage.setItem('cookieConsent', 'declined');
+    applyGaOptOut();
     banner.remove();
   });
 })();
