@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plett Cycling Club — Member System Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- React + Babel via CDN — no build step needed -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0a0a0a; --dark: #111111; --card: #1a1a1a; --border: #2a2a2a;
+      --accent: #e8ff3e; --accent2: #ff6b35; --text: #f0f0f0; --muted: #888;
+      --green: #4ade80; --red: #f87171; --amber: #fbbf24; --radius: 12px;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--dark); } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .font-display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
+    .font-mono { font-family: 'DM Mono', monospace; }
+    /* NAV */
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.08em; color: var(--accent); cursor: pointer; display: flex; align-items: center; gap: 8px; background: none; border: none; }
+    .nav-links { display: flex; align-items: center; gap: 6px; }
+    .nav-link { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; padding: 8px 12px; border-radius: 8px; transition: all 0.2s; }
+    .nav-link:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+    .nav-link.active { color: var(--accent); }
+    .btn-nav-join { background: var(--accent); color: var(--black); border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; font-size: 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-nav-join:hover { opacity: 0.85; transform: translateY(-1px); }
+    .mobile-toggle { display: none; background: none; border: none; color: var(--text); cursor: pointer; font-size: 22px; padding: 6px; }
+    .mobile-menu { display: none; position: fixed; inset: 0; z-index: 99; background: var(--dark); padding: 80px 24px 24px; flex-direction: column; gap: 8px; overflow-y: auto; }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu .nav-link { font-size: 18px; padding: 14px 16px; }
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 10px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.2s; border: none; font-family: 'DM Sans', sans-serif; }
+    .btn-primary { background: var(--accent); color: var(--black); }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,255,62,0.3); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-sm { padding: 7px 14px; font-size: 13px; border-radius: 8px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+    /* LAYOUT */
+    .section { max-width: 1200px; margin: 0 auto; padding: 80px 24px; }
+    .section-label { font-size: 12px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 5vw, 60px); line-height: 1; margin-bottom: 16px; }
+    /* CARDS */
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .card-hover { transition: all 0.2s; cursor: pointer; }
+    .card-hover:hover { border-color: rgba(232,255,62,0.3); transform: translateY(-2px); }
+    /* HERO */
+    .hero { min-height: 100vh; background: linear-gradient(160deg, #0a0a0a 0%, #1a1208 50%, #0a0a0a 100%); display: flex; align-items: center; padding-top: 64px; position: relative; overflow: hidden; }
+    .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(232,255,62,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(232,255,62,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+    .hero-glow { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(232,255,62,0.08) 0%, transparent 70%); top: 20%; right: -10%; pointer-events: none; }
+    .hero-emoji { position: absolute; right: 5%; top: 50%; transform: translateY(-50%); opacity: 0.04; font-size: 300px; line-height: 1; pointer-events: none; user-select: none; }
+    .hero-content { max-width: 1200px; margin: 0 auto; padding: 80px 24px; position: relative; z-index: 1; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(232,255,62,0.1); border: 1px solid rgba(232,255,62,0.3); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 24px; }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px, 10vw, 120px); line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 24px; }
+    .hero-title span { color: var(--accent); }
+    .hero-subtitle { font-size: 18px; color: var(--muted); max-width: 500px; margin-bottom: 40px; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats { display: flex; gap: 48px; margin-top: 80px; padding-top: 48px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    /* FORMS */
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .form-input { width: 100%; background: var(--dark); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; transition: all 0.2s; outline: none; }
+    .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,255,62,0.1); }
+    .form-input::placeholder { color: #555; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    /* BADGES */
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+    .badge-paid { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+    .badge-unpaid { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    .badge-admin { background: rgba(232,255,62,0.15); color: var(--accent); border: 1px solid rgba(232,255,62,0.3); }
+    /* TABLE */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); border-bottom: 1px solid var(--border); }
+    td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    /* DASHBOARD */
+    .dash-layout { min-height: 100vh; padding-top: 64px; }
+    .dash-content { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+    .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; }
+    .metric-val { font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; }
+    .metric-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .modal { background: var(--dark); border: 1px solid var(--border); border-radius: 16px; padding: 32px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; margin-bottom: 8px; }
+    /* PAYSTACK MOCK */
+    .paystack-card { background: #0052cc; color: white; border-radius: 12px; padding: 24px; margin: 20px 0; }
+    /* ALERTS */
+    .alert { padding: 14px 18px; border-radius: 10px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 20px; font-size: 14px; }
+    .alert-warning { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--amber); }
+    .alert-success { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: var(--green); }
+    .alert-info { background: rgba(232,255,62,0.08); border: 1px solid rgba(232,255,62,0.2); color: var(--accent); }
+    /* TABS */
+    .tab-bar { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 28px; }
+    .tab-btn { background: none; border: none; color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; padding: 10px 16px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; margin-bottom: -1px; }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    /* DETAIL ROWS */
+    .detail-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 16px; }
+    .detail-key { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; flex-shrink: 0; }
+    .detail-val { font-size: 14px; color: var(--text); text-align: right; }
+    /* PROFILE AVATAR */
+    .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--black); flex-shrink: 0; }
+    /* RENEWAL BANNER */
+    .renewal-banner { background: linear-gradient(135deg, rgba(255,107,53,0.15), rgba(232,255,62,0.1)); border: 1px solid rgba(255,107,53,0.4); border-radius: 12px; padding: 18px 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    /* GALLERY */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .gallery-item { aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; cursor: pointer; }
+    .gallery-item:hover { border-color: rgba(232,255,62,0.4); transform: translateY(-2px); }
+    /* STEPS */
+    .steps { display: flex; align-items: center; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    /* TOASTS */
+    .toast-container { position: fixed; bottom: 80px; right: 20px; z-index: 300; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+    .toast { background: var(--dark); border: 1px solid var(--border); border-radius: 10px; padding: 13px 16px; max-width: 320px; display: flex; align-items: center; gap: 10px; font-size: 13px; animation: fadeUp 0.3s ease; }
+    .toast-success { border-color: rgba(74,222,128,0.5); }
+    .toast-error { border-color: rgba(248,113,113,0.5); }
+    /* DEMO BAR */
+    .demo-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 150; background: rgba(15,8,0,0.97); border-top: 1px solid rgba(232,255,62,0.25); padding: 8px 16px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 12px; }
+    .demo-label { color: var(--accent); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+    .demo-btn { background: rgba(232,255,62,0.08); border: 1px solid rgba(232,255,62,0.25); color: var(--accent); padding: 4px 10px; border-radius: 5px; font-size: 11px; cursor: pointer; font-family: 'DM Mono', monospace; transition: all 0.15s; white-space: nowrap; }
+    .demo-btn:hover { background: rgba(232,255,62,0.18); }
+    .demo-btn.active { background: var(--accent); color: var(--black); font-weight: 700; }
+    .demo-sep { color: #444; margin: 0 4px; }
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    .fade-up { animation: fadeUp 0.45s ease both; }
+    /* ABOUT */
+    .about-hero { min-height: 38vh; display: flex; align-items: center; background: linear-gradient(135deg,#0a0a0a,#1a1a08); padding-top: 64px; }
+    /* CONTACT GRID */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    /* BAR CHART */
+    .bar-wrap { display:flex; gap:3px; align-items:flex-end; height:72px; }
+    .bar { flex:1; border-radius:2px 2px 0 0; transition:height 0.6s ease; min-height:4px; }
+    .bar-label { font-size:9px; color:var(--muted); text-transform:uppercase; text-align:center; margin-top:4px; }
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .nav-links { display:none; }
+      .mobile-toggle { display:block; }
+      .hero-stats { gap:28px; }
+      .form-row { grid-template-columns:1fr; }
+      .contact-grid { grid-template-columns:1fr; }
+      .dash-grid { grid-template-columns:1fr 1fr !important; }
+      .demo-bar { gap:5px; }
+    }
+    @media(max-width:480px){
+      .dash-grid { grid-template-columns:1fr !important; }
+      .hero-title { font-size:clamp(52px,14vw,80px); }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useCallback } = React;
+
+// ── CONSTANTS ──────────────────────────────────────────────
+const MEMBERSHIP_FEE = 450;
+const CURRENT_YEAR   = 2026;
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+const DUMMY_MEMBERS = [
+  { id:1, firstName:"James",  surname:"Hendricks",   email:"james@example.com",  phone:"082 123 4567", address:"12 Beach Rd, Plettenberg Bay",  emergencyName:"Sarah Hendricks",     emergencyPhone:"083 111 2222", nokName:"Sarah Hendricks",    nokRelationship:"Spouse",  nokPhone:"083 111 2222", medical:"",                     status:"paid",   paidYear:2026, paymentDate:"2026-01-15", isAdmin:true,  password:"demo123" },
+  { id:2, firstName:"Liesl",  surname:"van der Berg",email:"liesl@example.com",  phone:"071 987 6543", address:"5 Keurbooms Rd, Plett",          emergencyName:"Pieter van der Berg",  emergencyPhone:"072 333 4444", nokName:"Pieter van der Berg",nokRelationship:"Spouse",  nokPhone:"072 333 4444", medical:"Asthma – carry inhaler",status:"paid",   paidYear:2026, paymentDate:"2026-02-01", isAdmin:false, password:"demo123" },
+  { id:3, firstName:"Craig",  surname:"Botha",       email:"craig@example.com",  phone:"083 456 7890", address:"88 Longships Dr, Plett",         emergencyName:"Mark Botha",           emergencyPhone:"084 555 6666", nokName:"Mark Botha",         nokRelationship:"Brother", nokPhone:"084 555 6666", medical:"",                     status:"unpaid", paidYear:null,  paymentDate:null,         isAdmin:false, password:"demo123" },
+  { id:4, firstName:"Nomsa",  surname:"Dlamini",     email:"nomsa@example.com",  phone:"079 234 5678", address:"3 Lookout Rd, Plett",            emergencyName:"Sipho Dlamini",        emergencyPhone:"078 777 8888", nokName:"Sipho Dlamini",      nokRelationship:"Husband", nokPhone:"078 777 8888", medical:"Diabetes Type 2",      status:"unpaid", paidYear:null,  paymentDate:null,         isAdmin:false, password:"demo123" },
+  { id:5, firstName:"Ruan",   surname:"Prinsloo",    email:"ruan@example.com",   phone:"082 876 5432", address:"44 Marine Dr, Plett",            emergencyName:"Anna Prinsloo",        emergencyPhone:"081 999 0000", nokName:"Anna Prinsloo",      nokRelationship:"Mother",  nokPhone:"081 999 0000", medical:"",                     status:"paid",   paidYear:2026, paymentDate:"2026-01-08", isAdmin:false, password:"demo123" },
+  { id:6, firstName:"Tamsin", surname:"Oliver",      email:"tamsin@example.com", phone:"076 543 2109", address:"7 Robberg Ave, Plett",           emergencyName:"Greg Oliver",          emergencyPhone:"075 111 2233", nokName:"Greg Oliver",        nokRelationship:"Father",  nokPhone:"075 111 2233", medical:"",                     status:"paid",   paidYear:2025, paymentDate:"2025-03-20", isAdmin:false, password:"demo123" },
+];
+
+const fmt = d => d ? new Date(d).toLocaleDateString("en-ZA",{day:"2-digit",month:"short",year:"numeric"}) : "—";
+
+// ── ICONS ──────────────────────────────────────────────────
+const icons = {
+  bike:     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 0 0-1-1h-1l-3.5 9H14"/><path d="m9 15 3-9"/><path d="M5.5 14H13"/><line x1="19" y1="10" x2="22" y2="10"/></svg>,
+  check:    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12"/></svg>,
+  x:        <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  menu:     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+  shield:   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+  star:     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>,
+  map:      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3,6 9,3 15,6 21,3 21,18 15,21 9,18 3,21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>,
+  bell:     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
+  eye:      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
+  crown:    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>,
+  download: <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+  credit:   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
+  alert:    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+  calendar: <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+};
+const I = ({n, style={}}) => <span style={{fontSize:"1em",display:"inline-flex",alignItems:"center",...style}}>{icons[n]||null}</span>;
+
+// ── TOAST ──────────────────────────────────────────────────
+function Toasts({toasts}){
+  return <div className="toast-container">{toasts.map(t=>(
+    <div key={t.id} className={`toast ${t.type==="success"?"toast-success":t.type==="error"?"toast-error":""}`}>
+      {t.type==="success"&&<I n="check"/>}{t.type==="error"&&<I n="x"/>}
+      <span>{t.message}</span>
+    </div>
+  ))}</div>;
+}
+
+// ── NAVBAR ─────────────────────────────────────────────────
+function Navbar({page,setPage,user,logout}){
+  const [mob,setMob]=useState(false);
+  const go=p=>{setPage(p);setMob(false);};
+  const links=[{k:"home",l:"Home"},{k:"about",l:"About"},{k:"gallery",l:"Gallery"},{k:"join",l:"Join"},{k:"contact",l:"Contact"}];
+  return(
+    <>
+    <nav className="nav">
+      <div className="nav-inner">
+        <button className="nav-logo" onClick={()=>go("home")}><I n="bike"/> PCC</button>
+        <div className="nav-links">
+          {links.map(n=><button key={n.k} className={`nav-link${page===n.k?" active":""}`} onClick={()=>go(n.k)}>{n.l}</button>)}
+          {user
+            ?<><button className={`nav-link${page==="dashboard"?" active":""}`} onClick={()=>go("dashboard")}>Dashboard</button>
+               {user.isAdmin&&<button className={`nav-link${page==="admin"?" active":""}`} onClick={()=>go("admin")}>Admin</button>}
+               <button className="nav-link" onClick={logout}>Logout</button></>
+            :<><button className={`nav-link${page==="login"?" active":""}`} onClick={()=>go("login")}>Login</button>
+               <button className="btn-nav-join" onClick={()=>go("join")}>Join Now</button></>}
+        </div>
+        <button className="mobile-toggle" onClick={()=>setMob(!mob)}>{mob?"✕":"☰"}</button>
+      </div>
+    </nav>
+    {mob&&<div className="mobile-menu open">
+      {links.map(n=><button key={n.k} className="nav-link" onClick={()=>go(n.k)}>{n.l}</button>)}
+      {user
+        ?<><button className="nav-link" onClick={()=>go("dashboard")}>Dashboard</button>
+           {user.isAdmin&&<button className="nav-link" onClick={()=>go("admin")}>Admin</button>}
+           <button className="btn btn-ghost" style={{marginTop:8}} onClick={()=>{logout();setMob(false);}}>Logout</button></>
+        :<><button className="nav-link" onClick={()=>go("login")}>Login</button>
+           <button className="btn btn-primary" style={{marginTop:8}} onClick={()=>go("join")}>Join Now</button></>}
+    </div>}
+    </>
+  );
+}
+
+// ── DEMO BAR ───────────────────────────────────────────────
+function DemoBar({simMonth,setSimMonth,setPage,setUser,members}){
+  const ql=email=>{const m=members.find(x=>x.email===email);if(m){setUser(m);setPage("dashboard");}};
+  return(
+    <div className="demo-bar">
+      <span className="demo-label">🚴 Demo</span>
+      <span className="demo-sep">Month:</span>
+      {MONTHS.map((m,i)=><button key={m} className={`demo-btn${simMonth===i?" active":""}`} onClick={()=>setSimMonth(i)}>{m}</button>)}
+      <span className="demo-sep" style={{marginLeft:8}}>Login:</span>
+      <button className="demo-btn" onClick={()=>ql("james@example.com")}>Admin</button>
+      <button className="demo-btn" onClick={()=>ql("craig@example.com")}>Unpaid</button>
+      <button className="demo-btn" onClick={()=>ql("tamsin@example.com")}>Lapsed</button>
+    </div>
+  );
+}
+
+// ── HOME ───────────────────────────────────────────────────
+function HomePage({setPage}){
+  const feats=[
+    {i:"bike",t:"Weekly Rides",d:"Group rides through the Garden Route every Saturday morning from Central Beach."},
+    {i:"map",t:"Epic Routes",d:"From Robberg to Knysna — we explore the most beautiful roads in the Western Cape."},
+    {i:"shield",t:"Safety First",d:"All members ride with group support, emergency protocols, and mandatory contact details."},
+    {i:"star",t:"Community",d:"A welcoming mix of beginners to seasoned road warriors — everyone is welcome."},
+  ];
+  return(
+    <div>
+      <section className="hero">
+        <div className="hero-grid"/>
+        <div className="hero-glow"/>
+        <div className="hero-emoji">🚴</div>
+        <div className="hero-content">
+          <div className="hero-badge fade-up"><I n="map"/> Plettenberg Bay, South Africa</div>
+          <h1 className="hero-title fade-up" style={{animationDelay:"0.1s"}}>
+            RIDE WITH<br/><span>PLETT</span><br/>CYCLING
+          </h1>
+          <p className="hero-subtitle fade-up" style={{animationDelay:"0.2s"}}>
+            The Garden Route's most passionate cycling community. Join us on the open road through some of South Africa's most breathtaking landscapes.
+          </p>
+          <div className="hero-actions fade-up" style={{animationDelay:"0.3s"}}>
+            <button className="btn btn-primary" onClick={()=>setPage("join")}><I n="bike"/> Join the Club</button>
+            <button className="btn btn-ghost" onClick={()=>setPage("about")}>Learn More</button>
+          </div>
+          <div className="hero-stats">
+            {[["120+","Active Members"],["52","Rides Per Year"],["15k+","KMs Logged"],["2018","Est. Year"]].map(([n,l])=>(
+              <div key={l}><div className="stat-num">{n}</div><div className="stat-label">{l}</div></div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{background:"var(--dark)",borderTop:"1px solid var(--border)",borderBottom:"1px solid var(--border)"}}>
+        <div className="section">
+          <div className="section-label">Why Join Us</div>
+          <h2 className="section-title">BUILT FOR CYCLISTS,<br/>BY CYCLISTS</h2>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:20,marginTop:40}}>
+            {feats.map(f=>(
+              <div key={f.t} className="card card-hover">
+                <div style={{width:44,height:44,background:"rgba(232,255,62,0.1)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",color:"var(--accent)",fontSize:20,marginBottom:16}}><I n={f.i}/></div>
+                <h3 style={{fontSize:16,fontWeight:600,marginBottom:8}}>{f.t}</h3>
+                <p style={{fontSize:14,color:"var(--muted)",lineHeight:1.7}}>{f.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{background:"var(--dark)",borderTop:"1px solid var(--border)"}}>
+        <div className="section">
+          <div className="section-label">Upcoming</div>
+          <h2 className="section-title">NEXT RIDES</h2>
+          <div style={{display:"grid",gap:12,marginTop:32}}>
+            {[
+              {date:"15 Mar",name:"Robberg Peninsula Loop",dist:"42km",level:"Moderate"},
+              {date:"22 Mar",name:"Knysna Forest Challenge",dist:"78km",level:"Hard"},
+              {date:"29 Mar",name:"Lookout Beach Sprint",dist:"25km",level:"Easy"},
+            ].map(r=>(
+              <div key={r.name} className="card" style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12}}>
+                <div style={{display:"flex",gap:20,alignItems:"center"}}>
+                  <div style={{textAlign:"center",minWidth:48}}>
+                    <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,color:"var(--accent)",lineHeight:1}}>{r.date.split(" ")[0]}</div>
+                    <div style={{fontSize:11,color:"var(--muted)",textTransform:"uppercase"}}>{r.date.split(" ")[1]}</div>
+                  </div>
+                  <div>
+                    <div style={{fontWeight:600}}>{r.name}</div>
+                    <div style={{fontSize:13,color:"var(--muted)"}}>{r.dist} · {r.level}</div>
+                  </div>
+                </div>
+                <button className="btn btn-sm btn-ghost" onClick={()=>setPage("login")}>Join Ride →</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" style={{textAlign:"center"}}>
+        <div className="section-label">Membership</div>
+        <h2 className="section-title">READY TO ROLL?</h2>
+        <p style={{color:"var(--muted)",marginBottom:32,fontSize:16}}>Annual membership is R{MEMBERSHIP_FEE}. Valid January 1 – December 31.</p>
+        <div style={{display:"flex",gap:16,justifyContent:"center",flexWrap:"wrap"}}>
+          <button className="btn btn-primary" onClick={()=>setPage("join")}>Create Account</button>
+          <button className="btn btn-ghost" onClick={()=>setPage("login")}>Member Login</button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// ── ABOUT ──────────────────────────────────────────────────
+function AboutPage(){
+  return(
+    <div>
+      <div className="about-hero">
+        <div className="section">
+          <div className="section-label">About Us</div>
+          <h1 className="section-title">THE PLETT<br/>CYCLING CLUB</h1>
+          <p style={{color:"var(--muted)",fontSize:17,maxWidth:600,lineHeight:1.8}}>Founded in 2018 by a small group of cycling enthusiasts, Plett Cycling Club has grown into the heartbeat of the local riding community. We welcome riders of all abilities.</p>
+        </div>
+      </div>
+      <div className="section">
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:24}}>
+          {[
+            {t:"Our Mission",d:"To foster a thriving cycling culture in Plettenberg Bay by creating inclusive, safe, and enjoyable riding experiences for everyone."},
+            {t:"Our Rides",d:"We ride every Saturday morning at 6:30 AM from Central Beach parking lot. Multiple pace groups cater for all fitness levels. Social coffee after every ride."},
+            {t:"Membership Benefits",d:"Annual membership grants access to all club rides, events, skills clinics, emergency roadside support, and our exclusive members' jersey discount."},
+            {t:"Safety Policy",d:"All riders must wear helmets. We follow road rules strictly and ride with high-vis in low-light. Emergency contact details are mandatory for all members."},
+          ].map(x=>(
+            <div key={x.t} className="card">
+              <h3 style={{fontFamily:"Bebas Neue,sans-serif",fontSize:24,color:"var(--accent)",marginBottom:12}}>{x.t}</h3>
+              <p style={{color:"var(--muted)",lineHeight:1.8,fontSize:14}}>{x.d}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{marginTop:64}}>
+          <div className="section-label">Leadership</div>
+          <h2 className="section-title">COMMITTEE</h2>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))",gap:16,marginTop:32}}>
+            {[{n:"James Hendricks",r:"Chairperson"},{n:"Liesl van der Berg",r:"Secretary"},{n:"Ruan Prinsloo",r:"Treasurer"},{n:"Nomsa Dlamini",r:"Ride Captain"}].map(p=>(
+              <div key={p.n} className="card" style={{textAlign:"center"}}>
+                <div style={{width:56,height:56,borderRadius:"50%",background:"linear-gradient(135deg,var(--accent),var(--accent2))",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"Bebas Neue,sans-serif",fontSize:22,color:"var(--black)",margin:"0 auto 12px"}}>{p.n[0]}</div>
+                <div style={{fontWeight:600,fontSize:14}}>{p.n}</div>
+                <div style={{fontSize:12,color:"var(--muted)",marginTop:4}}>{p.r}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── GALLERY ────────────────────────────────────────────────
+function GalleryPage(){
+  const photos=[
+    {e:"🚴‍♂️",l:"Morning Group Ride",bg:"#1a2a0a"},{e:"🏔️",l:"Mountain Pass Climb",bg:"#0a1a2a"},
+    {e:"🌊",l:"Coastal Route",bg:"#0a1520"},{e:"🌅",l:"Sunrise Sprint",bg:"#2a1a0a"},
+    {e:"🚵‍♀️",l:"Off-Road Challenge",bg:"#1a0a0a"},{e:"🏆",l:"Club Championship 2025",bg:"#2a2a0a"},
+    {e:"🌳",l:"Knysna Forest Ride",bg:"#0a1a0a"},{e:"☕",l:"Coffee Stop — Plett Town",bg:"#1a1510"},
+    {e:"🛣️",l:"N2 Highway Segment",bg:"#151515"},{e:"🎯",l:"Time Trial Day",bg:"#1a0a15"},
+    {e:"🧭",l:"Robberg Loop",bg:"#0a1a15"},{e:"🔧",l:"Mechanics Workshop",bg:"#0f0f18"},
+  ];
+  return(
+    <div style={{paddingTop:64}}>
+      <div className="section">
+        <div className="section-label">Photos</div>
+        <h1 className="section-title">GALLERY</h1>
+        <p style={{color:"var(--muted)",marginBottom:40}}>Moments from the road, captured by our club members.</p>
+        <div className="gallery-grid">
+          {photos.map((p,i)=>(
+            <div key={i} className="gallery-item" style={{background:p.bg}}>
+              <span style={{fontSize:52}}>{p.e}</span>
+              <span style={{fontSize:12,color:"var(--muted)",textAlign:"center",padding:"0 12px"}}>{p.l}</span>
+            </div>
+          ))}
+        </div>
+        <p style={{color:"var(--muted)",fontSize:13,marginTop:20,textAlign:"center"}}>📸 Gallery images are placeholders — production version will display real member photos.</p>
+      </div>
+    </div>
+  );
+}
+
+// ── CONTACT ────────────────────────────────────────────────
+function ContactPage({addToast}){
+  const [sent,setSent]=useState(false);
+  return(
+    <div style={{paddingTop:64}}>
+      <div className="section">
+        <div className="section-label">Get In Touch</div>
+        <h1 className="section-title">CONTACT US</h1>
+        <div className="contact-grid" style={{marginTop:40}}>
+          <div>
+            <div className="card" style={{marginBottom:20}}>
+              <h3 style={{fontWeight:600,marginBottom:16}}>Ride With Us</h3>
+              {[["📍","Central Beach Parking Lot, Plettenberg Bay"],["🕕","Every Saturday — 6:30 AM"],["📧","info@plettcycling.co.za"],["📱","082 000 1234"]].map(([ic,tx])=>(
+                <div key={tx} style={{display:"flex",gap:12,marginBottom:12}}><span>{ic}</span><span style={{color:"var(--muted)",fontSize:14}}>{tx}</span></div>
+              ))}
+            </div>
+            <div className="card"><h3 style={{fontWeight:600,marginBottom:8}}>Social Media</h3><p style={{color:"var(--muted)",fontSize:14}}>@PlettCyclingClub on Facebook, Instagram & Strava</p></div>
+          </div>
+          {!sent?(
+            <div className="card">
+              <h3 style={{fontWeight:600,marginBottom:20}}>Send a Message</h3>
+              {[["Name","Your name"],["Email","your@email.com"]].map(([l,p])=>(
+                <div key={l} className="form-group"><label className="form-label">{l}</label><input className="form-input" placeholder={p}/></div>
+              ))}
+              <div className="form-group"><label className="form-label">Message</label><textarea className="form-input" rows={4} placeholder="How can we help?" style={{resize:"vertical"}}/></div>
+              <button className="btn btn-primary" style={{width:"100%"}} onClick={()=>{setSent(true);addToast("Message sent! We'll be in touch soon.","success");}}>Send Message</button>
+            </div>
+          ):(
+            <div className="card" style={{display:"flex",alignItems:"center",justifyContent:"center",minHeight:200,flexDirection:"column",gap:16,textAlign:"center"}}>
+              <div style={{width:56,height:56,background:"rgba(74,222,128,0.15)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",color:"var(--green)",fontSize:24}}><I n="check"/></div>
+              <div><div style={{fontWeight:600,marginBottom:4}}>Message Sent!</div><div style={{color:"var(--muted)",fontSize:14}}>We'll get back to you within 24 hours.</div></div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── SIGNUP ─────────────────────────────────────────────────
+function SignupPage({setPage,addMember,addToast}){
+  const [step,setStep]=useState(1);
+  const [form,setForm]=useState({firstName:"",surname:"",email:"",phone:"",password:"",address:"",emergencyName:"",emergencyPhone:"",nokName:"",nokRelationship:"",nokPhone:"",medical:""});
+  const [errs,setErrs]=useState({});
+  const s=k=>e=>setForm(f=>({...f,[k]:e.target.value}));
+
+  const v1=()=>{
+    const e={};
+    if(!form.firstName)e.firstName="Required";
+    if(!form.surname)e.surname="Required";
+    if(!form.email||!/\S+@\S+\.\S+/.test(form.email))e.email="Valid email required";
+    if(!form.phone)e.phone="Required";
+    if(!form.password||form.password.length<6)e.password="Min 6 characters";
+    if(!form.address)e.address="Required";
+    setErrs(e);return Object.keys(e).length===0;
+  };
+  const v2=()=>{
+    const e={};
+    if(!form.emergencyName)e.emergencyName="Required";
+    if(!form.emergencyPhone)e.emergencyPhone="Required";
+    if(!form.nokName)e.nokName="Required";
+    if(!form.nokRelationship)e.nokRelationship="Required";
+    if(!form.nokPhone)e.nokPhone="Required";
+    setErrs(e);return Object.keys(e).length===0;
+  };
+  const submit=()=>{
+    if(!v2())return;
+    addMember({...form,status:"unpaid",paidYear:null,paymentDate:null,isAdmin:false,password:form.password||"demo123"});
+    addToast("Account created! Please log in to continue.","success");
+    setPage("login");
+  };
+
+  const Err=({k})=>errs[k]?<div style={{color:"var(--red)",fontSize:12,marginTop:4}}>{errs[k]}</div>:null;
+
+  return(
+    <div style={{paddingTop:64}}>
+      <div style={{maxWidth:660,margin:"0 auto",padding:"60px 24px 120px"}}>
+        <div className="section-label">New Member</div>
+        <h1 className="section-title">JOIN THE CLUB</h1>
+        <p style={{color:"var(--muted)",marginBottom:32}}>Create your account — payment is made from your dashboard after signup.</p>
+
+        {/* STEPS */}
+        <div className="steps">
+          {[1,2].map((n,i)=>(
+            <React.Fragment key={n}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <div className="step-num" style={{background:n<step?"var(--green)":n===step?"var(--accent)":"var(--border)",color:"var(--black)"}}>{n<step?"✓":n}</div>
+                <span style={{fontSize:13,fontWeight:600,color:n===step?"var(--text)":n<step?"var(--green)":"var(--muted)"}}>{n===1?"Personal Info":"Safety Details"}</span>
+              </div>
+              {i<1&&<div style={{flex:1,height:1,background:n<step?"var(--green)":"var(--border)",margin:"0 8px",minWidth:20}}/>}
+            </React.Fragment>
+          ))}
+        </div>
+
+        {step===1&&(
+          <div className="card fade-up">
+            <div className="form-row">
+              <div className="form-group"><label className="form-label">First Name *</label><input className="form-input" value={form.firstName} onChange={s("firstName")} placeholder="James"/><Err k="firstName"/></div>
+              <div className="form-group"><label className="form-label">Surname *</label><input className="form-input" value={form.surname} onChange={s("surname")} placeholder="Smith"/><Err k="surname"/></div>
+            </div>
+            <div className="form-group"><label className="form-label">Email Address *</label><input className="form-input" type="email" value={form.email} onChange={s("email")} placeholder="james@example.com"/><Err k="email"/></div>
+            <div className="form-row">
+              <div className="form-group"><label className="form-label">Phone Number *</label><input className="form-input" value={form.phone} onChange={s("phone")} placeholder="082 123 4567"/><Err k="phone"/></div>
+              <div className="form-group"><label className="form-label">Password *</label><input className="form-input" type="password" value={form.password} onChange={s("password")} placeholder="Min 6 characters"/><Err k="password"/></div>
+            </div>
+            <div className="form-group"><label className="form-label">Address *</label><input className="form-input" value={form.address} onChange={s("address")} placeholder="12 Beach Rd, Plettenberg Bay"/><Err k="address"/></div>
+            <button className="btn btn-primary" style={{width:"100%",marginTop:8}} onClick={()=>{if(v1())setStep(2);}}>Continue to Safety Details →</button>
+          </div>
+        )}
+        {step===2&&(
+          <div className="card fade-up">
+            <div className="alert alert-info"><I n="shield"/><span style={{fontSize:13}}>Safety information is used only in emergencies. All data is kept confidential.</span></div>
+            <h3 style={{fontWeight:600,marginBottom:16,fontSize:15}}>Emergency Contact</h3>
+            <div className="form-row">
+              <div className="form-group"><label className="form-label">Contact Name *</label><input className="form-input" value={form.emergencyName} onChange={s("emergencyName")} placeholder="Sarah Smith"/><Err k="emergencyName"/></div>
+              <div className="form-group"><label className="form-label">Contact Phone *</label><input className="form-input" value={form.emergencyPhone} onChange={s("emergencyPhone")} placeholder="083 111 2222"/><Err k="emergencyPhone"/></div>
+            </div>
+            <h3 style={{fontWeight:600,marginBottom:16,marginTop:8,fontSize:15}}>Next of Kin</h3>
+            <div className="form-row">
+              <div className="form-group"><label className="form-label">Full Name *</label><input className="form-input" value={form.nokName} onChange={s("nokName")} placeholder="Sarah Smith"/><Err k="nokName"/></div>
+              <div className="form-group"><label className="form-label">Relationship *</label><input className="form-input" value={form.nokRelationship} onChange={s("nokRelationship")} placeholder="Spouse / Parent"/><Err k="nokRelationship"/></div>
+            </div>
+            <div className="form-group"><label className="form-label">Next of Kin Phone *</label><input className="form-input" value={form.nokPhone} onChange={s("nokPhone")} placeholder="083 111 2222"/><Err k="nokPhone"/></div>
+            <div className="form-group"><label className="form-label">Medical Information <span style={{color:"var(--muted)"}}>(Optional)</span></label><textarea className="form-input" rows={3} value={form.medical} onChange={s("medical")} placeholder="Allergies, conditions, medication..." style={{resize:"vertical"}}/></div>
+            <div style={{display:"flex",gap:12,marginTop:8}}>
+              <button className="btn btn-ghost" onClick={()=>setStep(1)}>← Back</button>
+              <button className="btn btn-primary" style={{flex:1}} onClick={submit}>Create Account</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── LOGIN ──────────────────────────────────────────────────
+function LoginPage({setPage,members,setUser,addToast}){
+  const [email,setEmail]=useState("");
+  const [pw,setPw]=useState("");
+  const [err,setErr]=useState("");
+  const [loading,setLoading]=useState(false);
+
+  const login=()=>{
+    setLoading(true);
+    setTimeout(()=>{
+      const m=members.find(x=>x.email===email&&x.password===pw);
+      if(m){setUser(m);addToast(`Welcome back, ${m.firstName}!`,"success");setPage("dashboard");}
+      else setErr("Invalid email or password. Try a demo account below.");
+      setLoading(false);
+    },700);
+  };
+
+  return(
+    <div style={{paddingTop:64,minHeight:"100vh",display:"flex",alignItems:"center"}}>
+      <div style={{maxWidth:420,margin:"0 auto",padding:"40px 24px",width:"100%"}}>
+        <div style={{textAlign:"center",marginBottom:32}}>
+          <div style={{width:56,height:56,background:"rgba(232,255,62,0.1)",border:"1px solid rgba(232,255,62,0.2)",borderRadius:14,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",color:"var(--accent)",fontSize:24}}><I n="bike"/></div>
+          <h1 style={{fontFamily:"Bebas Neue,sans-serif",fontSize:36}}>MEMBER LOGIN</h1>
+          <p style={{color:"var(--muted)",fontSize:14,marginTop:4}}>Sign in to your Plett Cycling Club account</p>
+        </div>
+        <div className="card">
+          {err&&<div className="alert alert-warning"><I n="alert"/><span style={{fontSize:13}}>{err}</span></div>}
+          <div className="form-group"><label className="form-label">Email Address</label><input className="form-input" type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="your@email.com" onKeyDown={e=>e.key==="Enter"&&login()}/></div>
+          <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" value={pw} onChange={e=>setPw(e.target.value)} placeholder="••••••••" onKeyDown={e=>e.key==="Enter"&&login()}/></div>
+          <button className="btn btn-primary" style={{width:"100%",marginTop:8}} onClick={login} disabled={loading}>{loading?"Signing in...":"Sign In →"}</button>
+          <div style={{marginTop:16,padding:12,background:"rgba(255,255,255,0.03)",borderRadius:8}}>
+            <div style={{fontSize:12,color:"var(--muted)",marginBottom:8}}>Demo accounts (password: demo123):</div>
+            {[["james@example.com","Admin + Paid 2026"],["craig@example.com","Unpaid member"],["tamsin@example.com","Lapsed – paid 2025"]].map(([em,lbl])=>(
+              <button key={em} style={{display:"block",width:"100%",textAlign:"left",background:"none",border:"none",color:"var(--accent)",fontSize:12,padding:"3px 0",cursor:"pointer",fontFamily:"DM Mono,monospace"}} onClick={()=>{setEmail(em);setPw("demo123");}}>
+                {em} — {lbl}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p style={{textAlign:"center",marginTop:20,color:"var(--muted)",fontSize:14}}>
+          Not a member? <button style={{background:"none",border:"none",color:"var(--accent)",cursor:"pointer",fontFamily:"DM Sans,sans-serif",fontSize:14}} onClick={()=>setPage("join")}>Join now →</button>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ── PAYMENT MODAL ──────────────────────────────────────────
+function PaymentModal({onClose,onSuccess,member,year,addToast}){
+  const [step,setStep]=useState("confirm");
+  const [card,setCard]=useState("");
+  const [exp,setExp]=useState("");
+  const [cvv,setCvv]=useState("");
+
+  const pay=()=>{
+    setStep("processing");
+    setTimeout(()=>{
+      setStep("success");
+      setTimeout(()=>{onSuccess(year);addToast(`✅ Payment of R${MEMBERSHIP_FEE} successful! ${year} membership activated.`,"success");onClose();},2000);
+    },2000);
+  };
+
+  return(
+    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div className="modal">
+        {step==="confirm"&&(<>
+          <div style={{fontSize:12,color:"var(--muted)",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:8}}>Membership Payment</div>
+          <div className="modal-title">PAY NOW</div>
+          <div className="card" style={{marginTop:20,marginBottom:20,background:"var(--dark)"}}>
+            {[["Member",`${member.firstName} ${member.surname}`],["Year",year],["Valid Until",`31 Dec ${year}`],["Amount",`R${MEMBERSHIP_FEE}.00`]].map(([k,v])=>(
+              <div key={k} className="detail-row"><span className="detail-key">{k}</span><span className="detail-val">{v}</span></div>
+            ))}
+          </div>
+          <div style={{display:"flex",gap:12}}>
+            <button className="btn btn-ghost" style={{flex:1}} onClick={onClose}>Cancel</button>
+            <button className="btn btn-primary" style={{flex:1}} onClick={()=>setStep("paystack")}>Proceed →</button>
+          </div>
+        </>)}
+
+        {step==="paystack"&&(<>
+          <div className="paystack-card">
+            <div style={{fontWeight:800,fontSize:20,letterSpacing:-0.5,marginBottom:8,opacity:0.9}}>paystack</div>
+            <div style={{fontSize:12,opacity:0.7,marginBottom:16}}>🔒 Sandbox / Demo Mode — no real charge</div>
+            <div style={{marginBottom:12}}>
+              <div style={{fontSize:11,opacity:0.8,marginBottom:4}}>CARD NUMBER</div>
+              <input style={{width:"100%",background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.3)",borderRadius:6,padding:"10px 12px",color:"white",fontFamily:"DM Mono,monospace",fontSize:15,outline:"none"}} placeholder="4084 0840 8408 4081" value={card} onChange={e=>setCard(e.target.value.replace(/\D/g,"").replace(/(.{4})/g,"$1 ").trim().slice(0,19))}/>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+              <div><div style={{fontSize:11,opacity:0.8,marginBottom:4}}>EXPIRY</div><input style={{width:"100%",background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.3)",borderRadius:6,padding:"10px 12px",color:"white",fontFamily:"DM Mono,monospace",fontSize:15,outline:"none"}} placeholder="12/27" value={exp} onChange={e=>setExp(e.target.value)}/></div>
+              <div><div style={{fontSize:11,opacity:0.8,marginBottom:4}}>CVV</div><input style={{width:"100%",background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.3)",borderRadius:6,padding:"10px 12px",color:"white",fontFamily:"DM Mono,monospace",fontSize:15,outline:"none"}} placeholder="123" value={cvv} onChange={e=>setCvv(e.target.value)} maxLength={3}/></div>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:12}}>
+            <button className="btn btn-ghost" onClick={()=>setStep("confirm")}>← Back</button>
+            <button className="btn btn-primary" style={{flex:1}} onClick={pay}>Pay R{MEMBERSHIP_FEE} →</button>
+          </div>
+          <p style={{fontSize:11,color:"var(--muted)",marginTop:10,textAlign:"center"}}>Any card number works in demo mode</p>
+        </>)}
+
+        {step==="processing"&&(
+          <div style={{textAlign:"center",padding:"40px 0"}}>
+            <div style={{fontSize:52,marginBottom:16,animation:"pulse 1s infinite"}}>💳</div>
+            <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,marginBottom:8}}>PROCESSING</div>
+            <div style={{color:"var(--muted)",fontSize:14}}>Contacting Paystack — please wait...</div>
+          </div>
+        )}
+
+        {step==="success"&&(
+          <div style={{textAlign:"center",padding:"40px 0"}}>
+            <div style={{width:72,height:72,background:"rgba(74,222,128,0.15)",border:"2px solid var(--green)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px",color:"var(--green)",fontSize:32}}><I n="check"/></div>
+            <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:36,color:"var(--green)",marginBottom:8}}>PAYMENT SUCCESSFUL</div>
+            <div style={{color:"var(--muted)",fontSize:14}}>Your {year} membership is now active!</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── MEMBER DASHBOARD ────────────────────────────────────────
+function MemberDashboard({user,updateMember,addToast,simMonth}){
+  const [showPay,setShowPay]=useState(false);
+  const [targetYear,setTargetYear]=useState(CURRENT_YEAR);
+  const [tab,setTab]=useState("overview");
+  const [editMode,setEditMode]=useState(false);
+  const [editForm,setEditForm]=useState({...user});
+
+  useEffect(()=>setEditForm({...user}),[user]);
+
+  const paid26 = user.paidYear===CURRENT_YEAR;
+  const paid25 = user.paidYear===CURRENT_YEAR-1;
+  const isOct  = simMonth>=9;
+
+  const payOpts=[];
+  if(!paid26) payOpts.push({year:CURRENT_YEAR,label:`${CURRENT_YEAR} Membership (Current Year)`});
+  if(isOct)   payOpts.push({year:CURRENT_YEAR+1,label:`${CURRENT_YEAR+1} Membership (Next Year — Early Bird 🎉)`});
+
+  const handlePaySuccess=yr=>{
+    updateMember(user.id,{status:"paid",paidYear:yr,paymentDate:new Date().toISOString().split("T")[0]});
+  };
+
+  const saveProfile=()=>{
+    updateMember(user.id,editForm);
+    setEditMode(false);
+    addToast("Profile updated.","success");
+  };
+
+  const ef=k=>e=>setEditForm(f=>({...f,[k]:e.target.value}));
+
+  return(
+    <div className="dash-layout">
+      <div className="dash-content">
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"center",gap:16,flexWrap:"wrap",marginBottom:32}}>
+          <div className="profile-avatar">{user.firstName[0]}{user.surname[0]}</div>
+          <div>
+            <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:32}}>{user.firstName} {user.surname}</div>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:6}}>
+              <span className={`badge ${paid26?"badge-paid":"badge-unpaid"}`}>{paid26?"✓ Paid":"✗ Unpaid"}</span>
+              {user.isAdmin&&<span className="badge badge-admin"><I n="crown"/> Admin</span>}
+            </div>
+          </div>
+        </div>
+
+        {/* Oct renewal banner */}
+        {isOct&&paid26&&(
+          <div className="renewal-banner">
+            <span style={{fontSize:22}}>🔔</span>
+            <div style={{flex:1}}>
+              <div style={{fontWeight:700,color:"var(--accent2)",marginBottom:4}}>Next Season Memberships Now Open!</div>
+              <div style={{fontSize:13,color:"var(--muted)"}}>Secure your {CURRENT_YEAR+1} membership now for only R{MEMBERSHIP_FEE} — early bird pricing!</div>
+            </div>
+            <button className="btn btn-primary btn-sm" onClick={()=>{setTargetYear(CURRENT_YEAR+1);setShowPay(true);}}>Renew Now</button>
+          </div>
+        )}
+
+        {/* Tabs */}
+        <div className="tab-bar">
+          {[["overview","Overview"],["payments","Payments"],["profile","Profile"]].map(([k,l])=>(
+            <button key={k} className={`tab-btn${tab===k?" active":""}`} onClick={()=>setTab(k)}>{l}</button>
+          ))}
+        </div>
+
+        {tab==="overview"&&(
+          <div className="fade-up">
+            <div className="dash-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:16,marginBottom:28}}>
+              <div className="metric-card" style={{borderColor:paid26?"rgba(74,222,128,0.3)":"rgba(248,113,113,0.3)"}}>
+                <div className="metric-label">Status</div>
+                <div className="metric-val" style={{color:paid26?"var(--green)":"var(--red)"}}>{paid26?"ACTIVE":"INACTIVE"}</div>
+                <div style={{fontSize:13,color:"var(--muted)"}}>Year {CURRENT_YEAR}</div>
+              </div>
+              <div className="metric-card">
+                <div className="metric-label">Paid Year</div>
+                <div className="metric-val" style={{color:"var(--accent)"}}>{user.paidYear||"—"}</div>
+                <div style={{fontSize:13,color:"var(--muted)"}}>Valid to 31 Dec {user.paidYear||"—"}</div>
+              </div>
+              <div className="metric-card">
+                <div className="metric-label">Payment Date</div>
+                <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:22,marginTop:8}}>{fmt(user.paymentDate)}</div>
+              </div>
+            </div>
+
+            {paid26
+              ?<div className="alert alert-success"><I n="check"/><div><strong>Your {CURRENT_YEAR} membership is active.</strong><div style={{fontSize:13,marginTop:2}}>Valid 1 Jan {CURRENT_YEAR} – 31 Dec {CURRENT_YEAR}. You're all set to ride!</div></div></div>
+              :paid25
+                ?<div className="alert alert-warning"><I n="alert"/><div><strong>Your membership has lapsed.</strong><div style={{fontSize:13,marginTop:2}}>You paid for {CURRENT_YEAR-1} but have not renewed for {CURRENT_YEAR}. Please pay to participate in rides.</div></div></div>
+                :<div className="alert alert-warning"><I n="alert"/><div><strong>You have not paid the {CURRENT_YEAR} membership.</strong><div style={{fontSize:13,marginTop:2}}>Your account is created but payment is required to join club rides.</div></div></div>
+            }
+
+            {payOpts.length>0&&(
+              <div>
+                <h3 style={{fontWeight:600,marginBottom:16}}>Pay Your Membership</h3>
+                <div style={{display:"grid",gap:12}}>
+                  {payOpts.map(o=>(
+                    <div key={o.year} className="card" style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12,borderColor:o.year===CURRENT_YEAR+1?"rgba(255,107,53,0.4)":"var(--border)"}}>
+                      <div>
+                        <div style={{fontWeight:600,marginBottom:4}}>{o.label}</div>
+                        <div style={{fontSize:13,color:"var(--muted)"}}>R{MEMBERSHIP_FEE} · Valid 1 Jan {o.year} – 31 Dec {o.year}</div>
+                      </div>
+                      <button className="btn btn-primary btn-sm" onClick={()=>{setTargetYear(o.year);setShowPay(true);}}><I n="credit"/> Pay Now</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!isOct&&paid26&&(
+              <div className="alert alert-info" style={{marginTop:20}}>
+                <I n="calendar"/>
+                <div style={{fontSize:13}}>Next year ({CURRENT_YEAR+1}) renewals open on <strong>1 October {CURRENT_YEAR}</strong>. Use the demo bar below to simulate October.</div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {tab==="payments"&&(
+          <div className="fade-up">
+            <h3 style={{fontWeight:600,marginBottom:20}}>Payment History</h3>
+            {user.paymentDate
+              ?<div className="card" style={{padding:0}}><div className="table-wrap"><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead><tbody><tr>
+                  <td style={{fontFamily:"DM Mono,monospace",fontSize:13}}>{fmt(user.paymentDate)}</td>
+                  <td>Annual Membership — {user.paidYear}</td>
+                  <td style={{fontFamily:"DM Mono,monospace"}}>R{MEMBERSHIP_FEE}.00</td>
+                  <td><span className="badge badge-paid">Paid</span></td>
+                </tr></tbody></table></div></div>
+              :<div className="card" style={{textAlign:"center",padding:"48px 24px",color:"var(--muted)"}}>
+                <div style={{fontSize:40,marginBottom:12,opacity:0.3}}>💳</div>
+                <div>No payment history yet.</div>
+                <button className="btn btn-primary btn-sm" style={{marginTop:16}} onClick={()=>setTab("overview")}>Go to Overview →</button>
+              </div>
+            }
+          </div>
+        )}
+
+        {tab==="profile"&&(
+          <div className="fade-up">
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+              <h3 style={{fontWeight:600}}>Profile Details</h3>
+              {!editMode
+                ?<button className="btn btn-ghost btn-sm" onClick={()=>setEditMode(true)}>Edit Profile</button>
+                :<div style={{display:"flex",gap:8}}>
+                   <button className="btn btn-ghost btn-sm" onClick={()=>setEditMode(false)}>Cancel</button>
+                   <button className="btn btn-primary btn-sm" onClick={saveProfile}>Save</button>
+                 </div>
+              }
+            </div>
+            <div className="card">
+              {editMode?(
+                <>
+                  <div className="form-row">
+                    <div className="form-group"><label className="form-label">First Name</label><input className="form-input" value={editForm.firstName} onChange={ef("firstName")}/></div>
+                    <div className="form-group"><label className="form-label">Surname</label><input className="form-input" value={editForm.surname} onChange={ef("surname")}/></div>
+                  </div>
+                  <div className="form-group"><label className="form-label">Phone</label><input className="form-input" value={editForm.phone} onChange={ef("phone")}/></div>
+                  <div className="form-group"><label className="form-label">Address</label><input className="form-input" value={editForm.address} onChange={ef("address")}/></div>
+                  <div className="form-group"><label className="form-label">Medical Info</label><textarea className="form-input" rows={3} value={editForm.medical} onChange={ef("medical")}/></div>
+                </>
+              ):(
+                [["Full Name",`${user.firstName} ${user.surname}`],["Email",user.email],["Phone",user.phone],["Address",user.address],["Emergency Contact",`${user.emergencyName} — ${user.emergencyPhone}`],["Next of Kin",`${user.nokName} (${user.nokRelationship}) — ${user.nokPhone}`],["Medical Info",user.medical||"None provided"]].map(([k,v])=>(
+                  <div key={k} className="detail-row"><span className="detail-key">{k}</span><span className="detail-val">{v}</span></div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+      {showPay&&<PaymentModal onClose={()=>setShowPay(false)} onSuccess={handlePaySuccess} member={user} year={targetYear} addToast={addToast}/>}
+    </div>
+  );
+}
+
+// ── ADMIN DASHBOARD ─────────────────────────────────────────
+function AdminDashboard({members,updateMember,addToast}){
+  const [filter,setFilter]=useState("all");
+  const [yearF,setYearF]=useState("all");
+  const [search,setSearch]=useState("");
+  const [sel,setSel]=useState(null);
+  const [tab,setTab]=useState("members");
+
+  const rows=members.filter(m=>{
+    if(filter==="paid"&&m.paidYear!==CURRENT_YEAR)return false;
+    if(filter==="unpaid"&&m.paidYear===CURRENT_YEAR)return false;
+    if(yearF!=="all"&&String(m.paidYear)!==yearF)return false;
+    if(search&&!`${m.firstName} ${m.surname} ${m.email}`.toLowerCase().includes(search.toLowerCase()))return false;
+    return true;
+  });
+
+  const totalPaid=members.filter(m=>m.paidYear===CURRENT_YEAR).length;
+  const totalUnpaid=members.length-totalPaid;
+
+  const exportCSV=()=>{
+    const hdr=["Name","Email","Phone","Status","PaidYear","PaymentDate"];
+    const data=rows.map(m=>[`${m.firstName} ${m.surname}`,m.email,m.phone,m.paidYear===CURRENT_YEAR?"Paid":"Unpaid",m.paidYear||"",m.paymentDate||""]);
+    const csv=[hdr,...data].map(r=>r.join(",")).join("\n");
+    const a=document.createElement("a");
+    a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);
+    a.download="pcc-members.csv";a.click();
+    addToast("CSV exported.","success");
+  };
+
+  return(
+    <div className="dash-layout">
+      <div className="dash-content">
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12,marginBottom:32}}>
+          <div>
+            <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:36}}>ADMIN DASHBOARD</div>
+            <div style={{color:"var(--muted)",fontSize:14}}>Plett Cycling Club — {CURRENT_YEAR}</div>
+          </div>
+          <span className="badge badge-admin"><I n="crown"/> Admin</span>
+        </div>
+
+        {/* Metrics */}
+        <div className="dash-grid" style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:16,marginBottom:32}}>
+          {[{l:"Total Members",v:members.length,c:"var(--text)"},{l:`Paid ${CURRENT_YEAR}`,v:totalPaid,c:"var(--green)"},{l:"Unpaid / Lapsed",v:totalUnpaid,c:"var(--red)"},{l:`Revenue ${CURRENT_YEAR}`,v:`R${(totalPaid*MEMBERSHIP_FEE).toLocaleString()}`,c:"var(--accent)"}].map(m=>(
+            <div key={m.l} className="metric-card"><div className="metric-val" style={{color:m.c}}>{m.v}</div><div className="metric-label">{m.l}</div></div>
+          ))}
+        </div>
+
+        {/* Tabs */}
+        <div className="tab-bar">
+          {[["members","Members"],["reminders","Renewal Reminders"],["analytics","Analytics"]].map(([k,l])=>(
+            <button key={k} className={`tab-btn${tab===k?" active":""}`} onClick={()=>setTab(k)}>{l}</button>
+          ))}
+        </div>
+
+        {tab==="members"&&(
+          <>
+            <div style={{display:"flex",gap:10,marginBottom:20,flexWrap:"wrap",alignItems:"center"}}>
+              <input className="form-input" placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)} style={{maxWidth:240}}/>
+              {["all","paid","unpaid"].map(f=><button key={f} className={`btn btn-sm ${filter===f?"btn-primary":"btn-ghost"}`} onClick={()=>setFilter(f)}>{f.charAt(0).toUpperCase()+f.slice(1)}</button>)}
+              <select className="form-input" style={{maxWidth:150}} value={yearF} onChange={e=>setYearF(e.target.value)}>
+                <option value="all">All Years</option>
+                {[CURRENT_YEAR,CURRENT_YEAR-1,CURRENT_YEAR-2].map(y=><option key={y} value={y}>{y}</option>)}
+              </select>
+              <button className="btn btn-ghost btn-sm" style={{marginLeft:"auto"}} onClick={exportCSV}><I n="download"/> Export CSV</button>
+            </div>
+            <div className="card" style={{padding:0}}>
+              <div className="table-wrap">
+                <table>
+                  <thead><tr><th>Member</th><th>Phone</th><th>Status</th><th>Paid Year</th><th>Payment Date</th><th>Role</th><th>Actions</th></tr></thead>
+                  <tbody>
+                    {rows.map(m=>(
+                      <tr key={m.id}>
+                        <td><div style={{fontWeight:500}}>{m.firstName} {m.surname}</div><div style={{fontSize:12,color:"var(--muted)"}}>{m.email}</div></td>
+                        <td style={{fontSize:13,color:"var(--muted)"}}>{m.phone}</td>
+                        <td><span className={`badge ${m.paidYear===CURRENT_YEAR?"badge-paid":"badge-unpaid"}`}>{m.paidYear===CURRENT_YEAR?"Paid":"Unpaid"}</span></td>
+                        <td style={{fontFamily:"DM Mono,monospace",fontSize:13}}>{m.paidYear||"—"}</td>
+                        <td style={{fontFamily:"DM Mono,monospace",fontSize:13}}>{fmt(m.paymentDate)}</td>
+                        <td>{m.isAdmin?<span className="badge badge-admin">Admin</span>:<span style={{fontSize:13,color:"var(--muted)"}}>Member</span>}</td>
+                        <td>
+                          <div style={{display:"flex",gap:6}}>
+                            <button className="btn btn-sm btn-ghost" title="View details" onClick={()=>setSel(m)}><I n="eye"/></button>
+                            {!m.isAdmin&&<button className="btn btn-sm btn-ghost" title="Promote to Admin" onClick={()=>{updateMember(m.id,{isAdmin:true});addToast(`${m.firstName} promoted to Admin.`,"success");}}><I n="crown"/></button>}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {rows.length===0&&<tr><td colSpan={7} style={{textAlign:"center",color:"var(--muted)",padding:"36px"}}>No members match current filters.</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
+
+        {tab==="reminders"&&(
+          <div className="fade-up">
+            <div className="alert alert-info"><I n="bell"/><div><strong>Renewal Reminder System</strong><div style={{fontSize:13,marginTop:4}}>Shows how automated reminders are triggered. In production, emails are sent at scheduled dates.</div></div></div>
+            <h3 style={{fontWeight:600,marginBottom:16}}>Reminder Schedule</h3>
+            <div style={{display:"grid",gap:12,marginBottom:32}}>
+              {[
+                {t:"1 October",ev:"Next year memberships open",tg:"All paid current-year members",msg:`"Plett Cycling Club ${CURRENT_YEAR+1} memberships are now open! Renew early and secure your spot."`},
+                {t:"1 November",ev:"First renewal reminder",tg:"Members not yet renewed for next year",msg:`"Reminder: ${CURRENT_YEAR+1} memberships are open. Renew now for uninterrupted access."`},
+                {t:"1 December",ev:"Final renewal push",tg:"Members not yet renewed for next year",msg:`"Last chance! ${CURRENT_YEAR+1} renewal closes 31 Dec. Don't lose your spot."`},
+                {t:"31 January",ev:"Lapse notice",tg:"Members who haven't renewed",msg:`"Your ${CURRENT_YEAR} membership has lapsed. Pay now to rejoin club rides."`},
+              ].map(r=>(
+                <div key={r.t} className="card">
+                  <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
+                    <div style={{background:"rgba(232,255,62,0.1)",border:"1px solid rgba(232,255,62,0.2)",borderRadius:8,padding:"5px 12px",fontSize:12,fontFamily:"DM Mono,monospace",color:"var(--accent)",whiteSpace:"nowrap",alignSelf:"flex-start"}}>{r.t}</div>
+                    <div style={{flex:1}}>
+                      <div style={{fontWeight:600,marginBottom:4}}>{r.ev}</div>
+                      <div style={{fontSize:13,color:"var(--muted)",marginBottom:8}}>Target: {r.tg}</div>
+                      <div style={{fontSize:13,background:"var(--dark)",borderRadius:6,padding:"8px 12px",borderLeft:"3px solid var(--accent2)",color:"#ccc",fontStyle:"italic"}}>{r.msg}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <h3 style={{fontWeight:600,marginBottom:16}}>Members Needing Reminder ({CURRENT_YEAR})</h3>
+            <div className="card" style={{padding:0}}>
+              <div className="table-wrap">
+                <table>
+                  <thead><tr><th>Member</th><th>Email</th><th>Last Paid</th><th>Action</th></tr></thead>
+                  <tbody>
+                    {members.filter(m=>m.paidYear!==CURRENT_YEAR).map(m=>(
+                      <tr key={m.id}>
+                        <td>{m.firstName} {m.surname}</td>
+                        <td style={{fontSize:13,color:"var(--muted)"}}>{m.email}</td>
+                        <td style={{fontFamily:"DM Mono,monospace",fontSize:13}}>{m.paidYear||"Never"}</td>
+                        <td><button className="btn btn-sm btn-ghost" onClick={()=>addToast(`📧 Reminder sent to ${m.firstName} ${m.surname}`,"success")}><I n="bell"/> Send Reminder</button></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab==="analytics"&&(
+          <div className="fade-up">
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:24}}>
+              <div className="card">
+                <h3 style={{fontWeight:600,marginBottom:20}}>Membership Distribution</h3>
+                {[{l:`Paid ${CURRENT_YEAR}`,n:totalPaid,c:"var(--green)"},{l:`Unpaid ${CURRENT_YEAR}`,n:totalUnpaid,c:"var(--red)"}].map(x=>(
+                  <div key={x.l} style={{marginBottom:16}}>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:6,fontSize:13}}>
+                      <span style={{color:"var(--muted)"}}>{x.l}</span>
+                      <span style={{fontFamily:"DM Mono,monospace"}}>{x.n} / {members.length}</span>
+                    </div>
+                    <div style={{height:8,background:"var(--dark)",borderRadius:4,overflow:"hidden"}}>
+                      <div style={{height:"100%",width:`${(x.n/members.length)*100}%`,background:x.c,borderRadius:4}}/>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="card">
+                <h3 style={{fontWeight:600,marginBottom:20}}>Revenue Summary</h3>
+                {[["Collected",`R${(totalPaid*MEMBERSHIP_FEE).toLocaleString()}`],["Outstanding",`R${(totalUnpaid*MEMBERSHIP_FEE).toLocaleString()}`],["Total Potential",`R${(members.length*MEMBERSHIP_FEE).toLocaleString()}`],["Collection Rate",`${Math.round((totalPaid/members.length)*100)}%`]].map(([k,v])=>(
+                  <div key={k} className="detail-row"><span className="detail-key">{k}</span><span style={{fontFamily:"DM Mono,monospace",fontSize:16,color:"var(--accent)"}}>{v}</span></div>
+                ))}
+              </div>
+            </div>
+            <div className="card" style={{marginTop:24}}>
+              <h3 style={{fontWeight:600,marginBottom:20}}>Payment Timeline — {CURRENT_YEAR}</h3>
+              <div className="bar-wrap">
+                {MONTHS.map((m,i)=>{
+                  const cnt=members.filter(mem=>{
+                    if(!mem.paymentDate)return false;
+                    const d=new Date(mem.paymentDate);
+                    return d.getFullYear()===CURRENT_YEAR&&d.getMonth()===i;
+                  }).length;
+                  const h=cnt>0?Math.max((cnt/members.length)*100,14):4;
+                  return(
+                    <div key={m} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center"}}>
+                      <div className="bar" style={{width:"100%",height:`${h}%`,background:cnt>0?"var(--accent)":"var(--border)"}}/>
+                      <div className="bar-label">{m}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Member Detail Modal */}
+      {sel&&(
+        <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&setSel(null)}>
+          <div className="modal" style={{maxWidth:500}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20}}>
+              <div>
+                <div className="modal-title">{sel.firstName.toUpperCase()} {sel.surname.toUpperCase()}</div>
+                <div style={{display:"flex",gap:8,marginTop:6}}>
+                  <span className={`badge ${sel.paidYear===CURRENT_YEAR?"badge-paid":"badge-unpaid"}`}>{sel.paidYear===CURRENT_YEAR?"Paid":"Unpaid"}</span>
+                  {sel.isAdmin&&<span className="badge badge-admin">Admin</span>}
+                </div>
+              </div>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setSel(null)}><I n="x"/></button>
+            </div>
+            {[["Email",sel.email],["Phone",sel.phone],["Address",sel.address],["Emergency Contact",`${sel.emergencyName} — ${sel.emergencyPhone}`],["Next of Kin",`${sel.nokName} (${sel.nokRelationship})`],["NOK Phone",sel.nokPhone],["Medical Info",sel.medical||"None"],["Paid Year",sel.paidYear||"Not paid"],["Payment Date",fmt(sel.paymentDate)]].map(([k,v])=>(
+              <div key={k} className="detail-row"><span className="detail-key">{k}</span><span className="detail-val">{v}</span></div>
+            ))}
+            {!sel.isAdmin&&<button className="btn btn-ghost btn-sm" style={{marginTop:16,width:"100%"}} onClick={()=>{updateMember(sel.id,{isAdmin:true});addToast(`${sel.firstName} promoted to Admin.`,"success");setSel(null);}}><I n="crown"/> Promote to Admin</button>}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── ROOT APP ────────────────────────────────────────────────
+function App(){
+  const [page,setPage]     = useState("home");
+  const [user,setUser]     = useState(null);
+  const [members,setMembers] = useState(DUMMY_MEMBERS);
+  const [toasts,setToasts] = useState([]);
+  const [simMonth,setSimMonth] = useState(new Date().getMonth());
+
+  const addToast=(msg,type="info")=>{
+    const id=Date.now();
+    setToasts(t=>[...t,{id,msg,type}]);
+    setTimeout(()=>setToasts(t=>t.filter(x=>x.id!==id)),4000);
+  };
+
+  const logout=()=>{setUser(null);setPage("home");addToast("Logged out.","info");};
+
+  const addMember=data=>{
+    const m={...data,id:Date.now()};
+    setMembers(ms=>[...ms,m]);
+  };
+
+  const updateMember=(id,updates)=>{
+    setMembers(ms=>ms.map(m=>{
+      if(m.id!==id)return m;
+      const u={...m,...updates};
+      if(user&&user.id===id)setUser(u);
+      return u;
+    }));
+  };
+
+  // Guard routes
+  useEffect(()=>{
+    if(!user&&(page==="dashboard"||page==="admin"))setPage("login");
+    if(user&&page==="admin"&&!user.isAdmin)setPage("dashboard");
+  },[page,user]);
+
+  const sp={setPage,addToast};
+
+  return(
+    <>
+      <Navbar page={page} setPage={setPage} user={user} logout={logout}/>
+      <main style={{paddingBottom:72}}>
+        {page==="home"    && <HomePage {...sp}/>}
+        {page==="about"   && <AboutPage/>}
+        {page==="gallery" && <GalleryPage/>}
+        {page==="join"    && <SignupPage {...sp} addMember={addMember}/>}
+        {page==="contact" && <ContactPage {...sp}/>}
+        {page==="login"   && <LoginPage {...sp} members={members} setUser={setUser}/>}
+        {page==="dashboard"&&user&&<MemberDashboard user={user} updateMember={updateMember} addToast={addToast} simMonth={simMonth}/>}
+        {page==="admin"   &&user?.isAdmin&&<AdminDashboard members={members} updateMember={updateMember} addToast={addToast}/>}
+      </main>
+      <DemoBar simMonth={simMonth} setSimMonth={setSimMonth} setPage={setPage} setUser={setUser} members={members}/>
+      <Toasts toasts={toasts}/>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
