@@ -572,6 +572,145 @@
     50% { opacity: 0.4; transform: scaleY(0.7); }
   }
 
+  /* ── ARCHITECTURE ── */
+  #architecture { background: var(--black); overflow: hidden; }
+
+  .arch-toggle {
+    display: inline-flex; margin-top: 2.5rem; margin-bottom: 3rem;
+    border: 1px solid rgba(255,255,255,0.1); overflow: hidden;
+  }
+  .arch-toggle-btn {
+    padding: 0.7rem 2rem; cursor: pointer; font-size: 0.8rem;
+    font-family: 'DM Mono', monospace; letter-spacing: 0.08em;
+    text-transform: uppercase; border: none; background: transparent;
+    color: var(--grey-text); transition: all 0.3s; position: relative;
+  }
+  .arch-toggle-btn.active {
+    background: var(--cyan); color: var(--black); font-weight: 500;
+  }
+  .arch-toggle-btn:not(.active):hover { color: var(--white); background: var(--grey-mid); }
+
+  /* ARCH VIEWS */
+  .arch-view { display: none; }
+  .arch-view.visible { display: block; }
+
+  /* ── CURRENT STATE DIAGRAM ── */
+  .arch-diagram {
+    position: relative; width: 100%;
+    background: var(--grey-dark);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2.5rem; overflow-x: auto;
+  }
+  .arch-legend {
+    display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--grey-muted);
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-line { width: 20px; height: 2px; flex-shrink: 0; }
+
+  /* SVG ARCH */
+  .arch-svg-wrap { min-width: 860px; }
+  .arch-svg { width: 100%; overflow: visible; }
+
+  /* Node base styles */
+  .arch-node {
+    cursor: pointer; transition: all 0.2s;
+  }
+  .arch-node rect, .arch-node .node-box {
+    transition: all 0.2s;
+  }
+  .arch-node:hover rect, .arch-node:hover .node-box {
+    filter: brightness(1.3);
+  }
+  .arch-node.highlighted rect { stroke: var(--cyan) !important; stroke-width: 2px !important; }
+  .arch-node.error-node rect { stroke: #e05050 !important; }
+
+  /* Flow arrows */
+  .flow-arrow { marker-end: url(#arrowhead); }
+  .flow-arrow-manual { stroke-dasharray: 5 3; }
+
+  /* DETAIL PANEL */
+  .arch-detail-panel {
+    margin-top: 1.5rem;
+    border: 1px solid var(--cyan-border);
+    background: var(--cyan-dim);
+    padding: 1.75rem 2rem;
+    display: none; animation: fadeUp 0.3s ease forwards;
+  }
+  .arch-detail-panel.visible { display: flex; gap: 3rem; flex-wrap: wrap; }
+  .panel-title {
+    font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--white);
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .panel-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.08em; padding: 0.2rem 0.5rem;
+    border: 1px solid var(--cyan-border); color: var(--cyan);
+  }
+  .panel-badge.problem { border-color: rgba(224,80,80,0.4); color: #e05050; }
+  .panel-desc { font-size: 0.85rem; color: var(--grey-text); line-height: 1.7; margin-bottom: 1rem; max-width: 420px; }
+  .panel-items { list-style: none; }
+  .panel-items li {
+    font-size: 0.8rem; color: var(--grey-text); padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .panel-items li:last-child { border-bottom: none; }
+  .panel-items li .pi { flex-shrink: 0; color: var(--cyan); }
+  .panel-items li .pi.bad { color: #e05050; }
+  .panel-close {
+    margin-left: auto; margin-top: -0.5rem; cursor: pointer;
+    font-size: 1.2rem; color: var(--grey-muted); line-height: 1;
+    padding: 0.25rem 0.5rem; align-self: flex-start;
+    transition: color 0.2s;
+  }
+  .panel-close:hover { color: var(--white); }
+
+  /* PROBLEM ANNOTATION */
+  .problem-annotation {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.05em; fill: #e05050;
+  }
+  .warning-box rect { fill: rgba(224,80,80,0.12); stroke: rgba(224,80,80,0.4); stroke-width: 1px; }
+  .warning-box text { fill: #e05050; font-family: 'DM Mono', monospace; font-size: 11px; }
+
+  /* FUTURE STATE */
+  .future-callouts {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: rgba(255,255,255,0.06); margin-top: 2rem;
+  }
+  .future-callout {
+    background: var(--grey-dark); padding: 1.75rem;
+    transition: background 0.3s; cursor: default;
+    position: relative;
+  }
+  .future-callout::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--cyan); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .future-callout:hover { background: var(--grey-mid); }
+  .future-callout:hover::before { transform: scaleX(1); }
+  .fc-num {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em;
+    color: var(--cyan); margin-bottom: 0.75rem;
+  }
+  .fc-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--white); }
+  .fc-body { font-size: 0.8rem; color: var(--grey-text); line-height: 1.6; }
+
+  /* CLICK HINT */
+  .click-hint {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--grey-muted); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .click-hint::before { content: '↑'; color: var(--cyan); }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     nav { padding: 1rem 1.5rem; }
@@ -582,6 +721,8 @@
     .timeline, .process-flow, .maturity-ladder, .deliverables-grid { grid-template-columns: 1fr; }
     .cases-grid { grid-template-columns: 1fr; }
     .commercial-meta { grid-template-columns: 1fr; }
+    .future-callouts { grid-template-columns: 1fr; }
+    .arch-detail-panel.visible { flex-direction: column; gap: 1.5rem; }
     footer { flex-direction: column; gap: 1rem; text-align: center; }
     .divider { margin: 0 1.5rem; }
   }
@@ -595,6 +736,7 @@
   <ul class="nav-links">
     <li><a href="#problem">Problem</a></li>
     <li><a href="#impact">Impact</a></li>
+    <li><a href="#architecture">Architecture</a></li>
     <li><a href="#approach">Approach</a></li>
     <li><a href="#deliverables">Deliverables</a></li>
     <li><a href="#commercial">Commercial</a></li>
@@ -721,6 +863,383 @@
         </ul>
       </div>
     </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-inner">
+    <p class="section-label reveal">System architecture</p>
+    <h2 class="section-title reveal">From fragmented execution<br>to <em>connected command.</em></h2>
+    <p class="section-body reveal">See how the current architecture creates the 10-day invoicing delay — and how the Intechem Command Layer resolves it. Click any node to explore.</p>
+
+    <div class="arch-toggle reveal">
+      <button class="arch-toggle-btn active" onclick="switchArch('current', this)">Current state</button>
+      <button class="arch-toggle-btn" onclick="switchArch('future', this)">Future state (ICL)</button>
+    </div>
+
+    <!-- ══ CURRENT STATE ══ -->
+    <div id="arch-current" class="arch-view visible reveal">
+      <div class="arch-diagram">
+        <div class="arch-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--grey-text);"></div>
+            Manual / human action
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--cyan);"></div>
+            System integration
+          </div>
+          <div class="legend-item">
+            <div class="legend-line" style="background: var(--grey-text);"></div>
+            Document flow
+          </div>
+          <div class="legend-item">
+            <div class="legend-line" style="background: #e05050; opacity: 0.7;"></div>
+            Bottleneck / problem
+          </div>
+        </div>
+        <p class="click-hint">Click any node to see details</p>
+
+        <div class="arch-svg-wrap">
+          <svg class="arch-svg" viewBox="0 0 900 440" xmlns="http://www.w3.org/2000/svg" style="font-family: 'DM Sans', sans-serif;">
+            <defs>
+              <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#555"/>
+              </marker>
+              <marker id="arrowhead-cyan" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="rgba(0,200,224,0.6)"/>
+              </marker>
+              <marker id="arrowhead-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#e05050"/>
+              </marker>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Background zones -->
+            <rect x="10" y="60" width="870" height="310" rx="4" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <text x="24" y="82" fill="rgba(255,255,255,0.2)" font-size="11" letter-spacing="2" font-family="'DM Mono', monospace" text-anchor="start">INTECHEM</text>
+
+            <!-- Customer box -->
+            <g class="arch-node" id="node-customer" onclick="showPanel('customer')" tabindex="0">
+              <rect x="20" y="120" width="110" height="50" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="75" y="141" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Customer</text>
+              <text x="75" y="157" fill="#888" font-size="9" text-anchor="middle">Accepts quote / Issues PO</text>
+              <circle cx="96" cy="122" r="4" fill="rgba(136,136,136,0.6)"/>
+            </g>
+
+            <!-- Sales box -->
+            <g class="arch-node" id="node-sales" onclick="showPanel('sales')" tabindex="0">
+              <rect x="190" y="100" width="100" height="45" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="240" y="120" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Sales</text>
+              <text x="240" y="134" fill="#888" font-size="9" text-anchor="middle">Quote → MS Dynamics</text>
+              <circle cx="261" cy="102" r="4" fill="rgba(136,136,136,0.6)"/>
+            </g>
+
+            <!-- Finance box -->
+            <g class="arch-node" id="node-finance" onclick="showPanel('finance')" tabindex="0">
+              <rect x="190" y="200" width="100" height="45" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="240" y="220" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Finance</text>
+              <text x="240" y="234" fill="#888" font-size="9" text-anchor="middle">PO (cust.) → Sage</text>
+              <circle cx="261" cy="202" r="4" fill="rgba(0,200,224,0.6)"/>
+            </g>
+
+            <!-- Procurement box -->
+            <g class="arch-node" id="node-procurement" onclick="showPanel('procurement')" tabindex="0">
+              <rect x="360" y="150" width="115" height="50" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="417" y="171" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Procurement</text>
+              <text x="417" y="185" fill="#888" font-size="9" text-anchor="middle">PR + Supplier PO → Excel</text>
+              <circle cx="436" cy="152" r="4" fill="rgba(136,136,136,0.6)"/>
+            </g>
+
+            <!-- Logistics box -->
+            <g class="arch-node" id="node-logistics" onclick="showPanel('logistics')" tabindex="0">
+              <rect x="545" y="100" width="110" height="45" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="600" y="120" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Logistics</text>
+              <text x="600" y="134" fill="#888" font-size="9" text-anchor="middle">Collection Note → Excel</text>
+              <circle cx="621" cy="102" r="4" fill="rgba(136,136,136,0.6)"/>
+            </g>
+
+            <!-- Transport box -->
+            <g class="arch-node" id="node-transport" onclick="showPanel('transport')" tabindex="0">
+              <rect x="730" y="100" width="120" height="45" rx="3" fill="#252525" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <text x="790" y="120" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Transport Co.</text>
+              <text x="790" y="134" fill="#888" font-size="9" text-anchor="middle">Collects + Delivers</text>
+              <circle cx="811" cy="102" r="4" fill="rgba(136,136,136,0.6)"/>
+            </g>
+
+            <!-- Supplier box -->
+            <g class="arch-node" id="node-supplier" onclick="showPanel('supplier')" tabindex="0">
+              <rect x="410" y="290" width="90" height="40" rx="3" fill="#252525" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <text x="455" y="313" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Supplier</text>
+              <circle cx="471" cy="292" r="4" fill="rgba(136,136,136,0.6)"/>
+            </g>
+
+            <!-- POD bottleneck box -->
+            <g class="arch-node error-node" id="node-pod" onclick="showPanel('pod')" tabindex="0">
+              <rect x="730" y="200" width="120" height="55" rx="3" fill="rgba(224,80,80,0.08)" stroke="rgba(224,80,80,0.5)" stroke-width="1.5"/>
+              <text x="790" y="222" fill="#e05050" font-size="11" font-weight="500" text-anchor="middle">⚠ POD Pack</text>
+              <text x="790" y="236" fill="rgba(224,80,80,0.7)" font-size="9" text-anchor="middle">Manual return</text>
+              <text x="790" y="248" fill="rgba(224,80,80,0.7)" font-size="9" text-anchor="middle">Up to 10 day delay</text>
+            </g>
+
+            <!-- Invoice blocked box -->
+            <g class="arch-node error-node" id="node-invoice" onclick="showPanel('invoice')" tabindex="0">
+              <rect x="190" y="290" width="100" height="40" rx="3" fill="rgba(224,80,80,0.08)" stroke="rgba(224,80,80,0.5)" stroke-width="1.5"/>
+              <text x="240" y="308" fill="#e05050" font-size="11" font-weight="500" text-anchor="middle">⚠ Invoice</text>
+              <text x="240" y="322" fill="rgba(224,80,80,0.7)" font-size="9" text-anchor="middle">Blocked until POD</text>
+            </g>
+
+            <!-- ARROWS — normal flow -->
+            <!-- Customer → Sales -->
+            <line x1="130" y1="145" x2="188" y2="125" stroke="#444" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+            <!-- Sales → Finance (PO) -->
+            <line x1="240" y1="145" x2="240" y2="198" stroke="#444" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+            <!-- Finance → Procurement -->
+            <line x1="290" y1="220" x2="358" y2="185" stroke="#444" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowhead)"/>
+            <!-- Procurement → Logistics -->
+            <line x1="475" y1="170" x2="543" y2="130" stroke="#444" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowhead)"/>
+            <!-- Logistics → Transport -->
+            <line x1="655" y1="122" x2="728" y2="122" stroke="#444" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+            <!-- Procurement → Supplier -->
+            <line x1="455" y1="200" x2="455" y2="288" stroke="#444" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arrowhead)"/>
+            <!-- Transport → POD (return, problem) -->
+            <line x1="790" y1="145" x2="790" y2="198" stroke="#e05050" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrowhead-red)"/>
+            <!-- POD → Invoice (delayed, problem) -->
+            <path d="M730 227 Q560 260 290 310" stroke="#e05050" stroke-width="1.5" stroke-dasharray="4 3" fill="none" marker-end="url(#arrowhead-red)"/>
+            <!-- Manual reconciliation label -->
+            <text x="500" y="272" fill="rgba(224,80,80,0.6)" font-size="9" font-family="'DM Mono', monospace" text-anchor="middle">manual reconciliation · delayed trigger</text>
+
+            <!-- Margin note -->
+            <rect x="348" y="90" width="140" height="26" rx="2" fill="rgba(224,80,80,0.1)" stroke="rgba(224,80,80,0.3)" stroke-width="1"/>
+            <text x="418" y="107" fill="#e05050" font-size="9" font-family="'DM Mono', monospace" text-anchor="middle">Margin assumed, not enforced</text>
+
+            <!-- Customer PO label -->
+            <text x="155" y="132" fill="#666" font-size="9" font-family="'DM Mono', monospace">PO</text>
+
+            <!-- Timing annotation -->
+            <rect x="730" y="370" width="150" height="28" rx="2" fill="rgba(224,80,80,0.1)" stroke="rgba(224,80,80,0.3)" stroke-width="1"/>
+            <text x="805" y="388" fill="#e05050" font-size="10" font-family="'DM Mono', monospace" text-anchor="middle">10-day invoicing delay</text>
+          </svg>
+        </div>
+
+        <!-- DETAIL PANEL -->
+        <div id="current-detail-panel" class="arch-detail-panel">
+          <div id="panel-content" style="flex:1; display:flex; gap: 3rem; flex-wrap: wrap;"></div>
+          <span class="panel-close" onclick="closePanel()">✕</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FUTURE STATE ══ -->
+    <div id="arch-future" class="arch-view reveal">
+      <div class="arch-diagram">
+        <div class="arch-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background: var(--cyan);"></div>
+            API / system integration
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(136,136,136,0.6);"></div>
+            Manual / human action
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background: rgba(0,200,224,0.25); border: 1px solid rgba(0,200,224,0.5); border-radius: 50%;"></div>
+            Intechem Command Layer
+          </div>
+        </div>
+        <p class="click-hint">Click any node to see details</p>
+
+        <div class="arch-svg-wrap">
+          <svg class="arch-svg" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" style="font-family: 'DM Sans', sans-serif;">
+            <defs>
+              <marker id="arrowhead2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#555"/>
+              </marker>
+              <marker id="arrowhead-cyan2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="rgba(0,200,224,0.8)"/>
+              </marker>
+              <filter id="glow2">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- ICL background zone -->
+            <rect x="220" y="40" width="480" height="340" rx="6" fill="rgba(0,200,224,0.04)" stroke="rgba(0,200,224,0.2)" stroke-width="1.5" stroke-dasharray="8 4"/>
+            <text x="234" y="62" fill="rgba(0,200,224,0.5)" font-size="10" letter-spacing="3" font-family="'DM Mono', monospace">INTECHEM COMMAND LAYER (ICL)</text>
+
+            <!-- Customer -->
+            <g class="arch-node" id="fn-customer" onclick="showFuturePanel('fcustomer')" tabindex="0">
+              <rect x="20" y="150" width="110" height="55" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="75" y="173" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Customer</text>
+              <text x="75" y="188" fill="#888" font-size="9" text-anchor="middle">Accepts quote</text>
+              <text x="75" y="200" fill="#888" font-size="9" text-anchor="middle">Issues CPO</text>
+              <circle cx="96" cy="152" r="4" fill="rgba(136,136,136,0.6)"/>
+            </g>
+
+            <!-- Core systems -->
+            <g class="arch-node" id="fn-dynamics" onclick="showFuturePanel('fdynamics')" tabindex="0">
+              <rect x="20" y="260" width="110" height="55" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="75" y="282" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">MS Dynamics</text>
+              <text x="75" y="297" fill="#888" font-size="9" text-anchor="middle">Quotes</text>
+              <text x="75" y="309" fill="#888" font-size="9" text-anchor="middle">Customer POs</text>
+              <circle cx="96" cy="262" r="4" fill="rgba(0,200,224,0.6)"/>
+            </g>
+
+            <!-- Sage -->
+            <g class="arch-node" id="fn-sage" onclick="showFuturePanel('fsage')" tabindex="0">
+              <rect x="20" y="370" width="110" height="55" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <text x="75" y="392" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Sage</text>
+              <text x="75" y="407" fill="#888" font-size="9" text-anchor="middle">Invoicing</text>
+              <text x="75" y="419" fill="#888" font-size="9" text-anchor="middle">Finance system</text>
+              <circle cx="96" cy="372" r="4" fill="rgba(0,200,224,0.6)"/>
+            </g>
+
+            <!-- ICL: PO View -->
+            <g class="arch-node" id="fn-poview" onclick="showFuturePanel('fpoview')" tabindex="0">
+              <rect x="235" y="80" width="125" height="50" rx="3" fill="#1a2a2a" stroke="rgba(0,200,224,0.3)" stroke-width="1"/>
+              <text x="297" y="101" fill="#f5f5f0" font-size="10" font-weight="500" text-anchor="middle">PO View</text>
+              <text x="297" y="115" fill="rgba(0,200,224,0.6)" font-size="9" text-anchor="middle">Customer + Supplier POs</text>
+              <text x="297" y="125" fill="#666" font-size="8" text-anchor="middle">(read-only)</text>
+            </g>
+
+            <!-- ICL: Purchase Requisition -->
+            <g class="arch-node" id="fn-pr" onclick="showFuturePanel('fpr')" tabindex="0">
+              <rect x="385" y="80" width="125" height="50" rx="3" fill="#1a2a2a" stroke="rgba(0,200,224,0.3)" stroke-width="1"/>
+              <text x="447" y="101" fill="#f5f5f0" font-size="10" font-weight="500" text-anchor="middle">Purchase Req.</text>
+              <text x="447" y="115" fill="rgba(0,200,224,0.6)" font-size="9" text-anchor="middle">Internal PR creation</text>
+              <text x="447" y="125" fill="#666" font-size="8" text-anchor="middle">1 PR → multiple loads</text>
+            </g>
+
+            <!-- ICL: Route + Transporter -->
+            <g class="arch-node" id="fn-route" onclick="showFuturePanel('froute')" tabindex="0">
+              <rect x="535" y="80" width="125" height="50" rx="3" fill="#1a2a2a" stroke="rgba(0,200,224,0.3)" stroke-width="1"/>
+              <text x="597" y="101" fill="#f5f5f0" font-size="10" font-weight="500" text-anchor="middle">Route Assignment</text>
+              <text x="597" y="115" fill="rgba(0,200,224,0.6)" font-size="9" text-anchor="middle">Transporter selection</text>
+              <text x="597" y="125" fill="#666" font-size="8" text-anchor="middle">Margin enforced</text>
+            </g>
+
+            <!-- ICL: Collection Notes -->
+            <g class="arch-node" id="fn-cn" onclick="showFuturePanel('fcn')" tabindex="0">
+              <rect x="235" y="185" width="125" height="50" rx="3" fill="#1a2a2a" stroke="rgba(0,200,224,0.3)" stroke-width="1"/>
+              <text x="297" y="206" fill="#f5f5f0" font-size="10" font-weight="500" text-anchor="middle">Collection Notes</text>
+              <text x="297" y="220" fill="rgba(0,200,224,0.6)" font-size="9" text-anchor="middle">1+ per PO</text>
+              <text x="297" y="230" fill="#666" font-size="8" text-anchor="middle">Single load execution</text>
+            </g>
+
+            <!-- ICL: Load Management -->
+            <g class="arch-node" id="fn-load" onclick="showFuturePanel('fload')" tabindex="0">
+              <rect x="385" y="185" width="125" height="50" rx="3" fill="#1a2a2a" stroke="rgba(0,200,224,0.3)" stroke-width="1"/>
+              <text x="447" y="206" fill="#f5f5f0" font-size="10" font-weight="500" text-anchor="middle">Load Management</text>
+              <text x="447" y="220" fill="rgba(0,200,224,0.6)" font-size="9" text-anchor="middle">Execution tracking</text>
+              <text x="447" y="230" fill="#666" font-size="8" text-anchor="middle">Real-time status</text>
+            </g>
+
+            <!-- ICL: Comms -->
+            <g class="arch-node" id="fn-comms" onclick="showFuturePanel('fcomms')" tabindex="0">
+              <rect x="535" y="185" width="125" height="50" rx="3" fill="#1a2a2a" stroke="rgba(0,200,224,0.3)" stroke-width="1"/>
+              <text x="597" y="206" fill="#f5f5f0" font-size="10" font-weight="500" text-anchor="middle">Communication</text>
+              <text x="597" y="220" fill="rgba(0,200,224,0.6)" font-size="9" text-anchor="middle">WhatsApp / Email</text>
+              <text x="597" y="230" fill="#666" font-size="8" text-anchor="middle">Driver POD capture</text>
+            </g>
+
+            <!-- ICL: POD / Auto-invoice trigger -->
+            <g class="arch-node" id="fn-podtrigger" onclick="showFuturePanel('fpodtrigger')" tabindex="0">
+              <rect x="310" y="295" width="200" height="55" rx="3" fill="rgba(0,200,224,0.1)" stroke="rgba(0,200,224,0.5)" stroke-width="1.5"/>
+              <text x="410" y="318" fill="#00c8e0" font-size="11" font-weight="500" text-anchor="middle">✓ Auto Invoice Trigger</text>
+              <text x="410" y="332" fill="rgba(0,200,224,0.7)" font-size="9" text-anchor="middle">POD verified → Sage invoice pushed</text>
+              <text x="410" y="344" fill="rgba(0,200,224,0.5)" font-size="8" text-anchor="middle">Same-day invoicing readiness</text>
+            </g>
+
+            <!-- Execution zone -->
+            <rect x="740" y="80" width="145" height="250" rx="4" fill="rgba(255,255,255,0.015)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <text x="754" y="100" fill="rgba(255,255,255,0.2)" font-size="10" letter-spacing="2" font-family="'DM Mono', monospace">EXECUTION</text>
+
+            <!-- Supplier (future) -->
+            <g class="arch-node" id="fn-fsupplier" onclick="showFuturePanel('fsupplier')" tabindex="0">
+              <rect x="753" y="110" width="110" height="38" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <text x="808" y="133" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Supplier</text>
+            </g>
+
+            <!-- Transporter (future) -->
+            <g class="arch-node" id="fn-ftransporter" onclick="showFuturePanel('ftransporter')" tabindex="0">
+              <rect x="753" y="175" width="110" height="38" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <text x="808" y="198" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Transporter</text>
+            </g>
+
+            <!-- Driver (future) -->
+            <g class="arch-node" id="fn-fdriver" onclick="showFuturePanel('fdriver')" tabindex="0">
+              <rect x="753" y="240" width="110" height="50" rx="3" fill="#1e1e1e" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <text x="808" y="262" fill="#f5f5f0" font-size="11" font-weight="500" text-anchor="middle">Driver</text>
+              <text x="808" y="278" fill="#888" font-size="9" text-anchor="middle">POD via WhatsApp</text>
+            </g>
+
+            <!-- ARROWS — future state -->
+            <!-- Customer → ICL -->
+            <line x1="130" y1="175" x2="233" y2="140" stroke="rgba(0,200,224,0.5)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- Dynamics → ICL -->
+            <line x1="130" y1="285" x2="233" y2="195" stroke="rgba(0,200,224,0.5)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- PO View → PR -->
+            <line x1="360" y1="105" x2="383" y2="105" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- PR → Route -->
+            <line x1="510" y1="105" x2="533" y2="105" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- PO View → Collection Notes -->
+            <line x1="297" y1="130" x2="297" y2="183" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- PR → Load Management -->
+            <line x1="447" y1="130" x2="447" y2="183" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- Route → Comms -->
+            <line x1="597" y1="130" x2="597" y2="183" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- Collection Notes → POD Trigger -->
+            <line x1="297" y1="235" x2="360" y2="293" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- Load Mgmt → POD Trigger -->
+            <line x1="447" y1="235" x2="430" y2="293" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- Comms → POD Trigger -->
+            <line x1="597" y1="235" x2="490" y2="293" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- Comms → Execution zone -->
+            <line x1="660" y1="210" x2="751" y2="210" stroke="rgba(0,200,224,0.4)" stroke-width="1.5" marker-end="url(#arrowhead-cyan2)"/>
+            <!-- POD Trigger → Sage -->
+            <path d="M360 325 Q180 380 132 398" stroke="rgba(0,200,224,0.6)" stroke-width="2" fill="none" marker-end="url(#arrowhead-cyan2)" filter="url(#glow2)"/>
+            <!-- POD trigger label -->
+            <text x="240" y="375" fill="rgba(0,200,224,0.5)" font-size="9" font-family="'DM Mono', monospace" text-anchor="middle">invoice triggered automatically</text>
+
+            <!-- Driver → POD capture label -->
+            <text x="680" y="278" fill="rgba(0,200,224,0.4)" font-size="8.5" font-family="'DM Mono', monospace" text-anchor="middle">POD upload</text>
+            <path d="M753 270 Q720 260 662 240" stroke="rgba(0,200,224,0.3)" stroke-width="1" fill="none" stroke-dasharray="4 3" marker-end="url(#arrowhead-cyan2)"/>
+          </svg>
+        </div>
+
+        <!-- Future detail panel -->
+        <div id="future-detail-panel" class="arch-detail-panel">
+          <div id="future-panel-content" style="flex:1; display:flex; gap: 3rem; flex-wrap: wrap;"></div>
+          <span class="panel-close" onclick="closeFuturePanel()">✕</span>
+        </div>
+      </div>
+
+      <div class="future-callouts">
+        <div class="future-callout">
+          <div class="fc-num">Key change 01</div>
+          <div class="fc-title">PO-driven control</div>
+          <p class="fc-body">The customer PO becomes the primary commercial control point. Each PO creates one or more collection notes, and margin is validated at PO level and reconciled at load level.</p>
+        </div>
+        <div class="future-callout">
+          <div class="fc-num">Key change 02</div>
+          <div class="fc-title">Same-day POD capture</div>
+          <p class="fc-body">Proof of Delivery is captured at the point of delivery via a lightweight driver web app or WhatsApp. This automatically triggers the invoicing workflow in Sage — eliminating the 10-day delay.</p>
+        </div>
+        <div class="future-callout">
+          <div class="fc-num">Key change 03</div>
+          <div class="fc-title">End-to-end visibility</div>
+          <p class="fc-body">The Intechem Command Layer connects commercial intent (quotes, POs) to physical execution (collection notes, loads) to cash (invoicing) — through a single, integrated layer.</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1062,7 +1581,7 @@
     <h2 class="cta-title reveal">Ready to<br><em>define the solution?</em></h2>
     <p class="cta-body reveal">Upon acceptance, we will finalise the delivery plan and confirm the workshop date. The engagement will be completed within two weeks — from workshop through to final deliverable.</p>
     <div class="reveal">
-      <a href="mailto:hello@occamco.com" class="cta-button">
+      <a href="/cdn-cgi/l/email-protection#ee868b828281ae818d8d8f838d81c08d8183" class="cta-button">
         Start a conversation →
       </a>
     </div>
@@ -1076,7 +1595,7 @@
   <p class="footer-legal">OCCAM HOLDINGS (PTY) LTD. Registered in South Africa: 2024/102148/07. 241 High-Level Road, Sea Point, Cape Town, 8005. This document is strictly confidential and may contain privileged information. Do not disclose, copy or distribute without prior consent.</p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // Scroll reveal
 const revealEls = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {
@@ -1113,19 +1632,257 @@ window.addEventListener('scroll', () => {
   });
 });
 
-// Counter animation for impact numbers
-function animateCounter(el, target, prefix = '', suffix = '') {
-  let start = 0;
-  const duration = 1500;
-  const step = (timestamp) => {
-    if (!start) start = timestamp;
-    const progress = Math.min((timestamp - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = prefix + Math.round(eased * target).toLocaleString() + suffix;
-    if (progress < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
+
+// ── ARCHITECTURE TOGGLE ──
+function switchArch(view, btn) {
+  document.querySelectorAll('.arch-view').forEach(v => v.classList.remove('visible'));
+  document.querySelectorAll('.arch-toggle-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('arch-' + view).classList.add('visible');
+  btn.classList.add('active');
+  closePanel(); closeFuturePanel();
 }
+
+const nodeData = {
+  customer: {
+    title: 'Customer', badge: 'External',
+    desc: 'The customer accepts a sales quote and issues a Purchase Order. The handoff is manual and not yet connected to execution systems.',
+    items: [
+      { good: true,  text: 'Accepts quote and issues PO' },
+      { good: false, text: 'PO captured in sales system only — not linked to execution' },
+      { good: false, text: 'No visibility for customer on delivery status' },
+    ]
+  },
+  sales: {
+    title: 'Sales — Microsoft Dynamics', badge: 'System: MS Dynamics',
+    desc: 'Sales issues quotes via Microsoft Dynamics. Once a customer PO is received, it is captured but not connected to procurement or logistics execution.',
+    items: [
+      { good: true,  text: 'Quote issued and tracked in Dynamics' },
+      { good: false, text: 'Customer PO captured but siloed — no downstream trigger' },
+      { good: false, text: 'Margin assumptions set here but not enforced at execution' },
+    ]
+  },
+  finance: {
+    title: 'Finance — Sage', badge: 'System: Sage',
+    desc: 'Finance records the customer Purchase Order in Sage and prepares for invoicing. However, invoicing is blocked until the full Proof of Delivery pack is received.',
+    items: [
+      { good: true,  text: 'Customer PO recorded in Sage' },
+      { good: false, text: 'Invoice cannot be raised until full POD pack received' },
+      { good: false, text: 'Manual reconciliation between execution and financial records' },
+      { good: false, text: 'No automated trigger from delivery completion' },
+    ]
+  },
+  procurement: {
+    title: 'Procurement — Excel', badge: 'Manual: Excel',
+    desc: 'Procurement creates a Purchase Requisition and a supplier Purchase Order. These steps rely heavily on Excel and manual coordination.',
+    items: [
+      { good: false, text: 'Relies on Excel for PR and supplier PO tracking' },
+      { good: false, text: 'Manual handoffs to logistics via email and WhatsApp' },
+      { good: false, text: 'No automated margin validation against transport costs' },
+    ]
+  },
+  logistics: {
+    title: 'Logistics — Collection Note', badge: 'Manual: Excel',
+    desc: 'Logistics prepares a Collection Note per load. Transport companies are coordinated manually. Load status is not visible to Finance or Sales.',
+    items: [
+      { good: false, text: 'Collection Note created manually — Excel-based' },
+      { good: false, text: 'Transport coordination via email and WhatsApp' },
+      { good: false, text: 'Load status not visible to Finance or Sales in real-time' },
+    ]
+  },
+  transport: {
+    title: 'Transport Company', badge: 'External',
+    desc: 'The transport company collects from the supplier and delivers to the customer. POD documents are returned manually — often asynchronously.',
+    items: [
+      { good: true,  text: 'Collects load from supplier and delivers to customer' },
+      { good: false, text: 'POD documents returned manually — no digital capture' },
+      { good: false, text: 'Asynchronous return creates up to 10-day delay' },
+    ]
+  },
+  supplier: {
+    title: 'Supplier', badge: 'External',
+    desc: 'The supplier fulfils the order when the transport company arrives. Coordination relies on manual documents with no real-time integration.',
+    items: [
+      { good: true,  text: 'Fulfils load when transport arrives' },
+      { good: false, text: 'No real-time visibility into order status' },
+    ]
+  },
+  pod: {
+    title: 'POD Pack — The Bottleneck', badge: 'problem', badgeText: 'Critical bottleneck',
+    desc: 'POD documents are returned manually and asynchronously. Finance cannot invoice until the full pack is received — causing up to a 10-day delay.',
+    items: [
+      { good: false, text: 'POD pack returned manually — no digital workflow' },
+      { good: false, text: 'Delay of up to 10 days from delivery to POD receipt' },
+      { good: false, text: 'Finance team must manually chase outstanding PODs' },
+      { good: false, text: 'Locks up R6.7m–R13.3m of working capital' },
+    ]
+  },
+  invoice: {
+    title: 'Invoicing — Blocked', badge: 'problem', badgeText: 'Working capital impact',
+    desc: 'Invoicing is entirely blocked until the full POD pack arrives. Despite loads being physically completed, the delay means Intechem carries unnecessary financing costs.',
+    items: [
+      { good: false, text: 'Invoice cannot be issued without complete POD pack' },
+      { good: false, text: 'Manual reconciliation between POD documents and Sage records' },
+      { good: false, text: 'Annual financing cost impact: R0.7m–R1.3m per annum' },
+    ]
+  }
+};
+
+function showPanel(nodeId) {
+  const data = nodeData[nodeId];
+  if (!data) return;
+  const panel = document.getElementById('current-detail-panel');
+  const content = document.getElementById('panel-content');
+  const isProblem = data.badge === 'problem';
+  const badgeText = data.badgeText || data.badge;
+  content.innerHTML = '<div><div class="panel-title">' + data.title + '<span class="panel-badge ' + (isProblem ? 'problem' : '') + '">' + badgeText + '</span></div><p class="panel-desc">' + data.desc + '</p></div><div><ul class="panel-items">' + data.items.map(i => '<li><span class="pi ' + (i.good ? '' : 'bad') + '">' + (i.good ? '✓' : '✕') + '</span><span>' + i.text + '</span></li>').join('') + '</ul></div>';
+  panel.classList.add('visible');
+  document.querySelectorAll('#arch-current .arch-node').forEach(n => n.classList.remove('highlighted'));
+  const node = document.getElementById('node-' + nodeId);
+  if (node) node.classList.add('highlighted');
+}
+
+function closePanel() {
+  const p = document.getElementById('current-detail-panel');
+  if (p) p.classList.remove('visible');
+  document.querySelectorAll('#arch-current .arch-node').forEach(n => n.classList.remove('highlighted'));
+}
+
+const futureNodeData = {
+  fcustomer: {
+    title: 'Customer', badge: 'External',
+    desc: 'The customer issues a Customer Purchase Order (CPO). This CPO is the primary commercial control point in the ICL — all downstream execution flows from it.',
+    items: [
+      { good: true, text: 'CPO becomes the commercial anchor for all downstream activity' },
+      { good: true, text: 'Margin and cost validated against CPO at commitment' },
+    ]
+  },
+  fdynamics: {
+    title: 'Microsoft Dynamics', badge: 'System integration',
+    desc: 'Dynamics remains the system of record for quotes and customer POs. The ICL pulls CPO data via API — no re-keying, no manual handoffs.',
+    items: [
+      { good: true, text: 'Quotes and CPOs synced to ICL via API integration' },
+      { good: true, text: 'No duplicate data entry — single source of truth' },
+    ]
+  },
+  fsage: {
+    title: 'Sage — Finance System of Record', badge: 'System integration',
+    desc: 'Sage remains the financial system of record for invoicing. The ICL automatically triggers invoice creation in Sage once POD requirements are met — same day.',
+    items: [
+      { good: true, text: 'Invoice auto-triggered in Sage once POD verified' },
+      { good: true, text: 'Eliminates manual reconciliation entirely' },
+      { good: true, text: 'Same-day invoicing readiness after delivery' },
+    ]
+  },
+  fpoview: {
+    title: 'PO View (ICL Module)', badge: 'ICL module',
+    desc: 'A consolidated read-only view of all Customer and Supplier POs within the ICL. Real-time visibility without requiring direct Dynamics or Sage access.',
+    items: [
+      { good: true, text: 'Consolidated view of all active CPOs and Supplier POs' },
+      { good: true, text: 'Real-time status against each PO' },
+      { good: true, text: 'Role-based access (Finance, Procurement, Logistics)' },
+    ]
+  },
+  fpr: {
+    title: 'Purchase Requisition (ICL Module)', badge: 'ICL module',
+    desc: 'Internal Purchase Requisitions are created and managed within the ICL. Each PR links directly to a CPO and generates multiple Collection Notes.',
+    items: [
+      { good: true, text: '1 PR maps to multiple collection notes (loads)' },
+      { good: true, text: 'PR linked to CPO — full commercial traceability' },
+      { good: true, text: 'Approval workflows built in — no email-based sign-offs' },
+    ]
+  },
+  froute: {
+    title: 'Route & Transporter Assignment', badge: 'ICL module',
+    desc: 'Routes and transporters are assigned within the ICL. Transport costs validated against the quoted margin at the point of commitment.',
+    items: [
+      { good: true, text: 'Transport cost validated against quoted margin at assignment' },
+      { good: true, text: 'Route and transporter recorded per load' },
+      { good: true, text: 'Split loads captured with margin impact visible' },
+    ]
+  },
+  fcn: {
+    title: 'Collection Notes (ICL Module)', badge: 'ICL module',
+    desc: 'Collection Notes are created digitally within the ICL. Each CN represents a single load event, linked to a PR and CPO.',
+    items: [
+      { good: true, text: '1 or more CNs per PR — each represents a single load' },
+      { good: true, text: 'Collection Note sent digitally to transporter' },
+      { good: true, text: 'Status tracked from creation through delivery' },
+    ]
+  },
+  fload: {
+    title: 'Load & Execution Management', badge: 'ICL module',
+    desc: 'Real-time load status tracking. Finance, Logistics, and Sales all share the same view — dispatched, in transit, delivered, POD received.',
+    items: [
+      { good: true, text: 'Real-time status: Dispatched → In Transit → Delivered' },
+      { good: true, text: 'Visibility shared across Finance, Logistics, Sales' },
+      { good: true, text: 'Automated alerts on delivery confirmation' },
+    ]
+  },
+  fcomms: {
+    title: 'Communication Layer (WhatsApp / Email)', badge: 'ICL module',
+    desc: 'The ICL sends automated communications to transporters and drivers. Drivers submit POD documents via WhatsApp — no app installation required.',
+    items: [
+      { good: true, text: 'Collection Note automatically sent to transporter on creation' },
+      { good: true, text: 'Driver receives WhatsApp link to upload POD' },
+      { good: true, text: 'POD submission triggers automatic status update in ICL' },
+    ]
+  },
+  fpodtrigger: {
+    title: 'Automatic Invoice Trigger', badge: 'The key outcome',
+    desc: 'Once POD requirements are verified in the ICL, an invoice is automatically pushed to Sage — on the same day as delivery. This eliminates the 10-day delay entirely.',
+    items: [
+      { good: true, text: 'POD verified → Sage invoice created automatically' },
+      { good: true, text: 'Same-day invoicing readiness after load delivery' },
+      { good: true, text: 'R6.7m–R13.3m working capital released' },
+      { good: true, text: 'R0.7m–R1.3m annual financing cost saved' },
+    ]
+  },
+  fsupplier: {
+    title: 'Supplier', badge: 'External',
+    desc: 'Supplier receives digital confirmation of collection via the ICL. No change to supplier systems required.',
+    items: [
+      { good: true, text: 'Digital collection confirmation sent automatically' },
+      { good: true, text: 'No change required to supplier systems' },
+    ]
+  },
+  ftransporter: {
+    title: 'Transporter', badge: 'External',
+    desc: 'Transporters receive Collection Notes digitally via WhatsApp or email. Manual coordination replaced by automated ICL messaging.',
+    items: [
+      { good: true, text: 'Collection Note sent digitally — no manual coordination' },
+      { good: true, text: 'WhatsApp / email integration — no new app required' },
+    ]
+  },
+  fdriver: {
+    title: 'Driver — POD Capture', badge: 'Key integration',
+    desc: 'Drivers capture Proof of Delivery via a lightweight web page sent via WhatsApp. POD upload immediately triggers the ICL invoicing workflow.',
+    items: [
+      { good: true, text: 'POD captured via WhatsApp link — no app install' },
+      { good: true, text: 'Supports photo upload and signature capture' },
+      { good: true, text: 'Immediate upload triggers ICL status update and invoice' },
+    ]
+  }
+};
+
+function showFuturePanel(nodeId) {
+  const data = futureNodeData[nodeId];
+  if (!data) return;
+  const panel = document.getElementById('future-detail-panel');
+  const content = document.getElementById('future-panel-content');
+  content.innerHTML = '<div><div class="panel-title">' + data.title + '<span class="panel-badge">' + data.badge + '</span></div><p class="panel-desc">' + data.desc + '</p></div><div><ul class="panel-items">' + data.items.map(i => '<li><span class="pi ' + (i.good ? '' : 'bad') + '">' + (i.good ? '✓' : '✕') + '</span><span>' + i.text + '</span></li>').join('') + '</ul></div>';
+  panel.classList.add('visible');
+}
+
+function closeFuturePanel() {
+  const p = document.getElementById('future-detail-panel');
+  if (p) p.classList.remove('visible');
+}
+
+document.querySelectorAll('.arch-node').forEach(node => {
+  node.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); node.click(); }
+  });
+});
 </script>
 </body>
 </html>
