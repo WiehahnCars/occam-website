@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ICL — Intechem Command Layer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:    #f3f5f8;
+  --bg1:   #ffffff;
+  --bg2:   #f8f9fb;
+  --bg3:   #eef0f5;
+  --bg4:   #e5e9f0;
+  --border:  #e2e7ef;
+  --border2: #d4dae6;
+  --border3: #c2cad8;
+  --text:  #0e1a2b;
+  --text2: #4f627a;
+  --text3: #8898b0;
+  --text4: #b8c4d4;
+  --accent:      #3b6ef5;
+  --accent-dim:  #2a5de0;
+  --accent-light:#eef2fe;
+  --accent-glow: rgba(59,110,245,0.13);
+  --sidebar-bg:    #0e1a2b;
+  --sidebar-bg1:   #162238;
+  --sidebar-bg2:   #1c2d47;
+  --sidebar-border:#1c2d47;
+  --sidebar-text:  #c4d2e8;
+  --sidebar-text2: #637a98;
+  --sidebar-text3: #364e6a;
+  --green:       #059660;
+  --green-light: #edfaf4;
+  --green-mid:   #c8f0e0;
+  --yellow:      #d4880a;
+  --yellow-light:#fff8e6;
+  --red:         #e0384f;
+  --red-light:   #fef1f3;
+  --red-mid:     #fbd8dd;
+  --orange:      #e0620a;
+  --orange-light:#fff3eb;
+  --purple:      #6d28d9;
+  --purple-light:#f2effe;
+  --cyan:        #0284a8;
+  --cyan-light:  #e8f8fc;
+  --sidebar-w: 220px;
+  --radius:    6px;
+  --radius-sm: 4px;
+  --radius-lg: 10px;
+  --shadow-xs: 0 1px 2px rgba(14,26,43,0.05);
+  --shadow-sm: 0 1px 3px rgba(14,26,43,0.07), 0 1px 2px rgba(14,26,43,0.04);
+  --shadow-md: 0 4px 12px rgba(14,26,43,0.10), 0 2px 4px rgba(14,26,43,0.05);
+  --shadow-lg: 0 16px 40px rgba(14,26,43,0.14), 0 6px 14px rgba(14,26,43,0.07);
+  --shadow-xl: 0 32px 80px rgba(14,26,43,0.18), 0 12px 28px rgba(14,26,43,0.09);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13.5px;line-height:1.5;overflow:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+input,select,textarea{font-family:inherit;outline:none;}
+a{text-decoration:none;color:inherit;}
+.screen{display:none;width:100%;height:100vh;}
+.screen.active{display:flex;}
+
+/* LOGIN */
+#screen-login{align-items:center;justify-content:center;background:linear-gradient(155deg,#eef3ff 0%,#f3f5f8 55%,#eef3ff 100%);position:relative;overflow:hidden;}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 52% 44% at 74% 24%,rgba(59,110,245,0.07) 0%,transparent 65%),radial-gradient(ellipse 38% 52% at 18% 78%,rgba(109,40,217,0.04) 0%,transparent 56%);}
+.login-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.7;mask-image:radial-gradient(ellipse 68% 68% at 50% 50%,black 18%,transparent 76%);}
+.login-box{position:relative;z-index:2;width:388px;background:var(--bg1);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px 36px 30px;box-shadow:var(--shadow-xl);}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.login-logo-mark{width:32px;height:32px;border-radius:7px;background:linear-gradient(145deg,var(--accent),#5b30f0);display:flex;align-items:center;justify-content:center;font-family:'Barlow',sans-serif;font-weight:800;font-size:10px;color:#fff;letter-spacing:0.5px;box-shadow:0 2px 8px rgba(59,110,245,0.28);}
+.login-logo-text{font-family:'Barlow',sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.3px;color:var(--text);}
+.login-logo-text span{color:var(--text3);font-family:'Inter',sans-serif;font-weight:400;font-size:10.5px;display:block;}
+.login-divider{height:1px;background:var(--border);margin:22px 0;}
+.login-title{font-family:'Barlow',sans-serif;font-size:22px;font-weight:700;margin-bottom:5px;letter-spacing:-0.5px;}
+.login-sub{color:var(--text2);font-size:13px;margin-bottom:22px;}
+.login-label{font-size:12px;color:var(--text);margin-bottom:5px;display:block;font-weight:600;}
+.login-input{width:100%;padding:9px 11px;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;margin-bottom:13px;transition:border-color 0.15s,box-shadow 0.15s;box-shadow:var(--shadow-xs);}
+.login-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);outline:none;}
+.login-roles{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:20px;}
+.role-btn{padding:8px 6px;border-radius:var(--radius-sm);background:var(--bg2);border:1px solid var(--border);color:var(--text3);font-size:12px;font-weight:500;transition:all 0.12s;text-align:center;}
+.role-btn:hover{border-color:var(--border2);color:var(--text2);background:var(--bg3);}
+.role-btn.selected{border-color:var(--accent);background:var(--accent-light);color:var(--accent);font-weight:600;}
+.login-btn{width:100%;padding:10.5px;border-radius:var(--radius-sm);background:var(--accent);color:#fff;font-size:13.5px;font-weight:600;font-family:'Barlow',sans-serif;letter-spacing:0.1px;transition:all 0.15s;box-shadow:0 1px 3px rgba(59,110,245,0.22),0 4px 12px rgba(59,110,245,0.14);}
+.login-btn:hover{background:var(--accent-dim);box-shadow:0 2px 5px rgba(59,110,245,0.28),0 8px 20px rgba(59,110,245,0.18);transform:translateY(-1px);}
+.login-hint{font-size:11px;color:var(--text4);margin-top:14px;text-align:center;}
+
+/* APP */
+#screen-app{flex-direction:row;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--sidebar-bg);border-right:none;display:flex;flex-direction:column;height:100vh;overflow:hidden;box-shadow:2px 0 8px rgba(14,26,43,0.14);}
+.sidebar-header{padding:16px 14px 12px;border-bottom:1px solid var(--sidebar-border);}
+.sidebar-logo{display:flex;align-items:center;gap:8px;}
+.sidebar-logo-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(145deg,var(--accent),#5b30f0);display:flex;align-items:center;justify-content:center;font-family:'Barlow',sans-serif;font-weight:800;font-size:9px;color:#fff;flex-shrink:0;letter-spacing:0.5px;box-shadow:0 0 10px rgba(59,110,245,0.25);}
+.sidebar-logo-text{font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;letter-spacing:-0.3px;color:#fff;}
+.sidebar-logo-sub{font-size:9.5px;color:var(--sidebar-text3);margin-top:0.5px;}
+.sidebar-role-badge{margin:8px 14px 0;padding:5px 9px;background:var(--sidebar-bg1);border:1px solid var(--sidebar-border);border-radius:var(--radius-sm);display:flex;align-items:center;gap:7px;}
+.role-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.sidebar-role-name{font-size:10px;font-weight:600;color:var(--sidebar-text2);letter-spacing:0.7px;text-transform:uppercase;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 7px;}
+.sidebar-nav::-webkit-scrollbar{width:2px;}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--sidebar-bg2);}
+.nav-section{margin-bottom:18px;}
+.nav-section-label{font-size:9px;font-weight:700;color:var(--sidebar-text3);letter-spacing:1.2px;text-transform:uppercase;padding:0 8px;margin-bottom:3px;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--radius-sm);color:var(--sidebar-text2);font-size:12.5px;font-weight:500;cursor:pointer;transition:all 0.1s;margin-bottom:1px;user-select:none;}
+.nav-item:hover{background:var(--sidebar-bg1);color:var(--sidebar-text);}
+.nav-item.active{background:rgba(59,110,245,0.16);color:#7eaaff;font-weight:600;}
+.nav-item svg{opacity:0.55;flex-shrink:0;transition:opacity 0.1s;}
+.nav-item:hover svg,.nav-item.active svg{opacity:1;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:7px;min-width:15px;text-align:center;}
+.sidebar-footer{padding:11px 14px;border-top:1px solid var(--sidebar-border);display:flex;align-items:center;gap:9px;}
+.sidebar-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#5b30f0);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.sidebar-user-info{flex:1;min-width:0;}
+.sidebar-user-name{font-size:12px;font-weight:600;color:var(--sidebar-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-user-role{font-size:9.5px;color:var(--sidebar-text3);margin-top:1px;}
+.logout-btn{width:24px;height:24px;border-radius:4px;background:transparent;border:1px solid var(--sidebar-border);color:var(--sidebar-text3);display:flex;align-items:center;justify-content:center;transition:all 0.13s;flex-shrink:0;}
+.logout-btn:hover{border-color:rgba(224,56,79,0.5);color:#ff8096;background:rgba(224,56,79,0.1);}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--bg);}
+.topbar{height:52px;min-height:52px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:14px;background:var(--bg1);position:relative;z-index:10;box-shadow:var(--shadow-xs);}
+.topbar-breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3);}
+.topbar-breadcrumb span{color:var(--text2);font-weight:500;}
+.topbar-actions{margin-left:auto;display:flex;align-items:center;gap:7px;}
+.topbar-search{display:flex;align-items:center;gap:7px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;color:var(--text3);font-size:12.5px;width:200px;transition:all 0.15s;box-shadow:var(--shadow-xs);}
+.topbar-search input{background:none;border:none;color:var(--text);font-size:12.5px;width:100%;}
+.topbar-search input::placeholder{color:var(--text4);}
+.topbar-search:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);background:var(--bg1);}
+.page-content{flex:1;overflow-y:auto;padding:24px 26px;}
+.page-content::-webkit-scrollbar{width:4px;}
+.page-content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.view{display:none;}
+.view.active{display:block;}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;gap:16px;}
+.page-header-left h1{font-family:'Barlow',sans-serif;font-size:20px;font-weight:700;margin-bottom:3px;letter-spacing:-0.5px;}
+.page-header-left p{color:var(--text3);font-size:12.5px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;transition:all 0.13s;white-space:nowrap;letter-spacing:-0.1px;}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(59,110,245,0.18),0 4px 10px rgba(59,110,245,0.12);}
+.btn-primary:hover{background:var(--accent-dim);box-shadow:0 2px 5px rgba(59,110,245,0.24),0 8px 18px rgba(59,110,245,0.16);transform:translateY(-1px);}
+.btn-secondary{background:var(--bg1);border:1px solid var(--border2);color:var(--text2);box-shadow:var(--shadow-xs);}
+.btn-secondary:hover{border-color:var(--border3);color:var(--text);background:var(--bg2);}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text3);}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text2);background:var(--bg2);}
+.btn-danger{background:var(--red-light);border:1px solid rgba(224,56,79,0.2);color:var(--red);}
+.btn-danger:hover{background:var(--red-mid);}
+.btn-success{background:var(--green-light);border:1px solid rgba(5,150,96,0.2);color:var(--green);}
+.btn-success:hover{background:var(--green-mid);}
+.btn-sm{padding:4px 10px;font-size:11.5px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.stat-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow-sm);transition:box-shadow 0.15s,border-color 0.15s;}
+.stat-card:hover{box-shadow:var(--shadow-md);border-color:var(--border2);}
+.stat-label{font-size:10.5px;color:var(--text3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;}
+.stat-value{font-family:'Barlow',sans-serif;font-size:28px;font-weight:700;margin-bottom:4px;letter-spacing:-1px;line-height:1;}
+.stat-sub{font-size:11px;color:var(--text3);}
+.stat-sub.up{color:var(--green);font-weight:500;}
+.stat-sub.warn{color:var(--yellow);font-weight:500;}
+
+/* CARDS */
+.card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border);background:var(--bg1);}
+.card-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-0.2px;}
+.card-sub{font-size:11.5px;color:var(--text3);margin-top:2px;}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;font-size:10.5px;font-weight:700;color:var(--text3);letter-spacing:0.5px;text-transform:uppercase;padding:9px 18px;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--bg2);}
+td{padding:11px 18px;border-bottom:1px solid var(--border);font-size:13px;color:var(--text);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg2);}
+.td-mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text2);letter-spacing:0.2px;}
+.td-dim{color:var(--text3);font-size:12px;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;border:1px solid transparent;}
+.badge::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.badge-green {background:var(--green-light); color:var(--green);  border-color:rgba(5,150,96,0.18);}
+.badge-yellow{background:var(--yellow-light);color:var(--yellow); border-color:rgba(212,136,10,0.18);}
+.badge-red   {background:var(--red-light);   color:var(--red);    border-color:rgba(224,56,79,0.18);}
+.badge-blue  {background:var(--accent-light);color:var(--accent); border-color:rgba(59,110,245,0.18);}
+.badge-orange{background:var(--orange-light);color:var(--orange); border-color:rgba(224,98,10,0.18);}
+.badge-purple{background:var(--purple-light);color:var(--purple); border-color:rgba(109,40,217,0.18);}
+.badge-cyan  {background:var(--cyan-light);  color:var(--cyan);   border-color:rgba(2,132,168,0.18);}
+.badge-grey  {background:var(--bg3);         color:var(--text3);  border-color:var(--border);}
+
+/* TABS */
+.tabs{display:flex;margin-bottom:18px;border-bottom:1px solid var(--border);}
+.tab-item{padding:8px 14px;font-size:12.5px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.12s;}
+.tab-item:hover{color:var(--text2);}
+.tab-item.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600;}
+
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(14,26,43,0.48);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg1);border:1px solid var(--border);border-radius:var(--radius-lg);width:560px;max-width:95vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-xl);}
+.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:'Barlow',sans-serif;font-size:16px;font-weight:700;letter-spacing:-0.3px;}
+.modal-close{width:26px;height:26px;border-radius:4px;background:var(--bg2);border:1px solid var(--border);color:var(--text3);display:flex;align-items:center;justify-content:center;font-size:15px;transition:all 0.13s;line-height:1;}
+.modal-close:hover{border-color:var(--red);color:var(--red);background:var(--red-light);}
+.modal-body{padding:22px;overflow-y:auto;}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:7px;background:var(--bg2);}
+
+/* FORMS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-group{margin-bottom:14px;}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px;}
+.form-label span{color:var(--red);}
+.form-input,.form-select,.form-textarea{width:100%;padding:8px 11px;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;transition:all 0.15s;box-shadow:var(--shadow-xs);}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);outline:none;}
+.form-textarea{resize:vertical;min-height:76px;}
+.form-select option{background:var(--bg1);}
+.form-hint{font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* ACTIVITY */
+.activity-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.activity-item:last-child{border-bottom:none;}
+.activity-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.activity-text{font-size:12.5px;line-height:1.5;color:var(--text2);}
+.activity-text strong{color:var(--text);font-weight:600;}
+.activity-time{font-size:10.5px;color:var(--text3);margin-top:2px;}
+.progress-bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:6px;}
+.progress-fill{height:100%;border-radius:2px;transition:width 0.5s;}
+
+/* DETAIL PANEL */
+.detail-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:16px;}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.detail-item label{font-size:10.5px;color:var(--text3);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;display:block;margin-bottom:4px;}
+.detail-item span{font-size:13px;color:var(--text);}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:7px;}
+.toast{display:flex;align-items:center;gap:9px;padding:10px 14px;border-radius:var(--radius);background:var(--bg1);border:1px solid var(--border);font-size:12.5px;min-width:270px;box-shadow:var(--shadow-lg);animation:slideIn 0.2s cubic-bezier(0.34,1.56,0.64,1);}
+.toast-icon{font-size:14px;flex-shrink:0;}
+.toast-text{flex:1;color:var(--text);}
+.toast-close{color:var(--text3);font-size:14px;cursor:pointer;padding:0 2px;}
+.toast.success{border-color:rgba(5,150,96,0.28);background:var(--green-light);}
+.toast.error  {border-color:rgba(224,56,79,0.28);background:var(--red-light);}
+.toast.info   {border-color:rgba(59,110,245,0.28);background:var(--accent-light);}
+@keyframes slideIn{from{transform:translateX(14px) scale(0.97);opacity:0;}to{transform:translateX(0) scale(1);opacity:1;}}
+
+/* TIMELINE */
+.timeline{padding:0;}
+.timeline-item{display:flex;gap:12px;padding-bottom:18px;position:relative;}
+.timeline-item::before{content:'';position:absolute;left:10px;top:22px;bottom:0;width:1px;background:var(--border);}
+.timeline-item:last-child::before{display:none;}
+.timeline-dot{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;z-index:1;border:2px solid var(--bg1);}
+.timeline-dot.done  {background:var(--green);color:#fff;}
+.timeline-dot.active{background:var(--accent);color:#fff;box-shadow:0 0 0 4px var(--accent-glow);}
+.timeline-dot.pending{background:var(--bg3);color:var(--text3);border-color:var(--border);}
+.timeline-content{flex:1;padding-top:1px;}
+.timeline-label{font-size:13px;font-weight:600;color:var(--text);}
+.timeline-time{font-size:11px;color:var(--text3);margin-top:2px;}
+
+/* STATUS FLOW */
+.status-flow{display:flex;align-items:center;overflow-x:auto;padding-bottom:2px;}
+.sf-step{display:flex;align-items:center;flex-shrink:0;}
+.sf-label{padding:4px 11px;border-radius:4px;font-size:11px;font-weight:600;background:var(--bg3);color:var(--text3);white-space:nowrap;border:1px solid var(--border);}
+.sf-label.done  {background:var(--green-light); color:var(--green); border-color:rgba(5,150,96,0.2);}
+.sf-label.active{background:var(--accent-light);color:var(--accent);border-color:rgba(59,110,245,0.2);}
+.sf-arrow{color:var(--text4);margin:0 5px;font-size:11px;}
+
+/* DRIVER */
+#screen-driver{align-items:center;justify-content:center;background:var(--bg);min-height:100vh;flex-direction:column;padding:20px;overflow-y:auto;}
+.driver-wrap{width:100%;max-width:420px;}
+.driver-header{text-align:center;margin-bottom:24px;}
+.driver-logo-mark{width:46px;height:46px;border-radius:11px;margin:0 auto 13px;background:linear-gradient(145deg,var(--accent),#5b30f0);display:flex;align-items:center;justify-content:center;font-family:'Barlow',sans-serif;font-weight:800;font-size:14px;color:#fff;letter-spacing:0.5px;box-shadow:0 4px 16px rgba(59,110,245,0.28);}
+.driver-header h1{font-family:'Barlow',sans-serif;font-size:20px;font-weight:700;margin-bottom:4px;letter-spacing:-0.4px;}
+.driver-header p{color:var(--text2);font-size:13px;}
+.driver-cn-info{background:var(--bg1);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;margin-bottom:22px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm);}
+.driver-cn-icon{width:34px;height:34px;border-radius:7px;background:var(--accent-light);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0;}
+.driver-cn-label{font-size:10.5px;color:var(--text3);margin-bottom:2px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;}
+.driver-cn-value{font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;letter-spacing:-0.2px;}
+.driver-steps{display:flex;margin-bottom:22px;position:relative;}
+.driver-steps::before{content:'';position:absolute;top:12px;left:13px;right:13px;height:2px;background:var(--border2);z-index:0;}
+.driver-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
+.driver-step-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border2);background:var(--bg1);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--text3);transition:all 0.22s;}
+.driver-step.done .driver-step-dot  {background:var(--green);border-color:var(--green);color:#fff;}
+.driver-step.active .driver-step-dot{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 4px var(--accent-glow);}
+.driver-step-label{font-size:10px;color:var(--text3);font-weight:500;}
+.driver-step.active .driver-step-label{color:var(--accent);font-weight:600;}
+.driver-step.done .driver-step-label  {color:var(--green);}
+.driver-card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow-sm);}
+.driver-card-header{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;background:var(--bg2);}
+.driver-card-header h2{font-family:'Barlow',sans-serif;font-size:14.5px;font-weight:700;letter-spacing:-0.2px;}
+.driver-card-body{padding:18px;}
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:28px 18px;text-align:center;cursor:pointer;transition:all 0.18s;margin-bottom:12px;position:relative;background:var(--bg2);}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-light);}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.upload-icon{font-size:26px;margin-bottom:8px;}
+.upload-title{font-size:13.5px;font-weight:600;margin-bottom:4px;color:var(--text);}
+.upload-sub{font-size:11.5px;color:var(--text3);}
+.upload-preview{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--green-light);border:1px solid rgba(5,150,96,0.2);border-radius:var(--radius-sm);margin-top:8px;}
+.upload-preview-name{font-size:12.5px;flex:1;color:var(--green);font-weight:500;}
+.upload-preview-remove{color:var(--red);font-size:15px;cursor:pointer;}
+.driver-input{width:100%;padding:10px 12px;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13.5px;margin-bottom:11px;transition:all 0.15s;box-shadow:var(--shadow-xs);}
+.driver-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);outline:none;}
+.driver-btn{width:100%;padding:13px;border-radius:var(--radius);font-family:'Barlow',sans-serif;font-size:14.5px;font-weight:700;transition:all 0.15s;margin-top:6px;letter-spacing:0.1px;}
+.driver-btn-primary{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(59,110,245,0.18),0 4px 12px rgba(59,110,245,0.14);}
+.driver-btn-primary:hover{background:var(--accent-dim);box-shadow:0 2px 6px rgba(59,110,245,0.24),0 8px 20px rgba(59,110,245,0.18);transform:translateY(-1px);}
+.driver-btn-secondary{background:var(--bg2);border:1px solid var(--border2);color:var(--text2);}
+.driver-success{text-align:center;padding:36px 16px;}
+.driver-success-icon{width:60px;height:60px;border-radius:50%;background:var(--green-light);border:2px solid rgba(5,150,96,0.28);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px;}
+.driver-success h2{font-family:'Barlow',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px;letter-spacing:-0.4px;}
+.driver-success p{color:var(--text2);font-size:13.5px;line-height:1.6;}
+
+/* LAYOUTS */
+.two-col{display:grid;grid-template-columns:1fr 320px;gap:16px;}
+.filter-bar{display:flex;align-items:center;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+.filter-select{padding:5px 9px;background:var(--bg1);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:12px;box-shadow:var(--shadow-xs);transition:border-color 0.13s;}
+.filter-select:focus{border-color:var(--accent);outline:none;}
+.inline-actions{display:flex;align-items:center;gap:5px;}
+.action-icon-btn{width:26px;height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);color:var(--text3);font-size:12px;transition:all 0.13s;cursor:pointer;}
+.action-icon-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);}
+.action-icon-btn.danger:hover{border-color:var(--red);color:var(--red);background:var(--red-light);}
+.notif-dot{width:7px;height:7px;border-radius:50%;background:var(--red);position:absolute;top:-2px;right:-2px;box-shadow:0 0 0 2px var(--bg1);}
+.attention-item{display:flex;align-items:center;gap:11px;padding:11px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s;}
+.attention-item:last-child{border-bottom:none;}
+.attention-item:hover{background:var(--bg2);}
+.attention-icon{width:30px;height:30px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;}
+.attention-content{flex:1;min-width:0;}
+.attention-title{font-size:13px;font-weight:500;color:var(--text);}
+.attention-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.attention-action{font-size:11px;color:var(--accent);font-weight:600;white-space:nowrap;}
+.section-divider{display:flex;align-items:center;gap:10px;margin:16px 0;}
+.section-divider span{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+.quick-card-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.quick-card-label{font-size:11.5px;font-weight:600;color:var(--text2);}
+.quick-card-count{font-size:22px;font-weight:700;letter-spacing:-0.5px;color:var(--text);}
+[data-role="admin"]       .role-dot{background:#9b80f5;}
+[data-role="procurement"] .role-dot{background:#6ca0ff;}
+[data-role="logistics"]   .role-dot{background:#22c97a;}
+[data-role="finance"]     .role-dot{background:#e8b94c;}
+[data-role="developer"]   .role-dot{background:#f07840;}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr);}.two-col{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="login-bg"></div>
+  <div class="login-grid"></div>
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-mark">ICL</div>
+      <div>
+        <div class="login-logo-text">Intechem</div>
+        <span style="font-size:11px;color:var(--text3);">Command Layer</span>
+      </div>
+    </div>
+    <div class="login-title">Welcome back</div>
+    <div class="login-sub">Sign in to access the operations platform</div>
+    <label class="login-label">Email address</label>
+    <input class="login-input" type="email" placeholder="you@intechem.co.za" id="login-email"/>
+    <label class="login-label">Password</label>
+    <input class="login-input" type="password" placeholder="••••••••" id="login-password"/>
+    <label class="login-label" style="margin-bottom:10px;">Sign in as</label>
+    <div class="login-roles" id="role-selector">
+      <button class="role-btn selected" data-role="admin">🛡 Admin</button>
+      <button class="role-btn" data-role="procurement">📋 Procurement</button>
+      <button class="role-btn" data-role="logistics">🚚 Logistics</button>
+      <button class="role-btn" data-role="finance">💰 Finance</button>
+      <button class="role-btn" data-role="developer">⚙️ Developer</button>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign in to ICL</button>
+    <div class="login-hint">This is a prototype. Any credentials will work.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     MAIN APP SCREEN
+════════════════════════════════════ -->
+<div id="screen-app" class="screen">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="main-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-mark">ICL</div>
+        <div><div class="sidebar-logo-text">Intechem</div><div class="sidebar-logo-sub">Command Layer</div></div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge" id="sidebar-role-badge">
+      <div class="role-dot"></div>
+      <span class="sidebar-role-name" id="sidebar-role-name">Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <div class="nav-item active" data-view="dashboard" onclick="switchView('dashboard',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Operations</div>
+        <div class="nav-item" data-view="purchase-orders" onclick="switchView('purchase-orders',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          Purchase Orders
+          <span class="nav-badge">3</span>
+        </div>
+        <div class="nav-item" data-view="requisitions" onclick="switchView('requisitions',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Purchase Requisitions
+        </div>
+        <div class="nav-item" data-view="collection-notes" onclick="switchView('collection-notes',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Collection Notes
+          <span class="nav-badge">2</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Master Data</div>
+        <div class="nav-item" data-view="customers" onclick="switchView('customers',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Customers &amp; Suppliers
+        </div>
+        <div class="nav-item" data-view="transport" onclick="switchView('transport',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          Transporters &amp; Drivers
+        </div>
+        <div class="nav-item" data-view="products" onclick="switchView('products',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Products
+        </div>
+      </div>
+      <div class="nav-section" id="nav-finance-section" style="display:none;">
+        <div class="nav-section-label">Finance</div>
+        <div class="nav-item" data-view="pod-review" onclick="switchView('pod-review',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>
+          POD Review
+          <span class="nav-badge">4</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">System</div>
+        <div class="nav-item" data-view="settings" onclick="switchView('settings',this)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </div>
+        <div class="nav-item" onclick="showDriverPage()" style="color:var(--cyan)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Preview Driver Page
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-avatar" id="sidebar-avatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebar-user-name">Admin User</div>
+        <div class="sidebar-user-role" id="sidebar-user-role"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d7b6b3babeb997beb9a3b2b4bfb2baf9b4b8f9adb6">[email&#160;protected]</a></div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()" title="Sign out">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <span id="topbar-section">Overview</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <span id="topbar-page">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <div class="topbar-search">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input placeholder="Search ICL…" type="text"/>
+        </div>
+        <button class="btn btn-ghost btn-sm" style="position:relative" onclick="showToast('No new notifications','info')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="notif-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="page-content">
+
+      <!-- ── DASHBOARD ── -->
+      <div id="view-dashboard" class="view active">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Good morning 👋</h1>
+            <p>Here's what needs your attention today — 23 Feb 2026</p>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" onclick="showToast('Sage sync triggered','info')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Sync Sage
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modal-new-cn')">+ New Collection Note</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Active CPOs</div>
+            <div class="stat-value">14</div>
+            <div class="stat-sub warn">3 require action</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">In Transit</div>
+            <div class="stat-value">7</div>
+            <div class="stat-sub up">2 delivered today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Pending POD Review</div>
+            <div class="stat-value">4</div>
+            <div class="stat-sub warn">Oldest: 2 days ago</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Draft Invoices</div>
+            <div class="stat-value">6</div>
+            <div class="stat-sub up">R 1.24M total</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div>
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <div class="card-title">Needs Attention</div>
+                  <div class="card-sub">Items requiring action from your role</div>
+                </div>
+              </div>
+              <div class="attention-item" onclick="switchView('collection-notes')">
+                <div class="attention-icon" style="background:var(--orange-light);color:var(--orange);">🚚</div>
+                <div class="attention-content">
+                  <div class="attention-title">CN-00042 awaiting driver upload</div>
+                  <div class="attention-sub">Dispatched 2 hours ago · Joburg → Durban</div>
+                </div>
+                <div class="attention-action">View →</div>
+              </div>
+              <div class="attention-item" onclick="switchView('requisitions')">
+                <div class="attention-icon" style="background:var(--accent-light);color:var(--accent);">📋</div>
+                <div class="attention-content">
+                  <div class="attention-title">PR-00018 awaiting approval</div>
+                  <div class="attention-sub">Submitted by Thabo M · CPO-2024-091</div>
+                </div>
+                <div class="attention-action">Review →</div>
+              </div>
+              <div class="attention-item" onclick="switchView('pod-review')">
+                <div class="attention-icon" style="background:var(--yellow-light);color:var(--yellow);">📄</div>
+                <div class="attention-content">
+                  <div class="attention-title">4 POD packs awaiting finance review</div>
+                  <div class="attention-sub">Oldest submitted 2 days ago</div>
+                </div>
+                <div class="attention-action">Review →</div>
+              </div>
+              <div class="attention-item" onclick="switchView('purchase-orders')">
+                <div class="attention-icon" style="background:var(--green-light);color:var(--green);">✅</div>
+                <div class="attention-content">
+                  <div class="attention-title">CPO-2024-087 ready to invoice</div>
+                  <div class="attention-sub">POD approved · Draft invoice pending Sage push</div>
+                </div>
+                <div class="attention-action">Create →</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Recent Collection Notes</div>
+                <button class="btn btn-ghost btn-sm" onclick="switchView('collection-notes')">View all</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>CN #</th><th>Customer</th><th>Route</th><th>Status</th><th>Driver</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td class="td-mono">CN-00044</td>
+                      <td>Chemforce SA</td>
+                      <td class="td-dim">JHB → CPT</td>
+                      <td><span class="badge badge-cyan">In Transit</span></td>
+                      <td class="td-dim">J. Dlamini</td>
+                    </tr>
+                    <tr>
+                      <td class="td-mono">CN-00043</td>
+                      <td>PetroServ Ltd</td>
+                      <td class="td-dim">JHB → DBN</td>
+                      <td><span class="badge badge-orange">Dispatched</span></td>
+                      <td class="td-dim">M. Sithole</td>
+                    </tr>
+                    <tr>
+                      <td class="td-mono">CN-00042</td>
+                      <td>AgriChem Group</td>
+                      <td class="td-dim">JHB → DBN</td>
+                      <td><span class="badge badge-yellow">Awaiting Upload</span></td>
+                      <td class="td-dim">R. Ndlovu</td>
+                    </tr>
+                    <tr>
+                      <td class="td-mono">CN-00041</td>
+                      <td>MineralTech</td>
+                      <td class="td-dim">JHB → PE</td>
+                      <td><span class="badge badge-green">Delivered</span></td>
+                      <td class="td-dim">P. Mokoena</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Activity Feed</div></div>
+              <div style="padding:4px 20px 20px;">
+                <div class="activity-item">
+                  <div class="activity-dot" style="background:var(--green)"></div>
+                  <div>
+                    <div class="activity-text"><strong>CN-00041</strong> marked as Delivered</div>
+                    <div class="activity-time">Just now · Finance</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot" style="background:var(--accent)"></div>
+                  <div>
+                    <div class="activity-text">WhatsApp sent to <strong>M. Sithole</strong> for CN-00043</div>
+                    <div class="activity-time">14 min ago · System</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot" style="background:var(--yellow)"></div>
+                  <div>
+                    <div class="activity-text"><strong>PR-00018</strong> submitted for approval</div>
+                    <div class="activity-time">1 hr ago · Procurement</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot" style="background:var(--purple)"></div>
+                  <div>
+                    <div class="activity-text">Sage sync completed · 3 new CPOs imported</div>
+                    <div class="activity-time">2 hrs ago · System</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot" style="background:var(--orange)"></div>
+                  <div>
+                    <div class="activity-text"><strong>CN-00042</strong> driver link resent</div>
+                    <div class="activity-time">3 hrs ago · Logistics</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-dot" style="background:var(--green)"></div>
+                  <div>
+                    <div class="activity-text">Draft invoice created in Sage for <strong>CPO-2024-086</strong></div>
+                    <div class="activity-time">Yesterday · System</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><div class="card-title">Sage Integration Status</div></div>
+              <div style="padding:16px 20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                  <span style="font-size:12px;color:var(--text2);">API Connection</span>
+                  <span class="badge badge-green">Live (mock)</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                  <span style="font-size:12px;color:var(--text2);">Last sync</span>
+                  <span style="font-size:12px;color:var(--text3);">Today, 10:42</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                  <span style="font-size:12px;color:var(--text2);">CPOs synced</span>
+                  <span style="font-size:12px;color:var(--text);">47</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                  <span style="font-size:12px;color:var(--text2);">WhatsApp (Twilio)</span>
+                  <span class="badge badge-yellow">Pending verify</span>
+                </div>
+                <button class="btn btn-secondary btn-sm" style="width:100%" onclick="showToast('Sage sync triggered successfully','success')">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  Trigger Manual Sync
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PURCHASE ORDERS ── -->
+      <div id="view-purchase-orders" class="view">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Customer Purchase Orders</h1>
+            <p>Synced from Sage — read-only. State managed in ICL.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('Syncing CPOs from Sage…','info')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Sync from Sage
+          </button>
+        </div>
+
+        <div class="filter-bar">
+          <select class="filter-select"><option>All statuses</option><option>Received</option><option>In Progress</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option></select>
+          <select class="filter-select"><option>All customers</option><option>Chemforce SA</option><option>PetroServ Ltd</option><option>AgriChem Group</option></select>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>CPO #</th><th>Customer</th><th>Products</th><th>Total Qty</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="td-mono">CPO-2024-091</td>
+                  <td><strong>Chemforce SA</strong></td>
+                  <td class="td-dim">Caustic Soda, HCl</td>
+                  <td>12,500 kg</td>
+                  <td><span class="badge badge-blue">In Progress</span></td>
+                  <td class="td-dim">18 Feb 2026</td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-cpo-detail')" title="View detail">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">CPO-2024-090</td>
+                  <td><strong>PetroServ Ltd</strong></td>
+                  <td class="td-dim">Acetone</td>
+                  <td>5,000 L</td>
+                  <td><span class="badge badge-orange">Shipped</span></td>
+                  <td class="td-dim">15 Feb 2026</td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-cpo-detail')" title="View detail">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">CPO-2024-089</td>
+                  <td><strong>AgriChem Group</strong></td>
+                  <td class="td-dim">Sodium Hypochlorite</td>
+                  <td>8,000 L</td>
+                  <td><span class="badge badge-yellow">Received</span></td>
+                  <td class="td-dim">14 Feb 2026</td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-cpo-detail')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">CPO-2024-087</td>
+                  <td><strong>MineralTech</strong></td>
+                  <td class="td-dim">Sulphuric Acid</td>
+                  <td>3,200 L</td>
+                  <td><span class="badge badge-green">Delivered</span></td>
+                  <td class="td-dim">10 Feb 2026</td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-cpo-detail')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="action-icon-btn" onclick="showToast('Draft invoice created in Sage','success')" title="Create Sage invoice" style="color:var(--green);border-color:var(--green)">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                    </button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">CPO-2024-085</td>
+                  <td><strong>SafeWash Co</strong></td>
+                  <td class="td-dim">IPA, Ethanol</td>
+                  <td>2,000 L</td>
+                  <td><span class="badge badge-grey">Cancelled</span></td>
+                  <td class="td-dim">05 Feb 2026</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PURCHASE REQUISITIONS ── -->
+      <div id="view-requisitions" class="view">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Purchase Requisitions</h1>
+            <p>Created in ICL, linked to CPOs. Requires approval before CN creation.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-new-pr')">+ New Requisition</button>
+        </div>
+        <div class="tabs">
+          <div class="tab-item active">All (8)</div>
+          <div class="tab-item">Draft (2)</div>
+          <div class="tab-item">Awaiting Approval (2)</div>
+          <div class="tab-item">Approved (3)</div>
+          <div class="tab-item">Rejected (1)</div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>PR #</th><th>CPO</th><th>Supplier</th><th>Products</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="td-mono">PR-00018</td>
+                  <td class="td-mono">CPO-2024-091</td>
+                  <td>ChemBase Dist.</td>
+                  <td class="td-dim">Caustic Soda · 12,500 kg</td>
+                  <td><span class="badge badge-yellow">Submitted</span></td>
+                  <td class="td-dim">Today</td>
+                  <td><div class="inline-actions">
+                    <button class="btn btn-success btn-sm" onclick="showToast('PR-00018 approved','success')">Approve</button>
+                    <button class="btn btn-danger btn-sm" onclick="showToast('PR-00018 rejected','error')">Reject</button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">PR-00017</td>
+                  <td class="td-mono">CPO-2024-090</td>
+                  <td>AceChem Supplies</td>
+                  <td class="td-dim">Acetone · 5,000 L</td>
+                  <td><span class="badge badge-green">Approved</span></td>
+                  <td class="td-dim">20 Feb</td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-new-cn')" title="Create CN">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    </button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">PR-00016</td>
+                  <td class="td-mono">CPO-2024-089</td>
+                  <td>Chlor-Tech SA</td>
+                  <td class="td-dim">Sodium Hypochlorite · 8,000 L</td>
+                  <td><span class="badge badge-blue">Draft</span></td>
+                  <td class="td-dim">19 Feb</td>
+                  <td><div class="inline-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="showToast('PR-00016 submitted for approval','info')">Submit</button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">PR-00015</td>
+                  <td class="td-mono">CPO-2024-088</td>
+                  <td>PureChem Ltd</td>
+                  <td class="td-dim">Glycerine · 1,200 kg</td>
+                  <td><span class="badge badge-red">Rejected</span></td>
+                  <td class="td-dim">15 Feb</td>
+                  <td><div class="inline-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="showToast('PR-00015 reopened as draft','info')">Re-draft</button>
+                  </div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── COLLECTION NOTES ── -->
+      <div id="view-collection-notes" class="view">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Collection Notes</h1>
+            <p>Full lifecycle management. CN creation gated on PR approval.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-new-cn')">+ New Collection Note</button>
+        </div>
+        <div class="tabs">
+          <div class="tab-item active">All (12)</div>
+          <div class="tab-item">Draft</div>
+          <div class="tab-item">Awaiting Collection (3)</div>
+          <div class="tab-item">In Transit (4)</div>
+          <div class="tab-item">Delivered (5)</div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>CN #</th><th>CPO</th><th>Customer</th><th>Transporter</th><th>Driver</th><th>Route</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td class="td-mono">CN-00044</td>
+                  <td class="td-mono">CPO-2024-091</td>
+                  <td>Chemforce SA</td>
+                  <td class="td-dim">FastHaul Logistics</td>
+                  <td class="td-dim">J. Dlamini</td>
+                  <td class="td-dim">JHB → CPT</td>
+                  <td><span class="badge badge-cyan">In Transit</span></td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-cn-detail')" title="View">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="action-icon-btn" onclick="showToast('WhatsApp resent to J. Dlamini','success')" title="Resend link">📱</button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">CN-00043</td>
+                  <td class="td-mono">CPO-2024-090</td>
+                  <td>PetroServ Ltd</td>
+                  <td class="td-dim">QuickFreight</td>
+                  <td class="td-dim">M. Sithole</td>
+                  <td class="td-dim">JHB → DBN</td>
+                  <td><span class="badge badge-orange">Dispatched</span></td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-cn-detail')" title="View">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="action-icon-btn" onclick="showToast('Status updated to In Transit','success')" title="Mark in transit" style="color:var(--cyan);border-color:var(--cyan)">✈</button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">CN-00042</td>
+                  <td class="td-mono">CPO-2024-089</td>
+                  <td>AgriChem Group</td>
+                  <td class="td-dim">RoadLink SA</td>
+                  <td class="td-dim">R. Ndlovu</td>
+                  <td class="td-dim">JHB → DBN</td>
+                  <td><span class="badge badge-yellow">Awaiting Upload</span></td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-cn-detail')" title="View">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                    <button class="action-icon-btn" onclick="showToast('Reminder sent to R. Ndlovu via WhatsApp','info')" title="Remind driver">📱</button>
+                  </div></td>
+                </tr>
+                <tr>
+                  <td class="td-mono">CN-00041</td>
+                  <td class="td-mono">CPO-2024-087</td>
+                  <td>MineralTech</td>
+                  <td class="td-dim">FastHaul Logistics</td>
+                  <td class="td-dim">P. Mokoena</td>
+                  <td class="td-dim">JHB → PE</td>
+                  <td><span class="badge badge-green">Delivered</span></td>
+                  <td><div class="inline-actions">
+                    <button class="action-icon-btn" onclick="openModal('modal-cn-detail')" title="View">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── POD REVIEW (Finance) ── -->
+      <div id="view-pod-review" class="view">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>POD Review</h1>
+            <p>Review uploaded proof-of-delivery documents and approve loads.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Pending Review (4)</div></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>CN #</th><th>Customer</th><th>Docs</th><th>Uploaded</th><th>Actions</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td class="td-mono">CN-00041</td>
+                      <td>MineralTech</td>
+                      <td>
+                        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+                          <span class="badge badge-green">COL ✓</span>
+                          <span class="badge badge-green">POD ✓</span>
+                        </div>
+                      </td>
+                      <td class="td-dim">2 hrs ago</td>
+                      <td><div class="inline-actions">
+                        <button class="btn btn-success btn-sm" onclick="showToast('CN-00041 approved · Draft invoice queued for Sage','success')">Approve & Invoice</button>
+                        <button class="btn btn-danger btn-sm" onclick="showToast('CN-00041 flagged for follow-up','error')">Flag</button>
+                      </div></td>
+                    </tr>
+                    <tr>
+                      <td class="td-mono">CN-00040</td>
+                      <td>Chemforce SA</td>
+                      <td>
+                        <div style="display:flex;gap:4px;">
+                          <span class="badge badge-green">COL ✓</span>
+                          <span class="badge badge-yellow">POD pending</span>
+                        </div>
+                      </td>
+                      <td class="td-dim">Yesterday</td>
+                      <td><div class="inline-actions">
+                        <button class="btn btn-ghost btn-sm" onclick="showToast('Reminder sent to driver','info')">Remind Driver</button>
+                      </div></td>
+                    </tr>
+                    <tr>
+                      <td class="td-mono">CN-00039</td>
+                      <td>PetroServ Ltd</td>
+                      <td>
+                        <div style="display:flex;gap:4px;">
+                          <span class="badge badge-green">COL ✓</span>
+                          <span class="badge badge-green">POD ✓</span>
+                        </div>
+                      </td>
+                      <td class="td-dim">2 days ago</td>
+                      <td><div class="inline-actions">
+                        <button class="btn btn-success btn-sm" onclick="showToast('CN-00039 approved · Draft invoice queued for Sage','success')">Approve & Invoice</button>
+                        <button class="btn btn-danger btn-sm" onclick="showToast('CN-00039 flagged','error')">Flag</button>
+                      </div></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Document Preview</div></div>
+              <div style="padding:20px;">
+                <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:40px;text-align:center;margin-bottom:12px;">
+                  <div style="font-size:32px;margin-bottom:8px;">📄</div>
+                  <div style="font-size:13px;color:var(--text2);margin-bottom:4px;">CN-00041 · Delivery Note</div>
+                  <div style="font-size:11px;color:var(--text3);">POD_CN00041_230226.jpg</div>
+                  <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;">
+                    <button class="btn btn-secondary btn-sm" onclick="showToast('Opening document preview…','info')">View Full</button>
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('Downloading document…','info')">Download</button>
+                  </div>
+                </div>
+                <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:40px;text-align:center;">
+                  <div style="font-size:32px;margin-bottom:8px;">📷</div>
+                  <div style="font-size:13px;color:var(--text2);margin-bottom:4px;">CN-00041 · Collection Note</div>
+                  <div style="font-size:11px;color:var(--text3);">COL_CN00041_230226.jpg</div>
+                  <div style="margin-top:14px;display:flex;gap:8px;justify-content:center;">
+                    <button class="btn btn-secondary btn-sm" onclick="showToast('Opening document preview…','info')">View Full</button>
+                    <button class="btn btn-ghost btn-sm" onclick="showToast('Downloading document…','info')">Download</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CUSTOMERS & SUPPLIERS ── -->
+      <div id="view-customers" class="view">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Customers &amp; Suppliers</h1>
+            <p>Synced from Sage — read-only master data.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('Syncing from Sage…','info')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Sync Sage
+          </button>
+        </div>
+        <div class="tabs">
+          <div class="tab-item active">Customers (6)</div>
+          <div class="tab-item">Suppliers (4)</div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Code</th><th>Contact</th><th>City</th><th>Active CPOs</th><th>Sage</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Chemforce SA</strong></td><td class="td-mono">CHFSA001</td><td class="td-dim"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7e171018113e1d161b1318110c1d1b501d1150041f">[email&#160;protected]</a></td><td class="td-dim">Johannesburg</td><td>3</td><td><span class="badge badge-green">Synced</span></td></tr>
+                <tr><td><strong>PetroServ Ltd</strong></td><td class="td-mono">PETLT002</td><td class="td-dim"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="503f223435222310203524223f233522267e333f7e2a31">[email&#160;protected]</a></td><td class="td-dim">Durban</td><td>1</td><td><span class="badge badge-green">Synced</span></td></tr>
+                <tr><td><strong>AgriChem Group</strong></td><td class="td-mono">AGCGP003</td><td class="td-dim"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f995969e908a8d909a8ab9989e8b909a919c949e8b968c89d79a96d78398">[email&#160;protected]</a></td><td class="td-dim">Cape Town</td><td>2</td><td><span class="badge badge-green">Synced</span></td></tr>
+                <tr><td><strong>MineralTech</strong></td><td class="td-mono">MNTECH004</td><td class="td-dim"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2050524f435552454d454e54604d494e4552414c544543480e434f0e5a41">[email&#160;protected]</a></td><td class="td-dim">Port Elizabeth</td><td>1</td><td><span class="badge badge-green">Synced</span></td></tr>
+                <tr><td><strong>SafeWash Co</strong></td><td class="td-mono">SFWSH005</td><td class="td-dim"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0c6d686165624c7f6d6a697b6d7f64226f6322766d">[email&#160;protected]</a></td><td class="td-dim">Pretoria</td><td>0</td><td><span class="badge badge-green">Synced</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TRANSPORT ── -->
+      <div id="view-transport" class="view">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Transporters &amp; Drivers</h1>
+            <p>Manually managed. Drivers receive WhatsApp links via their registered numbers.</p>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" onclick="openModal('modal-new-driver')">+ Add Driver</button>
+            <button class="btn btn-primary btn-sm" onclick="showToast('Add transporter form coming soon','info')">+ Add Transporter</button>
+          </div>
+        </div>
+        <div class="tabs">
+          <div class="tab-item active">Transporters (3)</div>
+          <div class="tab-item">Drivers (8)</div>
+          <div class="tab-item">Vehicles (6)</div>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Transporter</th><th>Contact</th><th>Drivers</th><th>Active CNs</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><strong>FastHaul Logistics</strong></td><td class="td-dim"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="72161b01021306111a32141301061a13071e5c111d5c0813">[email&#160;protected]</a> · 011 555 0100</td><td>3</td><td>2</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td><strong>QuickFreight</strong></td><td class="td-dim"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a3ccd3d0e3d2d6cac0c8c5d1c6cac4cbd78dc0cc8dd9c2">[email&#160;protected]</a> · 011 555 0200</td><td>2</td><td>1</td><td><span class="badge badge-green">Active</span></td></tr>
+                <tr><td><strong>RoadLink SA</strong></td><td class="td-dim"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2d4f42424644434a5e6d5f424c4941444346034e4203574c">[email&#160;protected]</a> · 011 555 0300</td><td>3</td><td>1</td><td><span class="badge badge-yellow">On hold</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PRODUCTS ── -->
+      <div id="view-products" class="view">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Products</h1>
+            <p>Manually managed product catalogue. Used in PR and CN creation.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('modal-new-product')">+ Add Product</button>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Product</th><th>Code</th><th>Category</th><th>Unit</th><th>Hazardous</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Caustic Soda</strong></td><td class="td-mono">CAUST-001</td><td class="td-dim">Alkalis</td><td>kg</td><td><span class="badge badge-red">Yes</span></td><td><button class="action-icon-btn" onclick="showToast('Edit product form coming soon','info')">✏</button></td></tr>
+                <tr><td><strong>Hydrochloric Acid</strong></td><td class="td-mono">HCLAC-002</td><td class="td-dim">Acids</td><td>L</td><td><span class="badge badge-red">Yes</span></td><td><button class="action-icon-btn" onclick="showToast('Edit product form coming soon','info')">✏</button></td></tr>
+                <tr><td><strong>Acetone</strong></td><td class="td-mono">ACETO-003</td><td class="td-dim">Solvents</td><td>L</td><td><span class="badge badge-orange">Flammable</span></td><td><button class="action-icon-btn" onclick="showToast('Edit product form coming soon','info')">✏</button></td></tr>
+                <tr><td><strong>Sodium Hypochlorite</strong></td><td class="td-mono">NAOCL-004</td><td class="td-dim">Oxidisers</td><td>L</td><td><span class="badge badge-yellow">Moderate</span></td><td><button class="action-icon-btn" onclick="showToast('Edit product form coming soon','info')">✏</button></td></tr>
+                <tr><td><strong>Isopropyl Alcohol</strong></td><td class="td-mono">IPA00-005</td><td class="td-dim">Solvents</td><td>L</td><td><span class="badge badge-orange">Flammable</span></td><td><button class="action-icon-btn" onclick="showToast('Edit product form coming soon','info')">✏</button></td></tr>
+                <tr><td><strong>Sulphuric Acid</strong></td><td class="td-mono">H2SO4-006</td><td class="td-dim">Acids</td><td>L</td><td><span class="badge badge-red">Yes</span></td><td><button class="action-icon-btn" onclick="showToast('Edit product form coming soon','info')">✏</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div id="view-settings" class="view">
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Settings</h1>
+            <p>Integrations, notifications, and system configuration.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Sage API Integration</div><span class="badge badge-yellow">Mock</span></div>
+              <div style="padding:20px;">
+                <div class="form-group">
+                  <label class="form-label">API Base URL</label>
+                  <input class="form-input" value="https://api.sage.com/v1/intechem" type="text"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">API Key</label>
+                  <input class="form-input" value="sk-sage-••••••••••••••••••••" type="password"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Sync Interval</label>
+                  <select class="form-select"><option>Every 30 minutes</option><option>Every hour</option><option>Manual only</option></select>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="showToast('Sage settings saved','success')">Save &amp; Test Connection</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">WhatsApp (Twilio)</div><span class="badge badge-yellow">Pending</span></div>
+              <div style="padding:20px;">
+                <div class="form-group">
+                  <label class="form-label">Account SID</label>
+                  <input class="form-input" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" type="text"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Auth Token</label>
+                  <input class="form-input" placeholder="••••••••••••••••••••••••••••••••" type="password"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">WhatsApp From Number</label>
+                  <input class="form-input" placeholder="+27xxxxxxxxx" type="text"/>
+                </div>
+                <div style="background:var(--yellow-light);border:1px solid var(--yellow);border-radius:6px;padding:12px;font-size:12px;color:var(--yellow);margin-bottom:14px;">
+                  ⚠ Meta Business verification and template approval still pending. Messages will be mocked until approved.
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="showToast('Twilio settings saved','success')">Save Settings</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">Email Notifications</div></div>
+              <div style="padding:20px;">
+                <div class="form-group">
+                  <label class="form-label">SMTP Host</label>
+                  <input class="form-input" value="smtp.intechem.co.za" type="text"/>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">From Address</label>
+                  <input class="form-input" value="noreply@intechem.co.za" type="text"/>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+                    <input type="checkbox" checked/> Email transporter on CN "Awaiting Collection"
+                  </label>
+                  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
+                    <input type="checkbox" checked/> Email customer on CPO "Delivered"
+                  </label>
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="showToast('Email settings saved','success')">Save Settings</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">User Management</div></div>
+              <div style="padding:12px 0;">
+                <div class="attention-item">
+                  <div class="sidebar-avatar" style="width:32px;height:32px;font-size:11px;">A</div>
+                  <div class="attention-content"><div class="attention-title">Admin User</div><div class="attention-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b9d8ddd4d0d7f9d0d7cddcdad1dcd497dad697c3d8">[email&#160;protected]</a> · Admin</div></div>
+                  <span class="badge badge-purple">Admin</span>
+                </div>
+                <div class="attention-item">
+                  <div class="sidebar-avatar" style="width:32px;height:32px;font-size:11px;background:linear-gradient(135deg,var(--accent),var(--cyan))">T</div>
+                  <div class="attention-content"><div class="attention-title">Thabo Mokoena</div><div class="attention-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="eb9fc5868480848e858aab82859f8e88838e86c58884c5918a">[email&#160;protected]</a> · Procurement</div></div>
+                  <span class="badge badge-blue">Procurement</span>
+                </div>
+                <div class="attention-item">
+                  <div class="sidebar-avatar" style="width:32px;height:32px;font-size:11px;background:linear-gradient(135deg,var(--green),var(--cyan))">L</div>
+                  <div class="attention-content"><div class="attention-title">Lerato Dube</div><div class="attention-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4b27652f3e292e0b22253f2e28232e2665282465312a">[email&#160;protected]</a> · Logistics</div></div>
+                  <span class="badge badge-green">Logistics</span>
+                </div>
+                <div class="attention-item">
+                  <div class="sidebar-avatar" style="width:32px;height:32px;font-size:11px;background:linear-gradient(135deg,var(--yellow),var(--orange))">N</div>
+                  <div class="attention-content"><div class="attention-title">Nomsa Khumalo</div><div class="attention-sub"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dab4f4b1b2afb7bbb6b59ab3b4aebfb9b2bfb7f4b9b5f4a0bb">[email&#160;protected]</a> · Finance</div></div>
+                  <span class="badge badge-yellow">Finance</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </main>
+</div><!-- /screen-app -->
+
+<!-- ════════════════════════════════════
+     DRIVER PAGE SCREEN
+════════════════════════════════════ -->
+<div id="screen-driver" class="screen">
+  <div class="driver-wrap">
+    <div class="driver-header">
+      <div class="driver-logo-mark">ICL</div>
+      <h1>Document Upload</h1>
+      <p>Upload your collection and delivery documents</p>
+    </div>
+
+    <div class="driver-cn-info">
+      <div class="driver-cn-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div>
+        <div class="driver-cn-label">Collection Note</div>
+        <div class="driver-cn-value">CN-00042 · JHB → DBN</div>
+      </div>
+      <div style="margin-left:auto;text-align:right;">
+        <div class="driver-cn-label">Customer</div>
+        <div style="font-size:13px;font-weight:600;">AgriChem Group</div>
+      </div>
+    </div>
+
+    <div class="driver-steps" id="driver-steps">
+      <div class="driver-step active" id="dstep-1">
+        <div class="driver-step-dot">1</div>
+        <div class="driver-step-label">Collection</div>
+      </div>
+      <div class="driver-step" id="dstep-2">
+        <div class="driver-step-dot">2</div>
+        <div class="driver-step-label">Details</div>
+      </div>
+      <div class="driver-step" id="dstep-3">
+        <div class="driver-step-dot">3</div>
+        <div class="driver-step-label">Delivery</div>
+      </div>
+      <div class="driver-step" id="dstep-4">
+        <div class="driver-step-dot">4</div>
+        <div class="driver-step-label">Done</div>
+      </div>
+    </div>
+
+    <!-- Step 1: Collection doc -->
+    <div id="driver-step1" class="driver-card">
+      <div class="driver-card-header">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">1</div>
+        <h2>Upload Collection Document</h2>
+      </div>
+      <div class="driver-card-body">
+        <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Take a photo of the signed collection note you received when picking up the load.</p>
+        <div class="upload-zone" id="upload-zone-col" onclick="simulateUpload('col')">
+          <input type="file" accept="image/*,application/pdf" onchange="handleFileSelect(event,'col')"/>
+          <div class="upload-icon">📷</div>
+          <div class="upload-title">Tap to take photo or choose file</div>
+          <div class="upload-sub">JPG, PNG or PDF accepted</div>
+        </div>
+        <div id="col-preview" style="display:none;" class="upload-preview">
+          <span style="font-size:18px;">✅</span>
+          <span class="upload-preview-name">collection_note.jpg</span>
+          <span class="upload-preview-remove" onclick="removeFile('col')">✕</span>
+        </div>
+        <button class="driver-btn driver-btn-primary" id="btn-next1" onclick="driverNext(1)" style="margin-top:12px;">Next →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Details -->
+    <div id="driver-step2" class="driver-card" style="display:none;">
+      <div class="driver-card-header">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">2</div>
+        <h2>Trip Details</h2>
+      </div>
+      <div class="driver-card-body">
+        <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500;">Your name</label>
+        <input class="driver-input" placeholder="Full name" type="text" value="R. Ndlovu"/>
+        <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500;">Vehicle registration</label>
+        <input class="driver-input" placeholder="e.g. CA 123 456" type="text" value="GP 44 FH"/>
+        <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500;">Collected at (time)</label>
+        <input class="driver-input" type="time" value="08:30"/>
+        <div style="display:flex;gap:10px;margin-top:8px;">
+          <button class="driver-btn driver-btn-secondary" onclick="driverBack(2)" style="flex:1;">← Back</button>
+          <button class="driver-btn driver-btn-primary" onclick="driverNext(2)" style="flex:2;">Next →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Delivery doc -->
+    <div id="driver-step3" class="driver-card" style="display:none;">
+      <div class="driver-card-header">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff">3</div>
+        <h2>Upload Delivery Document</h2>
+      </div>
+      <div class="driver-card-body">
+        <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Take a photo of the signed proof-of-delivery once the customer has confirmed receipt.</p>
+        <div class="upload-zone" id="upload-zone-del" onclick="simulateUpload('del')">
+          <input type="file" accept="image/*,application/pdf" onchange="handleFileSelect(event,'del')"/>
+          <div class="upload-icon">📄</div>
+          <div class="upload-title">Tap to take photo or choose file</div>
+          <div class="upload-sub">JPG, PNG or PDF accepted</div>
+        </div>
+        <div id="del-preview" style="display:none;" class="upload-preview">
+          <span style="font-size:18px;">✅</span>
+          <span class="upload-preview-name">delivery_note.jpg</span>
+          <span class="upload-preview-remove" onclick="removeFile('del')">✕</span>
+        </div>
+        <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500;margin-top:14px;">Delivered at (time)</label>
+        <input class="driver-input" type="time" value="16:45"/>
+        <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500;">Notes (optional)</label>
+        <textarea class="driver-input" rows="2" placeholder="Any delivery issues or comments…" style="resize:none;"></textarea>
+        <div style="display:flex;gap:10px;margin-top:8px;">
+          <button class="driver-btn driver-btn-secondary" onclick="driverBack(3)" style="flex:1;">← Back</button>
+          <button class="driver-btn driver-btn-primary" onclick="driverSubmit()" style="flex:2;" id="submit-btn">Submit ✓</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Success -->
+    <div id="driver-step4" class="driver-card" style="display:none;">
+      <div class="driver-card-body">
+        <div class="driver-success">
+          <div class="driver-success-icon">✅</div>
+          <h2>Documents submitted!</h2>
+          <p>Your documents for <strong>CN-00042</strong> have been uploaded successfully. Intechem's finance team will review them shortly.</p>
+          <div style="margin-top:20px;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;text-align:left;">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase;font-weight:600;">Summary</div>
+            <div style="font-size:13px;color:var(--text2);display:flex;justify-content:space-between;margin-bottom:4px;"><span>Collection doc</span><span style="color:var(--green)">✓ Uploaded</span></div>
+            <div style="font-size:13px;color:var(--text2);display:flex;justify-content:space-between;margin-bottom:4px;"><span>Delivery doc</span><span style="color:var(--green)">✓ Uploaded</span></div>
+            <div style="font-size:13px;color:var(--text2);display:flex;justify-content:space-between;"><span>Submitted at</span><span>16:47</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="driver-btn driver-btn-secondary" onclick="showScreen('app')" style="margin-top:12px;font-size:12px;padding:10px;">
+      ← Back to ICL Platform
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     MODALS
+════════════════════════════════════ -->
+
+<!-- New Collection Note -->
+<div class="modal-overlay" id="modal-new-cn">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Collection Note</div>
+      <button class="modal-close" onclick="closeModal('modal-new-cn')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--accent-light);border:1px solid rgba(59,110,245,0.25);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--accent);margin-bottom:20px;">
+        CN creation is gated on an approved Purchase Requisition.
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Purchase Requisition <span>*</span></label>
+          <select class="form-select"><option>PR-00017 — Acetone (Approved)</option><option disabled>PR-00016 — NaOCl (Draft)</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Customer PO</label>
+          <input class="form-input" value="CPO-2024-090" readonly/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Transporter <span>*</span></label>
+          <select class="form-select"><option>FastHaul Logistics</option><option>QuickFreight</option><option>RoadLink SA</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Driver <span>*</span></label>
+          <select class="form-select"><option>J. Dlamini</option><option>M. Sithole</option><option>R. Ndlovu</option><option>P. Mokoena</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Vehicle Reg</label>
+          <input class="form-input" placeholder="GP 44 FH" type="text"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Collection Date <span>*</span></label>
+          <input class="form-input" type="date" value="2026-02-24"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Origin</label>
+          <input class="form-input" value="Johannesburg Depot" type="text"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Destination <span>*</span></label>
+          <input class="form-input" placeholder="e.g. Durban" type="text"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Products &amp; Quantities</label>
+        <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:12px;font-size:13px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span>Acetone</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input style="width:80px;padding:4px 8px;background:var(--bg3);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-size:12px;" value="2500" type="number"/>
+              <span class="td-dim">/ 5,000 L</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-hint">Total CN quantities must not exceed CPO totals.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" placeholder="Any special handling instructions…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new-cn')">Cancel</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-new-cn');showToast('CN saved as draft','info')">Save Draft</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-new-cn');showToast('CN-00045 created · WhatsApp queued for driver','success')">Create &amp; Notify</button>
+    </div>
+  </div>
+</div>
+
+<!-- CPO Detail -->
+<div class="modal-overlay" id="modal-cpo-detail">
+  <div class="modal" style="width:640px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">CPO-2024-091</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px;">Chemforce SA · Synced from Sage</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge badge-blue">In Progress</span>
+        <button class="modal-close" onclick="closeModal('modal-cpo-detail')">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="detail-panel">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Customer</label><span>Chemforce SA</span></div>
+          <div class="detail-item"><label>PO Number</label><span class="td-mono">CPO-2024-091</span></div>
+          <div class="detail-item"><label>Order Date</label><span>18 Feb 2026</span></div>
+          <div class="detail-item"><label>Delivery Address</label><span>14 Chem Park, JHB</span></div>
+          <div class="detail-item"><label>Products</label><span>Caustic Soda, HCl</span></div>
+          <div class="detail-item"><label>Total Value</label><span>R 284,500</span></div>
+        </div>
+      </div>
+      <div class="section-divider"><span>Status Flow</span></div>
+      <div class="status-flow" style="margin-bottom:20px;">
+        <div class="sf-step"><div class="sf-label done">Received</div><div class="sf-arrow">→</div></div>
+        <div class="sf-step"><div class="sf-label active">In Progress</div><div class="sf-arrow">→</div></div>
+        <div class="sf-step"><div class="sf-label">Shipped</div><div class="sf-arrow">→</div></div>
+        <div class="sf-step"><div class="sf-label">Delivered</div><div class="sf-arrow">→</div></div>
+        <div class="sf-step"><div class="sf-label">Closed</div></div>
+      </div>
+      <div class="section-divider"><span>Linked Collection Notes</span></div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr><th style="text-align:left;font-size:11px;color:var(--text3);padding:6px 0;border-bottom:1px solid var(--border);">CN #</th><th style="text-align:left;font-size:11px;color:var(--text3);padding:6px 0;border-bottom:1px solid var(--border);">Qty</th><th style="text-align:left;font-size:11px;color:var(--text3);padding:6px 0;border-bottom:1px solid var(--border);">Status</th></tr></thead>
+        <tbody>
+          <tr><td style="padding:8px 0;font-size:13px;" class="td-mono">CN-00044</td><td style="padding:8px 0;font-size:13px;">6,000 kg</td><td style="padding:8px 0;"><span class="badge badge-cyan">In Transit</span></td></tr>
+          <tr><td style="padding:8px 0;font-size:13px;" class="td-mono">CN-00043</td><td style="padding:8px 0;font-size:13px;">6,500 kg</td><td style="padding:8px 0;"><span class="badge badge-orange">Dispatched</span></td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:12px;color:var(--text3);margin-top:8px;">Total dispatched: 12,500 kg / 12,500 kg (100%)</div>
+      <div class="progress-bar" style="margin-top:6px;"><div class="progress-fill" style="width:100%;background:var(--green);"></div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-cpo-detail')">Close</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-cpo-detail');openModal('modal-new-cn')">+ New CN</button>
+    </div>
+  </div>
+</div>
+
+<!-- CN Detail -->
+<div class="modal-overlay" id="modal-cn-detail">
+  <div class="modal" style="width:600px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">CN-00044</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px;">Chemforce SA · CPO-2024-091</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="badge badge-cyan">In Transit</span>
+        <button class="modal-close" onclick="closeModal('modal-cn-detail')">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="detail-panel">
+        <div class="detail-grid">
+          <div class="detail-item"><label>Transporter</label><span>FastHaul Logistics</span></div>
+          <div class="detail-item"><label>Driver</label><span>J. Dlamini</span></div>
+          <div class="detail-item"><label>Vehicle</label><span>GP 12 FH</span></div>
+          <div class="detail-item"><label>Route</label><span>JHB → CPT</span></div>
+          <div class="detail-item"><label>Collection Date</label><span>22 Feb 2026</span></div>
+          <div class="detail-item"><label>Driver Link</label><span style="color:var(--accent);font-size:12px;">icl.app/cn/00044/abc123</span></div>
+        </div>
+      </div>
+      <div class="section-divider"><span>CN Lifecycle</span></div>
+      <div style="padding:0 0 12px;">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot done">✓</div>
+            <div class="timeline-content"><div class="timeline-label">Draft created</div><div class="timeline-time">22 Feb · 07:45</div></div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot done">✓</div>
+            <div class="timeline-content"><div class="timeline-label">Ready for collection</div><div class="timeline-time">22 Feb · 08:00</div></div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot done">✓</div>
+            <div class="timeline-content"><div class="timeline-label">WhatsApp & email sent to driver</div><div class="timeline-time">22 Feb · 08:00 · Auto</div></div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot done">✓</div>
+            <div class="timeline-content"><div class="timeline-label">Collected — driver confirmed</div><div class="timeline-time">22 Feb · 09:30</div></div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot active">→</div>
+            <div class="timeline-content"><div class="timeline-label">In Transit</div><div class="timeline-time">Now</div></div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot pending">○</div>
+            <div class="timeline-content"><div class="timeline-label">Delivered — awaiting POD upload</div><div class="timeline-time">Pending</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="section-divider"><span>Notifications</span></div>
+      <div style="font-size:12px;display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:var(--text2);">WhatsApp to J. Dlamini</span><span class="badge badge-green">Delivered</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:var(--text2);">Email to FastHaul Logistics</span><span class="badge badge-green">Sent</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-cn-detail')">Close</button>
+      <button class="btn btn-secondary" onclick="showToast('Driver link resent via WhatsApp','success');closeModal('modal-cn-detail')">Resend Driver Link</button>
+      <button class="btn btn-primary" onclick="showToast('CN-00044 marked as Delivered','success');closeModal('modal-cn-detail')">Mark Delivered</button>
+    </div>
+  </div>
+</div>
+
+<!-- New PR -->
+<div class="modal-overlay" id="modal-new-pr">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Purchase Requisition</div>
+      <button class="modal-close" onclick="closeModal('modal-new-pr')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Customer PO <span>*</span></label>
+          <select class="form-select"><option>CPO-2024-089 — AgriChem Group</option><option>CPO-2024-091 — Chemforce SA</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Supplier <span>*</span></label>
+          <select class="form-select"><option>ChemBase Dist.</option><option>Chlor-Tech SA</option><option>AceChem Supplies</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Products &amp; Quantities <span>*</span></label>
+        <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:12px;">
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <select class="form-select" style="flex:2;">
+              <option>Sodium Hypochlorite</option><option>Caustic Soda</option><option>HCl</option>
+            </select>
+            <input class="form-input" placeholder="Qty" style="width:80px;" type="number"/>
+            <select class="form-select" style="width:60px;"><option>L</option><option>kg</option></select>
+          </div>
+          <button class="btn btn-ghost btn-sm">+ Add line</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Required by Date</label>
+        <input class="form-input" type="date" value="2026-02-28"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" placeholder="Reason for requisition, special requirements…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new-pr')">Cancel</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-new-pr');showToast('PR saved as draft','info')">Save Draft</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-new-pr');showToast('PR submitted for approval','success')">Submit for Approval</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Driver -->
+<div class="modal-overlay" id="modal-new-driver">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add Driver</div>
+      <button class="modal-close" onclick="closeModal('modal-new-driver')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name <span>*</span></label>
+          <input class="form-input" placeholder="First name" type="text"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name <span>*</span></label>
+          <input class="form-input" placeholder="Last name" type="text"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">WhatsApp Number <span>*</span></label>
+          <input class="form-input" placeholder="+27 xx xxx xxxx" type="tel"/>
+          <div class="form-hint">Used to send collection note links.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ID / Licence Number</label>
+          <input class="form-input" placeholder="Driver licence" type="text"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Transporter <span>*</span></label>
+        <select class="form-select"><option>FastHaul Logistics</option><option>QuickFreight</option><option>RoadLink SA</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new-driver')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-new-driver');showToast('Driver added successfully','success')">Add Driver</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Product -->
+<div class="modal-overlay" id="modal-new-product">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add Product</div>
+      <button class="modal-close" onclick="closeModal('modal-new-product')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Product Name <span>*</span></label>
+          <input class="form-input" placeholder="e.g. Caustic Soda" type="text"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Product Code <span>*</span></label>
+          <input class="form-input" placeholder="e.g. CAUST-007" type="text"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select"><option>Alkalis</option><option>Acids</option><option>Solvents</option><option>Oxidisers</option><option>Other</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Unit of Measure</label>
+          <select class="form-select"><option>L (litres)</option><option>kg (kilograms)</option><option>t (tonnes)</option></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Hazard Classification</label>
+        <select class="form-select"><option>Non-hazardous</option><option>Moderate</option><option>Flammable</option><option>Hazardous</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" placeholder="Handling or storage notes…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-new-product')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-new-product');showToast('Product added','success')">Add Product</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ── STATE ──
+let currentRole = 'admin';
+let currentView = 'dashboard';
+let driverCurrentStep = 1;
+let colFileUploaded = false;
+let delFileUploaded = false;
+
+const roleConfig = {
+  admin:       { label:'Admin',       color:'#a78bfa', initial:'A', email:'admin@intechem.co.za' },
+  procurement: { label:'Procurement', color:'#3d7fff', initial:'P', email:'procurement@intechem.co.za' },
+  logistics:   { label:'Logistics',   color:'#22c97a', initial:'L', email:'logistics@intechem.co.za' },
+  finance:     { label:'Finance',     color:'#f5c84a', initial:'F', email:'finance@intechem.co.za' },
+  developer:   { label:'Developer',   color:'#ff8c42', initial:'D', email:'dev@intechem.co.za' },
+};
+
+const viewMeta = {
+  'dashboard':        { section:'Overview',   page:'Dashboard' },
+  'purchase-orders':  { section:'Operations', page:'Purchase Orders' },
+  'requisitions':     { section:'Operations', page:'Purchase Requisitions' },
+  'collection-notes': { section:'Operations', page:'Collection Notes' },
+  'pod-review':       { section:'Finance',    page:'POD Review' },
+  'customers':        { section:'Master Data',page:'Customers & Suppliers' },
+  'transport':        { section:'Master Data',page:'Transporters & Drivers' },
+  'products':         { section:'Master Data',page:'Products' },
+  'settings':         { section:'System',     page:'Settings' },
+};
+
+// ── ROLE SELECTION ──
+document.querySelectorAll('.role-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    currentRole = btn.dataset.role;
+  });
+});
+
+// ── LOGIN ──
+function doLogin() {
+  const r = currentRole;
+  const cfg = roleConfig[r];
+
+  // Update sidebar
+  const badge = document.getElementById('sidebar-role-badge');
+  badge.setAttribute('data-role', r);
+  badge.querySelector('.role-dot').style.background = cfg.color;
+  document.getElementById('sidebar-role-name').textContent = cfg.label;
+  document.getElementById('sidebar-avatar').textContent = cfg.initial;
+  document.getElementById('sidebar-avatar').style.background = `linear-gradient(135deg, ${cfg.color}, var(--accent-dim))`;
+  document.getElementById('sidebar-user-name').textContent = cfg.label + ' User';
+  document.getElementById('sidebar-user-role').textContent = cfg.email;
+
+  // Finance nav section
+  document.getElementById('nav-finance-section').style.display =
+    (r === 'finance' || r === 'admin' || r === 'developer') ? 'block' : 'none';
+
+  showScreen('app');
+  switchView('dashboard');
+  showToast('Welcome back, ' + cfg.label, 'success');
+}
+
+function doLogout() {
+  showScreen('login');
+  driverCurrentStep = 1;
+}
+
+// ── SCREENS ──
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+function showDriverPage() {
+  driverCurrentStep = 1;
+  colFileUploaded = false;
+  delFileUploaded = false;
+  resetDriverSteps();
+  showScreen('driver');
+}
+
+// ── VIEWS ──
+function switchView(name, el) {
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  else {
+    const target = document.querySelector(`[data-view="${name}"]`);
+    if (target) target.classList.add('active');
+  }
+
+  // Update views
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const view = document.getElementById('view-' + name);
+  if (view) view.classList.add('active');
+
+  // Topbar
+  const meta = viewMeta[name] || { section:'ICL', page:name };
+  document.getElementById('topbar-section').textContent = meta.section;
+  document.getElementById('topbar-page').textContent = meta.page;
+
+  currentView = name;
+}
+
+// ── MODALS ──
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+// Close on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// ── TOASTS ──
+function showToast(msg, type='info') {
+  const icons = { success:'✅', error:'❌', info:'ℹ️' };
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-text">${msg}</span><span class="toast-close" onclick="this.parentElement.remove()">✕</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+// ── DRIVER STEPS ──
+function resetDriverSteps() {
+  for (let i = 1; i <= 4; i++) {
+    const step = document.getElementById(`dstep-${i}`);
+    const card = document.getElementById(`driver-step${i}`);
+    step.className = 'driver-step' + (i === 1 ? ' active' : '');
+    step.querySelector('.driver-step-dot').textContent = i;
+    if (card) card.style.display = i === 1 ? 'block' : 'none';
+  }
+}
+
+function driverNext(step) {
+  if (step === 1 && !colFileUploaded) {
+    // Allow proceeding for demo
+  }
+  document.getElementById(`driver-step${step}`).style.display = 'none';
+  document.getElementById(`driver-step${step + 1}`).style.display = 'block';
+
+  // Update step indicators
+  const currentEl = document.getElementById(`dstep-${step}`);
+  currentEl.className = 'driver-step done';
+  currentEl.querySelector('.driver-step-dot').textContent = '✓';
+
+  const nextEl = document.getElementById(`dstep-${step + 1}`);
+  nextEl.className = 'driver-step active';
+
+  driverCurrentStep = step + 1;
+}
+
+function driverBack(step) {
+  document.getElementById(`driver-step${step}`).style.display = 'none';
+  document.getElementById(`driver-step${step - 1}`).style.display = 'block';
+
+  const currentEl = document.getElementById(`dstep-${step}`);
+  currentEl.className = 'driver-step';
+
+  const prevEl = document.getElementById(`dstep-${step - 1}`);
+  prevEl.className = 'driver-step active';
+  prevEl.querySelector('.driver-step-dot').textContent = step - 1;
+
+  driverCurrentStep = step - 1;
+}
+
+function driverSubmit() {
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = 'Uploading…';
+  btn.disabled = true;
+  setTimeout(() => {
+    driverNext(3);
+    const step4 = document.getElementById('dstep-4');
+    step4.className = 'driver-step done';
+    step4.querySelector('.driver-step-dot').textContent = '✓';
+  }, 1200);
+}
+
+function simulateUpload(type) {
+  setTimeout(() => {
+    document.getElementById(`${type}-preview`).style.display = 'flex';
+    if (type === 'col') colFileUploaded = true;
+    else delFileUploaded = true;
+  }, 600);
+}
+
+function handleFileSelect(e, type) {
+  if (e.target.files && e.target.files[0]) {
+    const name = e.target.files[0].name;
+    const preview = document.getElementById(`${type}-preview`);
+    preview.querySelector('.upload-preview-name').textContent = name;
+    preview.style.display = 'flex';
+    if (type === 'col') colFileUploaded = true;
+    else delFileUploaded = true;
+  }
+}
+
+function removeFile(type) {
+  document.getElementById(`${type}-preview`).style.display = 'none';
+  if (type === 'col') colFileUploaded = false;
+  else delFileUploaded = false;
+}
+</script>
+</body>
+</html>
