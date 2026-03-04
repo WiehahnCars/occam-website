@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lee Botti & Associates — Candidate Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #111110;
+  --ink-2:     #2c2c2a;
+  --ink-3:     #6b6b67;
+  --ink-4:     #a8a8a3;
+  --ink-5:     #d4d4ce;
+  --paper:     #ffffff;
+  --paper-2:   #f7f6f3;
+  --paper-3:   #efede8;
+  --gold:      #c98a1a;
+  --gold-2:    #e6a020;
+  --gold-bg:   #fdf6e8;
+  --gold-ring: rgba(201,138,26,0.18);
+  --navy:      #17244a;
+  --navy-2:    #1f2e5c;
+  --green:     #1c7c4e;
+  --green-bg:  #e9f7ef;
+  --red:       #c0392b;
+  --red-bg:    #fdf0ee;
+  --r:         8px;
+  --r-lg:      14px;
+  --r-xl:      20px;
+  --sh:        0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  --sh-md:     0 4px 20px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
+  --sh-lg:     0 12px 48px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.06);
+  --ease:      cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper-2);color:var(--ink);line-height:1.6;}
+img{display:block;max-width:100%;}
+
+/* ── VIEWS ── */
+.view{display:none !important;}
+.view.active{display:block !important;}
+#view-landing.active,#view-login.active{display:flex !important;}
+
+/* ── ATOMS ── */
+.badge{display:inline-flex;align-items:center;padding:.2rem .55rem;border-radius:4px;font-size:.7rem;font-weight:600;letter-spacing:.03em;white-space:nowrap;}
+.badge-gold{background:var(--gold-bg);color:var(--gold);}
+.badge-navy{background:rgba(23,36,74,.08);color:var(--navy);}
+.badge-green{background:var(--green-bg);color:var(--green);}
+.badge-red{background:var(--red-bg);color:var(--red);}
+.badge-muted{background:var(--paper-3);color:var(--ink-3);}
+
+/* ════════════════════════════
+   LANDING
+════════════════════════════ */
+#view-landing{
+  min-height:100vh;
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:3rem 1.5rem;
+  background:var(--navy);
+  position:relative;overflow:hidden;
+}
+/* Subtle dot grid */
+#view-landing::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:28px 28px;
+  pointer-events:none;z-index:0;
+}
+/* Warm glow */
+#view-landing::after{
+  content:'';position:absolute;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,138,26,.22) 0%,transparent 65%);
+  top:-200px;right:-180px;pointer-events:none;z-index:0;
+}
+.land-inner{position:relative;z-index:1;width:100%;max-width:920px;text-align:center;}
+
+.land-pill{
+  display:inline-flex;align-items:center;gap:.45rem;
+  border:1px solid rgba(201,138,26,.35);
+  background:rgba(201,138,26,.08);
+  color:var(--gold-2);font-size:.72rem;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.35rem .9rem;border-radius:100px;
+  margin-bottom:2rem;
+  animation:fadeUp .5s var(--ease) both;
+}
+.land-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold-2);}
+
+.land-h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.6rem,7vw,4.8rem);
+  font-weight:800;line-height:1.04;
+  color:#fff;letter-spacing:-.03em;
+  margin-bottom:1.25rem;
+  animation:fadeUp .5s .08s var(--ease) both;
+}
+.land-h1 em{font-style:normal;color:var(--gold-2);}
+
+.land-sub{
+  font-size:1rem;color:rgba(255,255,255,.45);
+  max-width:460px;margin:0 auto 3rem;line-height:1.75;
+  animation:fadeUp .5s .16s var(--ease) both;
+}
+
+.land-cards{
+  display:grid;grid-template-columns:1fr 1fr;
+  max-width:740px;margin:0 auto;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r-xl);overflow:hidden;
+  animation:fadeUp .5s .24s var(--ease) both;
+}
+.land-card{
+  background:rgba(255,255,255,.04);
+  padding:2.5rem 2.25rem;
+  cursor:pointer;text-align:left;border:none;
+  font-family:'DM Sans',sans-serif;color:inherit;
+  transition:background .2s var(--ease);
+  border-right:1px solid rgba(255,255,255,.1);
+  position:relative;
+}
+.land-card:last-child{border-right:none;}
+.land-card:hover{background:rgba(255,255,255,.08);}
+.land-card-tag{
+  font-size:.65rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--gold-2);
+  margin-bottom:1rem;display:block;
+}
+.land-card-title{
+  font-family:'Syne',sans-serif;font-size:1.3rem;
+  font-weight:700;color:#fff;margin-bottom:.6rem;line-height:1.2;
+}
+.land-card-body{font-size:.83rem;color:rgba(255,255,255,.4);line-height:1.7;}
+.land-card-cta{
+  margin-top:1.75rem;display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.78rem;font-weight:600;color:var(--gold-2);
+  transition:gap .2s var(--ease);
+}
+.land-card:hover .land-card-cta{gap:.65rem;}
+
+.land-foot{
+  margin-top:2.25rem;font-size:.7rem;color:rgba(255,255,255,.2);
+  animation:fadeUp .5s .32s var(--ease) both;
+}
+
+/* ════════════════════════════
+   NAV
+════════════════════════════ */
+.top-nav{
+  height:54px;padding:0 1.75rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--paper);border-bottom:1px solid var(--paper-3);
+  position:sticky;top:0;z-index:50;
+}
+.nav-brand{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
+.nav-brand span{color:var(--gold);}
+.nav-ctx{font-size:.72rem;color:var(--ink-4);margin-left:.6rem;}
+.nav-right{display:flex;align-items:center;gap:.6rem;}
+.nav-badge{
+  display:flex;align-items:center;gap:.4rem;
+  background:var(--paper-2);border:1px solid var(--paper-3);
+  border-radius:100px;padding:.28rem .75rem;
+  font-size:.72rem;color:var(--ink-3);
+}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+
+/* ════════════════════════════
+   BUTTONS
+════════════════════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.6rem 1.1rem;border-radius:var(--r);
+  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;
+  cursor:pointer;border:none;transition:all .15s var(--ease);
+  white-space:nowrap;
+}
+.btn-ink{background:var(--ink);color:#fff;}
+.btn-ink:hover{background:var(--ink-2);transform:translateY(-1px);box-shadow:var(--sh-md);}
+.btn-gold{background:var(--gold);color:#fff;font-weight:600;}
+.btn-gold:hover{background:var(--gold-2);transform:translateY(-1px);box-shadow:var(--sh-md);}
+.btn-ghost{background:transparent;color:var(--ink-3);border:1px solid var(--paper-3);}
+.btn-ghost:hover{background:var(--paper-2);color:var(--ink);border-color:var(--ink-5);}
+.btn-full{width:100%;justify-content:center;}
+.btn-lg{padding:.75rem 1.5rem;font-size:.88rem;}
+
+/* ════════════════════════════
+   FORMS
+════════════════════════════ */
+.fgroup{margin-bottom:1rem;}
+.flabel{
+  display:block;font-size:.72rem;font-weight:600;
+  letter-spacing:.03em;color:var(--ink-2);margin-bottom:.38rem;
+}
+.flabel .req{color:var(--gold);margin-left:2px;}
+.finput,.fselect,.ftextarea{
+  width:100%;padding:.62rem .85rem;
+  border:1.5px solid var(--paper-3);border-radius:var(--r);
+  background:var(--paper);
+  font-family:'DM Sans',sans-serif;font-size:.875rem;color:var(--ink);
+  outline:none;transition:border-color .15s,box-shadow .15s;
+  -webkit-appearance:none;
+}
+.finput:focus,.fselect:focus,.ftextarea:focus{
+  border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-ring);
+}
+.finput::placeholder,.ftextarea::placeholder{color:var(--ink-4);}
+.finput.err{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1);}
+.fselect{
+  cursor:pointer;padding-right:2.25rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23a8a8a3' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .85rem center;
+}
+.ftextarea{resize:vertical;min-height:88px;line-height:1.6;}
+.fhint{font-size:.7rem;color:var(--ink-4);margin-top:.3rem;line-height:1.5;}
+.ferr-msg{font-size:.7rem;color:var(--red);margin-top:.3rem;display:none;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.frow.three{grid-template-columns:1fr 1fr 1fr;}
+.fcol-full{grid-column:1/-1;}
+
+/* Radio chips */
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.4rem;}
+.chip input[type=radio]{display:none;}
+.chip label{
+  padding:.38rem .85rem;border:1.5px solid var(--paper-3);
+  border-radius:100px;font-size:.78rem;cursor:pointer;
+  transition:all .15s;color:var(--ink-3);user-select:none;display:block;
+  line-height:1.4;
+}
+.chip input:checked+label{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:600;}
+.chip label:hover{border-color:var(--gold);color:var(--gold);}
+
+/* Checkbox */
+.chkrow{display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.65rem;}
+.chkrow input[type=checkbox]{width:15px;height:15px;accent-color:var(--gold);flex-shrink:0;margin-top:3px;cursor:pointer;}
+.chkrow span{font-size:.78rem;color:var(--ink-3);line-height:1.55;}
+
+/* ════════════════════════════
+   LOGIN
+════════════════════════════ */
+#view-login{
+  min-height:100vh;background:var(--paper-2);
+  align-items:center;justify-content:center;padding:2rem;
+}
+.login-wrap{width:100%;max-width:400px;}
+.login-brand{text-align:center;margin-bottom:1.75rem;}
+.login-brand-name{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.login-brand-name span{color:var(--gold);}
+.login-brand-sub{font-size:.75rem;color:var(--ink-4);margin-top:.25rem;}
+.login-card{
+  background:var(--paper);border:1.5px solid var(--paper-3);
+  border-radius:var(--r-xl);padding:2.25rem;box-shadow:var(--sh-md);
+}
+.login-card-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:.2rem;}
+.login-card-sub{font-size:.78rem;color:var(--ink-4);margin-bottom:1.75rem;}
+.login-err{
+  background:var(--red-bg);border:1px solid rgba(192,57,43,.2);
+  border-radius:var(--r);padding:.6rem .85rem;
+  font-size:.78rem;color:var(--red);margin-bottom:1rem;display:none;
+}
+.login-back{text-align:center;margin-top:1.25rem;}
+.link-btn{background:none;border:none;color:var(--gold);font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;}
+
+/* ════════════════════════════
+   REGISTRATION
+════════════════════════════ */
+#view-register{min-height:100vh;background:var(--paper-2);}
+
+.reg-layout{
+  display:grid;grid-template-columns:1fr 400px;
+  min-height:calc(100vh - 54px);
+}
+/* Sidebar */
+.reg-sidebar{
+  background:var(--navy);padding:3rem 2.5rem;
+  display:flex;flex-direction:column;justify-content:space-between;
+  position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto;
+}
+.reg-s-title{
+  font-family:'Syne',sans-serif;font-size:1.65rem;font-weight:800;
+  color:#fff;line-height:1.15;letter-spacing:-.025em;margin-bottom:.75rem;
+}
+.reg-s-title em{font-style:normal;color:var(--gold-2);}
+.reg-s-sub{font-size:.82rem;color:rgba(255,255,255,.38);line-height:1.7;margin-bottom:2.5rem;}
+.reg-s-perks{display:flex;flex-direction:column;gap:1.1rem;}
+.reg-perk{display:flex;align-items:flex-start;gap:.85rem;}
+.reg-perk-icon{
+  width:34px;height:34px;border-radius:10px;
+  background:rgba(255,255,255,.07);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:.95rem;
+}
+.reg-perk-text strong{display:block;font-size:.8rem;color:rgba(255,255,255,.8);margin-bottom:.1rem;}
+.reg-perk-text span{font-size:.75rem;color:rgba(255,255,255,.35);line-height:1.55;}
+.reg-s-foot{font-size:.68rem;color:rgba(255,255,255,.18);line-height:1.6;}
+
+/* Main form */
+.reg-main{padding:2.25rem 2rem 3rem;max-width:480px;width:100%;}
+
+/* Step pip bar */
+.pip-bar{display:flex;gap:.3rem;margin-bottom:1.75rem;}
+.pip{height:3px;flex:1;border-radius:10px;background:var(--paper-3);transition:background .35s;}
+.pip.on{background:var(--gold);}
+
+.step-eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.3rem;}
+.step-title{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;margin-bottom:.4rem;}
+.step-desc{font-size:.82rem;color:var(--ink-3);line-height:1.65;margin-bottom:1.75rem;}
+
+.fcard{
+  background:var(--paper);border:1.5px solid var(--paper-3);
+  border-radius:var(--r-lg);padding:1.5rem;margin-bottom:1rem;
+}
+.fcard-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:1.1rem;padding-bottom:.6rem;
+  border-bottom:1px solid var(--paper-3);
+}
+.step-nav{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;}
+.step-back-btn{
+  background:none;border:none;font-family:'DM Sans',sans-serif;
+  font-size:.78rem;color:var(--ink-4);cursor:pointer;
+  display:flex;align-items:center;gap:.3rem;transition:color .15s;
+}
+.step-back-btn:hover{color:var(--ink);}
+
+/* Qual rows */
+.qual-rows{display:flex;flex-direction:column;gap:.55rem;margin-bottom:.65rem;}
+.qual-row{display:grid;grid-template-columns:2fr 2fr 1fr auto;gap:.45rem;align-items:center;}
+.btn-del{
+  background:none;border:1.5px solid var(--paper-3);border-radius:var(--r);
+  color:var(--ink-4);cursor:pointer;padding:.35rem .5rem;font-size:.85rem;
+  transition:all .15s;
+}
+.btn-del:hover{border-color:var(--red);color:var(--red);}
+.btn-add-row{
+  width:100%;padding:.5rem;border:1.5px dashed var(--paper-3);border-radius:var(--r);
+  background:transparent;color:var(--ink-4);font-size:.75rem;
+  cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;
+}
+.btn-add-row:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-bg);}
+
+/* Consent scroll */
+.consent-scroll{
+  background:var(--paper-2);border:1.5px solid var(--paper-3);
+  border-radius:var(--r);padding:1rem;max-height:200px;overflow-y:auto;
+  font-size:.75rem;color:var(--ink-3);line-height:1.7;margin-bottom:.85rem;
+}
+.consent-scroll h5{font-size:.75rem;color:var(--ink-2);margin:.7rem 0 .3rem;}
+.consent-scroll ul{padding-left:1rem;}
+.consent-scroll li{margin-bottom:.2rem;}
+
+/* Success */
+.success-screen{
+  min-height:calc(100vh - 54px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:3rem 1.5rem;text-align:center;
+  background:var(--paper-2);
+}
+.success-ring{
+  width:68px;height:68px;border-radius:50%;
+  background:var(--green-bg);color:var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;margin:0 auto 1.5rem;
+  animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.success-h{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;margin-bottom:.65rem;}
+.success-body{font-size:.88rem;color:var(--ink-3);max-width:400px;margin:0 auto 2rem;line-height:1.75;}
+.success-ref{
+  background:var(--paper);border:1.5px solid var(--paper-3);
+  border-radius:var(--r-lg);padding:1.25rem 2rem;
+  margin-bottom:1.75rem;box-shadow:var(--sh);
+}
+.success-ref-lbl{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.3rem;}
+.success-ref-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);letter-spacing:-.01em;}
+.upsell-box{
+  background:var(--gold-bg);border:1.5px solid rgba(201,138,26,.2);
+  border-radius:var(--r-lg);padding:1.25rem 1.5rem;
+  max-width:420px;width:100%;text-align:left;margin-bottom:1.5rem;
+  display:flex;gap:.85rem;align-items:flex-start;
+}
+.upsell-icon{font-size:1.3rem;flex-shrink:0;margin-top:.1rem;}
+.upsell-title{font-size:.82rem;font-weight:700;color:var(--gold);margin-bottom:.2rem;}
+.upsell-desc{font-size:.75rem;color:var(--ink-3);line-height:1.55;}
+
+/* ════════════════════════════
+   ADMIN
+════════════════════════════ */
+#view-admin{min-height:100vh;background:var(--paper-2);}
+.admin-wrap{display:grid;grid-template-columns:216px 1fr;min-height:calc(100vh - 54px);}
+
+.admin-sidebar{
+  background:var(--paper);border-right:1.5px solid var(--paper-3);
+  padding:1rem 0;
+  position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto;
+}
+.sb-section{
+  font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-5);padding:.9rem 1.25rem .35rem;
+}
+.sb-item{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.58rem 1.25rem;cursor:pointer;
+  font-size:.8rem;color:var(--ink-3);
+  transition:all .15s;border-left:2px solid transparent;
+}
+.sb-item:hover{background:var(--paper-2);color:var(--ink);}
+.sb-item.on{
+  background:var(--gold-bg);color:var(--gold);
+  border-left-color:var(--gold);font-weight:600;
+}
+.sb-icon{font-size:.85rem;width:18px;text-align:center;}
+.sb-badge{
+  margin-left:auto;background:var(--paper-3);color:var(--ink-3);
+  font-size:.62rem;font-weight:700;padding:.1rem .42rem;border-radius:100px;
+}
+.sb-item.on .sb-badge{background:rgba(201,138,26,.15);color:var(--gold);}
+
+.admin-main{padding:2rem;overflow-y:auto;}
+.panel{display:none;}
+.panel.on{display:block;}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.75rem;gap:1rem;flex-wrap:wrap;}
+.panel-h1{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;}
+.panel-sub{font-size:.78rem;color:var(--ink-4);margin-top:.15rem;}
+
+/* Stat cards */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem;}
+.stat-card{
+  background:var(--paper);border:1.5px solid var(--paper-3);
+  border-radius:var(--r-lg);padding:1.25rem;box-shadow:var(--sh);
+}
+.stat-card.hi{border-color:rgba(201,138,26,.3);background:var(--gold-bg);}
+.stat-lbl{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.45rem;}
+.stat-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-.03em;}
+.stat-card.hi .stat-val{color:var(--gold);}
+.stat-sub{font-size:.7rem;color:var(--ink-4);margin-top:.25rem;}
+
+/* Charts */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.75rem;}
+.chart-card{
+  background:var(--paper);border:1.5px solid var(--paper-3);
+  border-radius:var(--r-lg);padding:1.5rem;box-shadow:var(--sh);
+}
+.chart-title{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:1.1rem;}
+.bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.65rem;}
+.bar-lbl{font-size:.75rem;color:var(--ink-2);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bar-track{flex:1;height:5px;border-radius:3px;background:var(--paper-3);overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;background:var(--gold);transition:width .5s var(--ease);}
+.bar-n{font-size:.7rem;font-weight:700;color:var(--ink-3);width:18px;text-align:right;}
+
+/* Table */
+.tbar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem;}
+.tsearch{
+  flex:1;min-width:180px;padding:.58rem .85rem;
+  border:1.5px solid var(--paper-3);border-radius:var(--r);
+  background:var(--paper);font-family:'DM Sans',sans-serif;
+  font-size:.82rem;color:var(--ink);outline:none;
+  transition:border-color .15s;
+}
+.tsearch:focus{border-color:var(--gold);}
+.tsearch::placeholder{color:var(--ink-4);}
+.tfilter{
+  padding:.55rem 2rem .55rem .75rem;
+  border:1.5px solid var(--paper-3);border-radius:var(--r);
+  background:var(--paper);font-family:'DM Sans',sans-serif;
+  font-size:.76rem;color:var(--ink-2);outline:none;cursor:pointer;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a8a8a3' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .6rem center;
+}
+.twrap{
+  background:var(--paper);border:1.5px solid var(--paper-3);
+  border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh);
+}
+.dtable{width:100%;border-collapse:collapse;font-size:.78rem;}
+.dtable thead th{
+  background:var(--paper-2);padding:.65rem 1rem;text-align:left;
+  font-size:.63rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);border-bottom:1.5px solid var(--paper-3);
+  cursor:pointer;white-space:nowrap;transition:color .15s;
+}
+.dtable thead th:hover{color:var(--ink);}
+.dtable tbody td{padding:.72rem 1rem;border-bottom:1.5px solid var(--paper-3);vertical-align:middle;}
+.dtable tbody tr:last-child td{border-bottom:none;}
+.dtable tbody tr:hover td{background:var(--gold-bg);}
+.id-chip{
+  display:inline-flex;align-items:center;gap:.3rem;
+  background:var(--paper-2);border:1px solid var(--paper-3);
+  border-radius:4px;padding:.15rem .45rem;
+  font-family:'Courier New',monospace;font-size:.7rem;color:var(--ink-3);
+}
+.id-reveal{background:none;border:none;cursor:pointer;color:var(--gold);font-size:.62rem;font-weight:700;font-family:'DM Sans',sans-serif;}
+.tpag{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.7rem 1rem;border-top:1.5px solid var(--paper-3);
+  font-size:.72rem;color:var(--ink-4);
+}
+.ppills{display:flex;gap:.25rem;}
+.ppill{
+  width:28px;height:28px;border:1.5px solid var(--paper-3);
+  border-radius:var(--r);background:transparent;font-size:.72rem;
+  cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.ppill:hover{background:var(--paper-2);}
+.ppill.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+.act-btn{
+  padding:.28rem .6rem;border-radius:5px;font-size:.68rem;font-weight:600;
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:all .15s;border:1.5px solid;
+}
+.act-view{background:var(--paper);border-color:var(--paper-3);color:var(--ink-2);}
+.act-view:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.act-dl{background:var(--gold-bg);border-color:rgba(201,138,26,.25);color:var(--gold);}
+.act-dl:hover{background:var(--gold);color:#fff;border-color:var(--gold);}
+
+/* Export grid */
+.exp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem;}
+.exp-card{
+  background:var(--paper);border:1.5px solid var(--paper-3);
+  border-radius:var(--r-lg);padding:1.5rem;box-shadow:var(--sh);
+}
+.exp-card-title{font-size:.88rem;font-weight:600;color:var(--ink);margin-bottom:.3rem;}
+.exp-card-desc{font-size:.75rem;color:var(--ink-3);margin-bottom:1.25rem;line-height:1.55;}
+
+/* Modal */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.35);
+  backdrop-filter:blur(6px);z-index:200;
+  display:none;align-items:flex-start;justify-content:center;
+  padding:2rem;overflow-y:auto;
+}
+.modal-bg.open{display:flex;}
+.modal-card{
+  background:var(--paper);border:1.5px solid var(--paper-3);
+  border-radius:var(--r-xl);width:100%;max-width:680px;
+  box-shadow:var(--sh-lg);animation:slideIn .22s var(--ease) both;
+}
+.modal-head{
+  padding:1.5rem 1.75rem;border-bottom:1.5px solid var(--paper-3);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;color:var(--ink);}
+.modal-ref{font-size:.7rem;color:var(--ink-4);margin-top:.15rem;}
+.modal-x{
+  width:28px;height:28px;border-radius:50%;border:1.5px solid var(--paper-3);
+  background:var(--paper-2);color:var(--ink-3);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;font-size:.78rem;
+}
+.modal-x:hover{background:var(--paper-3);color:var(--ink);}
+.modal-body{padding:1.75rem;}
+.modal-section{margin-bottom:1.75rem;}
+.modal-section:last-child{margin-bottom:0;}
+.modal-slabel{
+  font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:.85rem;padding-bottom:.45rem;
+  border-bottom:1.5px solid var(--paper-3);
+}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.ditem .dl{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.15rem;}
+.ditem .dv{font-size:.82rem;color:var(--ink-2);}
+.modal-foot{
+  padding:1.1rem 1.75rem;border-top:1.5px solid var(--paper-3);
+  display:flex;justify-content:flex-end;gap:.55rem;
+}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:1.5rem;right:1.5rem;
+  background:var(--ink);color:#fff;
+  padding:.8rem 1.2rem;border-radius:var(--r-lg);
+  font-size:.8rem;z-index:999;box-shadow:var(--sh-lg);
+  display:none;animation:toastUp .2s var(--ease);
+}
+.toast.show{display:block;}
+
+/* Animations */
+@keyframes fadeUp{from{transform:translateY(18px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+@keyframes popIn{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes slideIn{from{transform:translateY(-14px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+@keyframes toastUp{from{transform:translateY(8px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+/* Responsive */
+@media(max-width:900px){
+  .land-cards{grid-template-columns:1fr;}
+  .land-card{border-right:none;border-bottom:1px solid rgba(255,255,255,.1);}
+  .land-card:last-child{border-bottom:none;}
+  .reg-layout{grid-template-columns:1fr;}
+  .reg-sidebar{display:none;}
+  .reg-main{max-width:100%;padding:1.5rem;}
+  .admin-wrap{grid-template-columns:1fr;}
+  .admin-sidebar{position:static;height:auto;display:flex;flex-wrap:wrap;padding:.5rem;border-right:none;border-bottom:1.5px solid var(--paper-3);}
+  .sb-section{display:none;}
+  .sb-item{border-radius:var(--r);border-left:none;padding:.45rem .7rem;font-size:.75rem;}
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .frow{grid-template-columns:1fr;}
+  .dg{grid-template-columns:1fr;}
+}
+@media(max-width:540px){
+  .stat-row{grid-template-columns:1fr;}
+  .tbar{flex-direction:column;}
+  .tsearch,.tfilter{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- toast -->
+<div class="toast" id="toast"></div>
+
+<!-- modal -->
+<div class="modal-bg" id="cModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div><div class="modal-name" id="m-name"></div><div class="modal-ref" id="m-ref"></div></div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="m-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="dlModal()">⬇ Download</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LANDING ══ -->
+<div id="view-landing" class="view active">
+  <div class="land-inner">
+    <div class="land-pill">South Africa's recruitment specialists · Est. 1977</div>
+    <h1 class="land-h1">Where logistics<br>talent finds its<br><em>next move.</em></h1>
+    <p class="land-sub">Lee Botti & Associates connects top professionals with leading companies across supply chain, shipping, and travel nationwide.</p>
+    <div class="land-cards">
+      <button class="land-card" onclick="showV('register')">
+        <span class="land-card-tag">For candidates</span>
+        <div class="land-card-title">Register with us</div>
+        <div class="land-card-body">Takes 60 seconds. Tell us who you are and what you're looking for — we'll handle the rest.</div>
+        <div class="land-card-cta">Get started <span>→</span></div>
+      </button>
+      <button class="land-card" onclick="showV('login')">
+        <span class="land-card-tag">For consultants</span>
+        <div class="land-card-title">Admin portal</div>
+        <div class="land-card-body">View registrations, filter by region or sector, download profiles and export to CSV.</div>
+        <div class="land-card-cta">Sign in <span>→</span></div>
+      </button>
+    </div>
+    <p class="land-foot">🔒 Handled in compliance with POPIA (Act 4 of 2013) · Johannesburg · Cape Town · Durban</p>
+  </div>
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="view-login" class="view">
+  <div class="login-wrap">
+    <div class="login-brand">
+      <div class="login-brand-name">Lee Botti <span>&</span> Associates</div>
+      <div class="login-brand-sub">Consultant Admin Portal</div>
+    </div>
+    <div class="login-card">
+      <div class="login-card-title">Sign in</div>
+      <div class="login-card-sub">Demo credentials: <strong>admin</strong> / <strong>leebotti2026</strong></div>
+      <div class="login-err" id="login-err">Incorrect username or password.</div>
+      <div class="fgroup"><label class="flabel">Username</label><input class="finput" id="l-user" value="admin"></div>
+      <div class="fgroup"><label class="flabel">Password</label><input class="finput" type="password" id="l-pass" value="leebotti2026"></div>
+      <button class="btn btn-ink btn-full btn-lg" onclick="doLogin()">Sign in →</button>
+    </div>
+    <div class="login-back"><button class="link-btn" onclick="showV('landing')">← Back to home</button></div>
+  </div>
+</div>
+
+<!-- ══ REGISTER ══ -->
+<div id="view-register" class="view">
+  <nav class="top-nav">
+    <div style="display:flex;align-items:center;">
+      <div class="nav-brand">Lee Botti <span>&</span> Associates</div>
+      <span class="nav-ctx">/ Register</span>
+    </div>
+    <button class="btn btn-ghost" onclick="showV('landing')">← Home</button>
+  </nav>
+
+  <div id="reg-body">
+    <div class="reg-layout">
+
+      <!-- sidebar -->
+      <div class="reg-sidebar">
+        <div>
+          <div class="reg-s-title">Your next role<br>starts <em>here.</em></div>
+          <div class="reg-s-sub">Register in 60 seconds. Our consultants match you with opportunities across Johannesburg, Cape Town, and Durban.</div>
+          <div class="reg-s-perks">
+            <div class="reg-perk"><div class="reg-perk-icon">⚡</div><div class="reg-perk-text"><strong>Fast, frictionless</strong><span>Just the essentials to start. No lengthy forms upfront.</span></div></div>
+            <div class="reg-perk"><div class="reg-perk-icon">🎯</div><div class="reg-perk-text"><strong>Matched opportunities</strong><span>We send you roles that fit your sector, level, and location.</span></div></div>
+            <div class="reg-perk"><div class="reg-perk-icon">🤝</div><div class="reg-perk-text"><strong>A real consultant</strong><span>You'll speak to a person who knows your industry.</span></div></div>
+            <div class="reg-perk"><div class="reg-perk-icon">🔒</div><div class="reg-perk-text"><strong>Your data is safe</strong><span>Stored securely and handled under POPIA.</span></div></div>
+          </div>
+        </div>
+        <div class="reg-s-foot">Lee Botti & Associates (Pty) Ltd<br>Johannesburg · Cape Town · Durban · Est. 1977</div>
+      </div>
+
+      <!-- main -->
+      <div class="reg-main">
+
+        <!-- STEP 1 -->
+        <div id="s1" class="rstep">
+          <div class="pip-bar"><div class="pip on"></div><div class="pip"></div><div class="pip"></div></div>
+          <div class="step-eyebrow">Step 1 of 3</div>
+          <div class="step-title">Quick intro</div>
+          <div class="step-desc">Your name, contact, and what kind of role you're after. Under 60 seconds.</div>
+
+          <div class="fcard">
+            <div class="fcard-label">Your details</div>
+            <div class="frow" style="margin-bottom:.85rem;">
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">First name <span class="req">*</span></label><input class="finput" id="r-fn" placeholder="e.g. Anri"></div>
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Surname <span class="req">*</span></label><input class="finput" id="r-sn" placeholder="e.g. van der Merwe"></div>
+            </div>
+            <div class="frow">
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Email <span class="req">*</span></label><input class="finput" id="r-em" type="email" placeholder="you@example.com"></div>
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Phone <span class="req">*</span></label><input class="finput" id="r-ph" type="tel" placeholder="083 123 4567"></div>
+            </div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard-label">What are you looking for?</div>
+            <div class="fgroup"><label class="flabel">Sector <span class="req">*</span></label>
+              <select class="fselect" id="r-sec">
+                <option value="">— Select your sector —</option>
+                <option>Supply Chain / Logistics</option><option>Shipping / Freight</option>
+                <option>Travel</option><option>Warehousing</option>
+                <option>Procurement</option><option>Transport</option><option>Other</option>
+              </select>
+            </div>
+            <div class="fgroup"><label class="flabel">Preferred region <span class="req">*</span></label>
+              <div class="chips">
+                <div class="chip"><input type="radio" name="reg" id="r-jnb" value="Johannesburg"><label for="r-jnb">Johannesburg</label></div>
+                <div class="chip"><input type="radio" name="reg" id="r-cpt" value="Cape Town"><label for="r-cpt">Cape Town</label></div>
+                <div class="chip"><input type="radio" name="reg" id="r-dbn" value="Durban"><label for="r-dbn">Durban</label></div>
+                <div class="chip"><input type="radio" name="reg" id="r-pta" value="Pretoria"><label for="r-pta">Pretoria</label></div>
+                <div class="chip"><input type="radio" name="reg" id="r-nat" value="Other / National"><label for="r-nat">National</label></div>
+              </div>
+            </div>
+            <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Job type <span class="req">*</span></label>
+              <div class="chips">
+                <div class="chip"><input type="radio" name="jt" id="jt-p" value="Permanent"><label for="jt-p">Permanent</label></div>
+                <div class="chip"><input type="radio" name="jt" id="jt-t" value="Temporary / Contract"><label for="jt-t">Contract / Temp</label></div>
+                <div class="chip"><input type="radio" name="jt" id="jt-e" value="Either"><label for="jt-e">Either</label></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-nav">
+            <span></span>
+            <button class="btn btn-gold btn-lg" onclick="nextS(1)">Continue →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="s2" class="rstep" style="display:none;">
+          <div class="pip-bar"><div class="pip on"></div><div class="pip on"></div><div class="pip"></div></div>
+          <div class="step-eyebrow">Step 2 of 3</div>
+          <div class="step-title">Your background</div>
+          <div class="step-desc">Help us match you better. All optional — you can complete this after your first chat with us.</div>
+
+          <div class="fcard">
+            <div class="fcard-label">Role preferences</div>
+            <div class="frow" style="margin-bottom:.85rem;">
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Seniority</label>
+                <select class="fselect" id="r-lv">
+                  <option value="">— Select —</option>
+                  <option>Entry Level / Junior</option><option>Mid-Level</option>
+                  <option>Senior</option><option>Management</option><option>Executive</option>
+                </select>
+              </div>
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Availability</label>
+                <select class="fselect" id="r-nt">
+                  <option value="">— Select —</option>
+                  <option>Immediately available</option><option>1 week</option>
+                  <option>2 weeks</option><option>1 month</option>
+                  <option>2 months</option><option>3 months</option>
+                </select>
+              </div>
+            </div>
+            <div class="frow">
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Current employer</label><input class="finput" id="r-emp" placeholder="Company name"></div>
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Expected salary (p.m.)</label><input class="finput" id="r-sal" placeholder="e.g. R35,000"></div>
+            </div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard-label">Qualifications</div>
+            <div class="qual-rows" id="qual-rows">
+              <div class="qual-row">
+                <input class="finput" placeholder="Qualification">
+                <input class="finput" placeholder="Institution">
+                <input class="finput" placeholder="Year" maxlength="4">
+                <div style="width:28px;"></div>
+              </div>
+            </div>
+            <button class="btn-add-row" onclick="addQual()">+ Add qualification</button>
+          </div>
+
+          <div class="fcard" style="margin-bottom:0;">
+            <div class="fcard-label">Summary</div>
+            <textarea class="ftextarea" id="r-sum" placeholder="2–3 sentences on your experience and what you're looking for..."></textarea>
+          </div>
+
+          <div class="step-nav">
+            <button class="step-back-btn" onclick="prevS(2)">← Back</button>
+            <button class="btn btn-gold btn-lg" onclick="nextS(2)">Continue →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div id="s3" class="rstep" style="display:none;">
+          <div class="pip-bar"><div class="pip on"></div><div class="pip on"></div><div class="pip on"></div></div>
+          <div class="step-eyebrow">Step 3 of 3</div>
+          <div class="step-title">Final details</div>
+          <div class="step-desc">Personal info and your consent for the background check required before placement.</div>
+
+          <div class="fcard">
+            <div class="fcard-label">Personal info</div>
+            <div class="frow" style="margin-bottom:.85rem;">
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Date of birth <span class="req">*</span></label><input class="finput" type="date" id="r-dob"></div>
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Nationality</label><input class="finput" id="r-nat2" placeholder="e.g. South African"></div>
+            </div>
+            <div class="frow" style="margin-bottom:.85rem;">
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">SA ID Number</label><input class="finput" id="r-id" placeholder="13-digit SA ID" maxlength="13"><div class="fhint">Stored securely · masked in admin views</div></div>
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Passport (if no SA ID)</label><input class="finput" id="r-pp" placeholder="Passport number"></div>
+            </div>
+            <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Physical address</label><input class="finput" id="r-addr" placeholder="Street, City, Province, Postal Code"></div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard-label">LexisNexis RefCheck — Consent & Indemnity</div>
+            <div class="consent-scroll">
+              <strong>Consent to process personal information</strong>
+              <p style="margin-top:.4rem;">I hereby consent to the Company, its duly authorised agent, LexisNexis Risk Management (LNRM) and its data providers to process my personal information and conduct background verification checks including but not limited to: credit, criminal, qualifications, employment references, fraud prevention, ID verification, FAIS, driver's licence, and social media.</p>
+              <h5>I understand and agree that:</h5>
+              <ul>
+                <li>All personal information is disclosed in confidence and kept securely by the Company and LNRM.</li>
+                <li>Results of background checks will be communicated to the Company and kept on record per company policy.</li>
+                <li>This form may be used for continued verification for the duration of my engagement.</li>
+                <li>I declare all information provided is full, correct and up to date.</li>
+                <li>I have the right to withdraw consent at any time via the appropriate Withdrawal of Consent Form.</li>
+                <li>For criminal checks, my fingerprints will be captured and stored for a reasonable period.</li>
+                <li>Consumer credit checks are only for positions requiring honesty with cash/finances and for fraud prevention.</li>
+              </ul>
+              <h5>Indemnity</h5>
+              <p>All signatories agree that LNRM, the Company, referees, and data providers shall not incur liability for any document or information obtained through inquiries conducted in good faith.</p>
+            </div>
+            <div class="chkrow"><input type="checkbox" id="r-con1"><span>I have read and agree to the LexisNexis RefCheck Consent & Indemnity. I consent to background verification being conducted on my behalf. <span class="req">*</span></span></div>
+            <div class="chkrow"><input type="checkbox" id="r-con2"><span>I consent to Lee Botti & Associates storing my personal information in accordance with POPIA (Act 4 of 2013). <span class="req">*</span></span></div>
+            <div class="chkrow"><input type="checkbox" id="r-nocrim" checked><span>I have no criminal charges or convictions to declare.</span></div>
+            <div id="crim-wrap" style="display:none;margin-top:.75rem;"><label class="flabel">Details of charge / conviction</label><textarea class="ftextarea" id="r-crimd" placeholder="Provide full details..."></textarea></div>
+          </div>
+
+          <div class="fcard">
+            <div class="fcard-label">Declaration</div>
+            <div class="frow">
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">Full legal name <span class="req">*</span></label><input class="finput" id="r-signame" placeholder="Type your full name"></div>
+              <div class="fgroup" style="margin-bottom:0;"><label class="flabel">City / place <span class="req">*</span></label><input class="finput" id="r-sigplace" placeholder="e.g. Cape Town"></div>
+            </div>
+          </div>
+
+          <div class="step-nav">
+            <button class="step-back-btn" onclick="prevS(3)">← Back</button>
+            <button class="btn btn-gold btn-lg" onclick="submitReg()">Submit registration ✓</button>
+          </div>
+        </div>
+
+      </div><!-- /reg-main -->
+    </div><!-- /reg-layout -->
+  </div><!-- /reg-body -->
+
+  <!-- success -->
+  <div id="reg-success" style="display:none;">
+    <div class="success-screen">
+      <div class="success-ring">✓</div>
+      <div class="success-h">You're registered!</div>
+      <div class="success-body">Thank you — one of our consultants will be in touch shortly. Please keep your phone and email available.</div>
+      <div class="success-ref">
+        <div class="success-ref-lbl">Your reference number</div>
+        <div class="success-ref-num" id="suc-ref">LB-2026-0001</div>
+      </div>
+      <div class="upsell-box">
+        <div class="upsell-icon">📋</div>
+        <div>
+          <div class="upsell-title">Speed up your placement</div>
+          <div class="upsell-desc">When you come in for your in-person meeting, bring your ID document. Your consultant will complete the LexisNexis fingerprint check, which is required before any placement.</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" onclick="showV('landing')">← Back to home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div id="view-admin" class="view">
+  <nav class="top-nav">
+    <div style="display:flex;align-items:center;">
+      <div class="nav-brand">Lee Botti <span>&</span> Associates</div>
+      <span class="nav-ctx">/ Admin</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-badge"><span class="nav-dot"></span><span id="a-uname">admin</span></div>
+      <button class="btn btn-ghost" onclick="doLogout()">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="admin-wrap">
+    <aside class="admin-sidebar">
+      <div class="sb-section">Overview</div>
+      <div class="sb-item on" onclick="showP('dashboard',this)"><span class="sb-icon">📊</span>Dashboard</div>
+      <div class="sb-section">Candidates</div>
+      <div class="sb-item" onclick="showP('candidates',this)"><span class="sb-icon">👥</span>All Candidates<span class="sb-badge" id="sb-count">0</span></div>
+      <div class="sb-item" onclick="showP('newreg',this)"><span class="sb-icon">🆕</span>New This Week</div>
+      <div class="sb-section">By Region</div>
+      <div class="sb-item" onclick="filterReg('Johannesburg',this)"><span class="sb-icon">🏙</span>Johannesburg</div>
+      <div class="sb-item" onclick="filterReg('Cape Town',this)"><span class="sb-icon">🌊</span>Cape Town</div>
+      <div class="sb-item" onclick="filterReg('Durban',this)"><span class="sb-icon">☀️</span>Durban</div>
+      <div class="sb-section">Data</div>
+      <div class="sb-item" onclick="showP('exports',this)"><span class="sb-icon">⬇️</span>Export Data</div>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- DASHBOARD -->
+      <div class="panel on" id="panel-dashboard">
+        <div class="panel-head">
+          <div><div class="panel-h1">Dashboard</div><div class="panel-sub" id="dash-date"></div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-card hi"><div class="stat-lbl">Total Candidates</div><div class="stat-val" id="st-tot">0</div><div class="stat-sub">All registered</div></div>
+          <div class="stat-card"><div class="stat-lbl">New This Week</div><div class="stat-val" id="st-wk">0</div><div class="stat-sub">Last 7 days</div></div>
+          <div class="stat-card"><div class="stat-lbl">Permanent</div><div class="stat-val" id="st-perm">0</div><div class="stat-sub">Seeking perm roles</div></div>
+          <div class="stat-card"><div class="stat-lbl">Available Now</div><div class="stat-val" id="st-avail">0</div><div class="stat-sub">Immediate start</div></div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card"><div class="chart-title">Candidates by Region</div><div id="reg-bars"></div></div>
+          <div class="chart-card"><div class="chart-title">Candidates by Sector</div><div id="sec-bars"></div></div>
+        </div>
+      </div>
+
+      <!-- CANDIDATES -->
+      <div class="panel" id="panel-candidates">
+        <div class="panel-head">
+          <div><div class="panel-h1" id="c-title">All Candidates</div><div class="panel-sub" id="c-sub">Full register</div></div>
+          <button class="btn btn-ink" onclick="exportCSV(getFiltered())">⬇ Export CSV</button>
+        </div>
+        <div class="tbar">
+          <input class="tsearch" id="t-search" placeholder="Search name, email, region..." oninput="renderT()">
+          <select class="tfilter" id="t-reg" onchange="renderT()"><option value="">All regions</option><option>Johannesburg</option><option>Cape Town</option><option>Durban</option><option>Pretoria</option><option>Other / National</option></select>
+          <select class="tfilter" id="t-sec" onchange="renderT()"><option value="">All sectors</option><option>Supply Chain / Logistics</option><option>Shipping / Freight</option><option>Travel</option><option>Warehousing</option><option>Procurement</option><option>Transport</option></select>
+          <select class="tfilter" id="t-jt" onchange="renderT()"><option value="">All job types</option><option>Permanent</option><option>Temporary / Contract</option><option>Either</option></select>
+          <select class="tfilter" id="t-nt" onchange="renderT()"><option value="">All availability</option><option>Immediately available</option><option>1 week</option><option>2 weeks</option><option>1 month</option></select>
+        </div>
+        <div class="twrap">
+          <table class="dtable">
+            <thead><tr>
+              <th onclick="sortBy('name')">Name ↕</th>
+              <th onclick="sortBy('region')">Region ↕</th>
+              <th onclick="sortBy('sector')">Sector ↕</th>
+              <th>Job Type</th><th>Availability</th><th>ID</th>
+              <th onclick="sortBy('registered')">Registered ↕</th>
+              <th>Actions</th>
+            </tr></thead>
+            <tbody id="t-body"></tbody>
+          </table>
+          <div class="tpag" id="t-pag"></div>
+        </div>
+      </div>
+
+      <!-- NEW REG -->
+      <div class="panel" id="panel-newreg">
+        <div class="panel-head">
+          <div><div class="panel-h1">New This Week</div><div class="panel-sub">Registered in the last 7 days</div></div>
+          <button class="btn btn-ink" onclick="exportCSV(getNewWeek())">⬇ Export CSV</button>
+        </div>
+        <div class="twrap">
+          <table class="dtable">
+            <thead><tr><th>Name</th><th>Region</th><th>Sector</th><th>Job Type</th><th>Email</th><th>Registered</th><th>Actions</th></tr></thead>
+            <tbody id="nw-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EXPORTS -->
+      <div class="panel" id="panel-exports">
+        <div class="panel-head"><div><div class="panel-h1">Export Data</div><div class="panel-sub">Download candidate data as CSV (ID numbers masked)</div></div></div>
+        <div class="exp-grid">
+          <div class="exp-card"><div class="exp-card-title">All Candidates</div><div class="exp-card-desc">Complete register. ID numbers are masked for security.</div><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates)">⬇ Export All</button></div>
+          <div class="exp-card"><div class="exp-card-title">By Region</div><div class="exp-card-desc">Export candidates from a specific office region.</div><select class="fselect" id="exp-r" style="margin-bottom:.75rem;"><option value="">All</option><option>Johannesburg</option><option>Cape Town</option><option>Durban</option></select><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>!document.getElementById('exp-r').value||c.region===document.getElementById('exp-r').value))">⬇ Export</button></div>
+          <div class="exp-card"><div class="exp-card-title">By Sector</div><div class="exp-card-desc">Export candidates from a specific industry sector.</div><select class="fselect" id="exp-s" style="margin-bottom:.75rem;"><option value="">All</option><option>Supply Chain / Logistics</option><option>Shipping / Freight</option><option>Travel</option><option>Warehousing</option><option>Procurement</option></select><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>!document.getElementById('exp-s').value||c.sector===document.getElementById('exp-s').value))">⬇ Export</button></div>
+          <div class="exp-card"><div class="exp-card-title">Immediately Available</div><div class="exp-card-desc">Only candidates who can start right away.</div><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>c.notice==='Immediately available'))">⬇ Export</button></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+/* ── DATA ── */
+const SEED=[
+  {id:'LB-2026-0001',fn:'Anri',sn:'van der Merwe',email:'anri.vdm@gmail.com',phone:'082 345 6789',region:'Cape Town',sector:'Supply Chain / Logistics',jobtype:'Permanent',seniority:'Mid-Level',notice:'Immediately available',salary:'R32,000',nat:'South African',idNum:'9201025012087',dob:'1992-01-02',reg:'2026-02-28',criminal:false,linkedin:'https://linkedin.com/in/anri-vdm',employer:'Fuelogic (Pty) Ltd',summary:'Supply chain coordinator with 7 years in FMCG logistics.',quals:[{q:'BCom Logistics',i:'Stellenbosch University',y:'2014'}]},
+  {id:'LB-2026-0002',fn:'Thabo',sn:'Nkosi',email:'thabo.nkosi@outlook.com',phone:'071 234 5678',region:'Johannesburg',sector:'Shipping / Freight',jobtype:'Permanent',seniority:'Senior',notice:'1 month',salary:'R55,000',nat:'South African',idNum:'8807155034082',dob:'1988-07-15',reg:'2026-03-01',criminal:false,linkedin:'',employer:'Kuehne + Nagel',summary:'Senior freight operations manager, 12 years import/export.',quals:[{q:'National Diploma: Shipping',i:'DUT',y:'2010'}]},
+  {id:'LB-2026-0003',fn:'Michelle',sn:'Pietersen',email:'mpietersen@yahoo.com',phone:'083 456 7890',region:'Cape Town',sector:'Travel',jobtype:'Either',seniority:'Entry Level / Junior',notice:'2 weeks',salary:'R18,000',nat:'South African',idNum:'0003285023091',dob:'2000-03-28',reg:'2026-03-02',criminal:false,linkedin:'',employer:'Flight Centre',summary:'Travel consultant, 2 years corporate travel.',quals:[{q:'Tourism & Hospitality Cert',i:'CPUT',y:'2021'}]},
+  {id:'LB-2026-0004',fn:'Sipho',sn:'Dlamini',email:'sipho.dlamini@gmail.com',phone:'064 789 0123',region:'Durban',sector:'Warehousing',jobtype:'Temporary / Contract',seniority:'Mid-Level',notice:'Immediately available',salary:'R22,000',nat:'South African',idNum:'9512185081074',dob:'1995-12-18',reg:'2026-03-03',criminal:false,linkedin:'',employer:'DHL Supply Chain',summary:'5 years warehouse ops, team lead experience.',quals:[{q:'Forklift Operator Cert',i:'MERSETA',y:'2018'}]},
+  {id:'LB-2026-0005',fn:'Elize',sn:'Fourie',email:'efourie@icloud.com',phone:'072 901 2345',region:'Johannesburg',sector:'Procurement',jobtype:'Permanent',seniority:'Management',notice:'3 months',salary:'R75,000',nat:'South African',idNum:'8303125034081',dob:'1983-03-12',reg:'2026-03-03',criminal:false,linkedin:'https://linkedin.com/in/elize-fourie',employer:'Pick n Pay',summary:'Head of Procurement, 15 years retail supply chain.',quals:[{q:'BCom Honours Purchasing',i:'UNISA',y:'2007'}]},
+  {id:'LB-2026-0006',fn:'Riaan',sn:'Adams',email:'radams@protonmail.com',phone:'079 012 3456',region:'Cape Town',sector:'Transport',jobtype:'Permanent',seniority:'Senior',notice:'1 month',salary:'R45,000',nat:'South African',idNum:'8609175048076',dob:'1986-09-17',reg:'2026-02-25',criminal:false,linkedin:'',employer:'Imperial Logistics',summary:'Fleet operations manager, 10 years road transport.',quals:[{q:'N Dip: Transport Management',i:'CPUT',y:'2009'}]},
+  {id:'LB-2026-0007',fn:'Priya',sn:'Maharaj',email:'priya.m@gmail.com',phone:'082 123 9876',region:'Durban',sector:'Supply Chain / Logistics',jobtype:'Permanent',seniority:'Mid-Level',notice:'2 weeks',salary:'R38,000',nat:'South African',idNum:'9407115043089',dob:'1994-07-11',reg:'2026-03-04',criminal:false,linkedin:'https://linkedin.com/in/priya-m',employer:'Tiger Brands',summary:'Supply chain analyst, strong SAP and data skills.',quals:[{q:'BSc Industrial Engineering',i:'UKZN',y:'2016'}]},
+  {id:'LB-2026-0008',fn:'James',sn:'Smith',email:'james.smith@work.com',phone:'083 234 5678',region:'Johannesburg',sector:'Shipping / Freight',jobtype:'Either',seniority:'Entry Level / Junior',notice:'Immediately available',salary:'R20,000',nat:'British',idNum:'',dob:'2001-05-22',reg:'2026-03-04',criminal:false,linkedin:'',employer:'',summary:'Recent graduate seeking first freight forwarding role.',quals:[{q:'BA International Business',i:'Wits',y:'2023'}]},
+];
+let allCandidates=[...SEED];
+let regCount=SEED.length;
+let sortF='reg',sortD=-1,curPage=1;
+const PG=10;
+let curModal=null;
+const revealed={};
+
+/* ── VIEWS ── */
+function showV(n){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+n).classList.add('active');
+  if(n==='admin')refreshAdmin();
+}
+
+/* ── LOGIN ── */
+function doLogin(){
+  const u=document.getElementById('l-user').value.trim();
+  const p=document.getElementById('l-pass').value.trim();
+  const err=document.getElementById('login-err');
+  if(u==='admin'&&p==='leebotti2026'){err.style.display='none';document.getElementById('a-uname').textContent=u;showV('admin');}
+  else err.style.display='block';
+}
+document.getElementById('l-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogout(){showV('landing');}
+
+/* ── REGISTRATION ── */
+function nextS(from){
+  if(!valStep(from))return;
+  document.getElementById('s'+from).style.display='none';
+  document.getElementById('s'+(from+1)).style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function prevS(from){
+  document.getElementById('s'+from).style.display='none';
+  document.getElementById('s'+(from-1)).style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function valStep(s){
+  if(s===1){
+    let ok=true;
+    ['r-fn','r-em','r-ph'].forEach(id=>{const el=document.getElementById(id);if(!el.value.trim()){el.classList.add('err');ok=false;}else el.classList.remove('err');});
+    if(!document.getElementById('r-sn').value.trim()){document.getElementById('r-sn').classList.add('err');ok=false;}else document.getElementById('r-sn').classList.remove('err');
+    if(!document.getElementById('r-sec').value){document.getElementById('r-sec').classList.add('err');ok=false;}else document.getElementById('r-sec').classList.remove('err');
+    if(!document.querySelector('input[name="reg"]:checked')){toast('Please select a region.');ok=false;}
+    if(!document.querySelector('input[name="jt"]:checked')){toast('Please select a job type.');ok=false;}
+    if(!ok)toast('Please complete the required fields.');
+    return ok;
+  }
+  if(s===3){
+    if(!document.getElementById('r-con1').checked||!document.getElementById('r-con2').checked){toast('Please tick both consent boxes.');return false;}
+    if(!document.getElementById('r-signame').value.trim()||!document.getElementById('r-sigplace').value.trim()){toast('Please complete the declaration.');return false;}
+    return true;
+  }
+  return true;
+}
+function submitReg(){
+  if(!valStep(3))return;
+  regCount++;
+  const ref='LB-2026-'+String(regCount).padStart(4,'0');
+  const quals=[];
+  document.querySelectorAll('#qual-rows .qual-row').forEach(row=>{
+    const ins=row.querySelectorAll('input');
+    if(ins[0].value.trim())quals.push({q:ins[0].value,i:ins[1].value,y:ins[2].value});
+  });
+  allCandidates.unshift({
+    id:ref,
+    fn:document.getElementById('r-fn').value.trim(),
+    sn:document.getElementById('r-sn').value.trim(),
+    email:document.getElementById('r-em').value.trim(),
+    phone:document.getElementById('r-ph').value.trim(),
+    region:document.querySelector('input[name="reg"]:checked')?.value||'',
+    sector:document.getElementById('r-sec').value,
+    jobtype:document.querySelector('input[name="jt"]:checked')?.value||'',
+    seniority:document.getElementById('r-lv').value,
+    notice:document.getElementById('r-nt').value,
+    employer:document.getElementById('r-emp').value.trim(),
+    salary:document.getElementById('r-sal').value.trim(),
+    summary:document.getElementById('r-sum').value.trim(),
+    dob:document.getElementById('r-dob').value,
+    nat:document.getElementById('r-nat2').value.trim(),
+    idNum:document.getElementById('r-id').value.trim(),
+    passport:document.getElementById('r-pp').value.trim(),
+    addr:document.getElementById('r-addr').value.trim(),
+    criminal:!document.getElementById('r-nocrim').checked,
+    quals,
+    reg:new Date().toISOString().split('T')[0]
+  });
+  document.getElementById('suc-ref').textContent=ref;
+  document.getElementById('reg-body').style.display='none';
+  document.getElementById('reg-success').style.display='block';
+}
+let qualN=1;
+function addQual(){
+  qualN++;
+  const d=document.createElement('div');d.className='qual-row';
+  d.innerHTML=`<input class="finput" placeholder="Qualification"><input class="finput" placeholder="Institution"><input class="finput" placeholder="Year" maxlength="4"><button class="btn-del" onclick="this.closest('.qual-row').remove()">×</button>`;
+  document.getElementById('qual-rows').appendChild(d);
+}
+document.getElementById('r-nocrim').addEventListener('change',function(){
+  document.getElementById('crim-wrap').style.display=this.checked?'none':'block';
+});
+
+/* ── ADMIN ── */
+function showP(n,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('panel-'+n).classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('on'));
+  if(el)el.classList.add('on');
+  if(n==='candidates'){document.getElementById('c-title').textContent='All Candidates';document.getElementById('c-sub').textContent='Full register';document.getElementById('t-reg').value='';renderT();}
+  if(n==='newreg')renderNewWeek();
+  if(n==='dashboard')refreshAdmin();
+}
+function filterReg(r,el){
+  showP('candidates',el);
+  document.getElementById('c-title').textContent=r+' Candidates';
+  document.getElementById('c-sub').textContent='Filtered by region: '+r;
+  document.getElementById('t-reg').value=r;
+  renderT();
+}
+function refreshAdmin(){
+  const n=allCandidates.length;
+  document.getElementById('st-tot').textContent=n;
+  document.getElementById('sb-count').textContent=n;
+  const wk=new Date();wk.setDate(wk.getDate()-7);
+  document.getElementById('st-wk').textContent=allCandidates.filter(c=>new Date(c.reg)>=wk).length;
+  document.getElementById('st-perm').textContent=allCandidates.filter(c=>c.jobtype==='Permanent').length;
+  document.getElementById('st-avail').textContent=allCandidates.filter(c=>c.notice==='Immediately available').length;
+  document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-ZA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const regs={},secs={};
+  allCandidates.forEach(c=>{regs[c.region||'Unknown']=(regs[c.region||'Unknown']||0)+1;secs[c.sector||'Unknown']=(secs[c.sector||'Unknown']||0)+1;});
+  const mxR=Math.max(...Object.values(regs));
+  const mxS=Math.max(...Object.values(secs));
+  document.getElementById('reg-bars').innerHTML=Object.entries(regs).sort((a,b)=>b[1]-a[1]).map(([r,c])=>`<div class="bar-row"><div class="bar-lbl">${r}</div><div class="bar-track"><div class="bar-fill" style="width:${c/mxR*100}%"></div></div><div class="bar-n">${c}</div></div>`).join('');
+  document.getElementById('sec-bars').innerHTML=Object.entries(secs).sort((a,b)=>b[1]-a[1]).map(([s,c])=>`<div class="bar-row"><div class="bar-lbl">${s}</div><div class="bar-track"><div class="bar-fill" style="width:${c/mxS*100}%"></div></div><div class="bar-n">${c}</div></div>`).join('');
+}
+function getFiltered(){
+  const s=(document.getElementById('t-search')?.value||'').toLowerCase();
+  const fr=document.getElementById('t-reg')?.value||'';
+  const fs=document.getElementById('t-sec')?.value||'';
+  const fj=document.getElementById('t-jt')?.value||'';
+  const fn=document.getElementById('t-nt')?.value||'';
+  return allCandidates.filter(c=>{
+    const nm=`${c.fn} ${c.sn}`.toLowerCase();
+    return(!s||nm.includes(s)||(c.email||'').toLowerCase().includes(s)||(c.region||'').toLowerCase().includes(s)||(c.sector||'').toLowerCase().includes(s))
+      &&(!fr||c.region===fr)&&(!fs||c.sector===fs)&&(!fj||c.jobtype===fj)&&(!fn||c.notice===fn);
+  });
+}
+function sortBy(f){if(sortF===f)sortD*=-1;else{sortF=f;sortD=1;}renderT();}
+function renderT(){
+  let data=getFiltered();
+  data.sort((a,b)=>{
+    const av=sortF==='name'?`${a.sn}${a.fn}`:(a[sortF]||'');
+    const bv=sortF==='name'?`${b.sn}${b.fn}`:(b[sortF]||'');
+    return av.localeCompare(bv)*sortD;
+  });
+  const tot=data.length,pages=Math.max(1,Math.ceil(tot/PG));
+  if(curPage>pages)curPage=1;
+  const pg=data.slice((curPage-1)*PG,curPage*PG);
+  const tb=document.getElementById('t-body');if(!tb)return;
+  tb.innerHTML=pg.map(c=>`<tr>
+    <td><div style="font-weight:600;color:var(--ink);font-size:.82rem;">${c.sn}, ${c.fn}</div><div style="font-size:.7rem;color:var(--ink-4);">${c.email}</div></td>
+    <td><span class="badge badge-muted">${c.region||'—'}</span></td>
+    <td style="font-size:.75rem;color:var(--ink-2);">${c.sector||'—'}</td>
+    <td><span class="badge ${c.jobtype==='Permanent'?'badge-gold':'badge-muted'}">${c.jobtype||'—'}</span></td>
+    <td style="font-size:.72rem;color:var(--ink-3);">${c.notice||'—'}</td>
+    <td><span class="id-chip" id="id-${c.id}">${maskId(c.idNum||c.passport||'N/A')}<button class="id-reveal" onclick="toggleId('${c.id}','${c.idNum||c.passport||'N/A'}')">👁</button></span></td>
+    <td style="font-size:.7rem;color:var(--ink-4);">${c.reg}</td>
+    <td style="white-space:nowrap;"><button class="act-btn act-view" onclick="viewC('${c.id}')" style="margin-right:.3rem;">View</button><button class="act-btn act-dl" onclick="exportCSV([allCandidates.find(x=>x.id==='${c.id}')])">⬇</button></td>
+  </tr>`).join('')||'<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--ink-4);">No candidates match these filters.</td></tr>';
+  const pag=document.getElementById('t-pag');if(!pag)return;
+  let pills='';for(let i=1;i<=pages;i++)pills+=`<button class="ppill ${i===curPage?'on':''}" onclick="goP(${i})">${i}</button>`;
+  pag.innerHTML=`<span>Showing ${Math.min((curPage-1)*PG+1,tot)}–${Math.min(curPage*PG,tot)} of ${tot}</span><div class="ppills">${pills}</div>`;
+}
+function goP(n){curPage=n;renderT();}
+function getNewWeek(){const w=new Date();w.setDate(w.getDate()-7);return allCandidates.filter(c=>new Date(c.reg)>=w);}
+function renderNewWeek(){
+  const tb=document.getElementById('nw-body');if(!tb)return;
+  const data=getNewWeek();
+  tb.innerHTML=data.map(c=>`<tr><td><strong>${c.sn}, ${c.fn}</strong></td><td><span class="badge badge-muted">${c.region||'—'}</span></td><td style="font-size:.75rem;">${c.sector||'—'}</td><td>${c.jobtype||'—'}</td><td style="font-size:.75rem;">${c.email}</td><td style="font-size:.7rem;color:var(--ink-4);">${c.reg}</td><td><button class="act-btn act-view" onclick="viewC('${c.id}')">View</button></td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--ink-4);">No new registrations this week.</td></tr>';
+}
+
+/* ── ID MASK ── */
+function maskId(id){if(!id||id==='N/A')return'N/A';if(id.length<=4)return'***'+id;return id.slice(0,3)+'••••••'+id.slice(-4);}
+function toggleId(rid,raw){
+  const el=document.getElementById('id-'+rid);if(!el)return;
+  if(revealed[rid]){el.childNodes[0].nodeValue=maskId(raw);revealed[rid]=false;}
+  else{el.childNodes[0].nodeValue=raw+' ';revealed[rid]=true;}
+}
+
+/* ── MODAL ── */
+function viewC(rid){
+  const c=allCandidates.find(x=>x.id===rid);if(!c)return;
+  curModal=c;
+  document.getElementById('m-name').textContent=`${c.fn} ${c.sn}`;
+  document.getElementById('m-ref').textContent=`Ref: ${c.id}  ·  Registered: ${c.reg}`;
+  const qH=c.quals?.length?c.quals.map(q=>`<div style="display:flex;gap:.75rem;padding:.45rem 0;border-bottom:1px solid var(--paper-3);font-size:.78rem;"><span style="flex:2;color:var(--ink);">${q.q}</span><span style="flex:2;color:var(--ink-3);">${q.i}</span><span style="color:var(--ink-4);">${q.y}</span></div>`).join(''):'<span style="font-size:.78rem;color:var(--ink-4);">None on record.</span>';
+  document.getElementById('m-body').innerHTML=`
+    <div class="modal-section"><div class="modal-slabel">Personal</div><div class="dg">
+      <div class="ditem"><div class="dl">Email</div><div class="dv">${c.email}</div></div>
+      <div class="ditem"><div class="dl">Phone</div><div class="dv">${c.phone||'—'}</div></div>
+      <div class="ditem"><div class="dl">Date of Birth</div><div class="dv">${c.dob||'—'}</div></div>
+      <div class="ditem"><div class="dl">Nationality</div><div class="dv">${c.nat||'—'}</div></div>
+      <div class="ditem"><div class="dl">SA ID</div><div class="dv"><span class="id-chip">${maskId(c.idNum||'N/A')}</span></div></div>
+      <div class="ditem"><div class="dl">Criminal</div><div class="dv"><span class="badge ${c.criminal?'badge-red':'badge-green'}">${c.criminal?'Declared':'None declared'}</span></div></div>
+    </div></div>
+    <div class="modal-section"><div class="modal-slabel">Role & Preferences</div><div class="dg">
+      <div class="ditem"><div class="dl">Region</div><div class="dv">${c.region||'—'}</div></div>
+      <div class="ditem"><div class="dl">Sector</div><div class="dv">${c.sector||'—'}</div></div>
+      <div class="ditem"><div class="dl">Job Type</div><div class="dv">${c.jobtype||'—'}</div></div>
+      <div class="ditem"><div class="dl">Seniority</div><div class="dv">${c.seniority||'—'}</div></div>
+      <div class="ditem"><div class="dl">Availability</div><div class="dv">${c.notice||'—'}</div></div>
+      <div class="ditem"><div class="dl">Expected Salary</div><div class="dv">${c.salary||'—'}</div></div>
+      <div class="ditem"><div class="dl">Employer</div><div class="dv">${c.employer||'—'}</div></div>
+    </div></div>
+    ${c.summary?`<div class="modal-section"><div class="modal-slabel">Summary</div><p style="font-size:.82rem;color:var(--ink-2);line-height:1.7;">${c.summary}</p></div>`:''}
+    <div class="modal-section"><div class="modal-slabel">Qualifications</div>${qH}</div>
+    ${c.linkedin?`<div class="modal-section"><div class="modal-slabel">Links</div><a href="${c.linkedin}" target="_blank" style="font-size:.8rem;color:var(--gold);">LinkedIn →</a></div>`:''}`;
+  document.getElementById('cModal').classList.add('open');
+}
+function closeModal(){document.getElementById('cModal').classList.remove('open');curModal=null;}
+document.getElementById('cModal').addEventListener('click',e=>{if(e.target===document.getElementById('cModal'))closeModal();});
+function dlModal(){if(curModal)exportCSV([curModal]);}
+
+/* ── EXPORT ── */
+function exportCSV(data){
+  if(!data?.length){toast('No data to export.');return;}
+  const H=['Ref','Surname','First Name','Email','Phone','Region','Sector','Job Type','Seniority','Availability','Salary','Nationality','ID (Masked)','Employer','Criminal','Registered'];
+  const rows=data.map(c=>[c.id,c.sn,c.fn,c.email,c.phone||'',c.region||'',c.sector||'',c.jobtype||'',c.seniority||'',c.notice||'',c.salary||'',c.nat||'',maskId(c.idNum||c.passport||'N/A'),c.employer||'',c.criminal?'Declared':'None',c.reg]);
+  const csv=[H,...rows].map(r=>r.map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`LeeBotti_${new Date().toISOString().split('T')[0]}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast(`✓ Exported ${data.length} candidate${data.length!==1?'s':''}`);
+}
+
+/* ── TOAST ── */
+let tT;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),3000);}
+
+refreshAdmin();
+</script>
+</body>
+</html>

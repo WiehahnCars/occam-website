@@ -8,7 +8,8 @@
     { "source": "/login", "destination": "/login.html" },
     { "source": "/building-is-no-longer-the-constraint", "destination": "/building-is-no-longer-the-constraint.html" },
     { "source": "/beyond-the-frontier", "destination": "/beyond-the-frontier.html" },
-    { "source": "/proposals/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4", "destination": "/proposals/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4.html" }
+    { "source": "/proposals/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4", "destination": "/proposals/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4.html" },
+    { "source": "/proposals/lee_botti_recruitment", "destination": "/proposals/lee_botti_recruitment.html" }
 
   ]
 }
