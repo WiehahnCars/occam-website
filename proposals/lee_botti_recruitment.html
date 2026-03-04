@@ -5,38 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lee Botti & Associates — Candidate Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink:       #111110;
-  --ink-2:     #2c2c2a;
-  --ink-3:     #6b6b67;
-  --ink-4:     #a8a8a3;
-  --ink-5:     #d4d4ce;
+  --ink:       #111111;
+  --ink-2:     #2a2a2a;
+  --ink-3:     #666666;
+  --ink-4:     #999999;
+  --ink-5:     #cccccc;
   --paper:     #ffffff;
-  --paper-2:   #f7f6f3;
-  --paper-3:   #efede8;
-  --gold:      #c98a1a;
-  --gold-2:    #e6a020;
-  --gold-bg:   #fdf6e8;
-  --gold-ring: rgba(201,138,26,0.18);
-  --navy:      #17244a;
-  --navy-2:    #1f2e5c;
-  --green:     #1c7c4e;
-  --green-bg:  #e9f7ef;
-  --red:       #c0392b;
+  --paper-2:   #f5f5f5;
+  --paper-3:   #e5e5e5;
+  --gold:      #b8860b;
+  --gold-2:    #d4a017;
+  --gold-bg:   #faf6ec;
+  --gold-ring: rgba(184,134,11,0.15);
+  --navy:      #000000;
+  --navy-2:    #111111;
+  --green:     #1a6e42;
+  --green-bg:  #eaf4ee;
+  --red:       #b93025;
   --red-bg:    #fdf0ee;
-  --r:         8px;
-  --r-lg:      14px;
-  --r-xl:      20px;
-  --sh:        0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
-  --sh-md:     0 4px 20px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
-  --sh-lg:     0 12px 48px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.06);
+  --r:         6px;
+  --r-lg:      10px;
+  --r-xl:      16px;
+  --sh:        0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --sh-md:     0 4px 20px rgba(0,0,0,.07), 0 2px 6px rgba(0,0,0,.04);
+  --sh-lg:     0 12px 48px rgba(0,0,0,.10), 0 4px 12px rgba(0,0,0,.06);
   --ease:      cubic-bezier(.4,0,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
-body{font-family:'DM Sans',sans-serif;background:var(--paper-2);color:var(--ink);line-height:1.6;}
+body{font-family:'Montserrat',sans-serif;background:var(--paper-2);color:var(--ink);line-height:1.6;}
 img{display:block;max-width:100%;}
 
 /* ── VIEWS ── */
@@ -59,91 +59,75 @@ img{display:block;max-width:100%;}
   min-height:100vh;
   flex-direction:column;
   align-items:center;justify-content:center;
-  padding:3rem 1.5rem;
-  background:var(--navy);
-  position:relative;overflow:hidden;
+  padding:4rem 1.5rem;
+  background:#000;
 }
-/* Subtle dot grid */
-#view-landing::before{
-  content:'';position:absolute;inset:0;
-  background-image:radial-gradient(circle,rgba(255,255,255,.06) 1px,transparent 1px);
-  background-size:28px 28px;
-  pointer-events:none;z-index:0;
-}
-/* Warm glow */
-#view-landing::after{
-  content:'';position:absolute;
-  width:700px;height:700px;border-radius:50%;
-  background:radial-gradient(circle,rgba(201,138,26,.22) 0%,transparent 65%);
-  top:-200px;right:-180px;pointer-events:none;z-index:0;
-}
-.land-inner{position:relative;z-index:1;width:100%;max-width:920px;text-align:center;}
+.land-inner{width:100%;max-width:860px;text-align:center;}
 
 .land-pill{
   display:inline-flex;align-items:center;gap:.45rem;
-  border:1px solid rgba(201,138,26,.35);
-  background:rgba(201,138,26,.08);
-  color:var(--gold-2);font-size:.72rem;font-weight:600;
-  letter-spacing:.1em;text-transform:uppercase;
-  padding:.35rem .9rem;border-radius:100px;
-  margin-bottom:2rem;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.55);font-size:.68rem;font-weight:500;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:.35rem 1rem;border-radius:4px;
+  margin-bottom:2.5rem;
   animation:fadeUp .5s var(--ease) both;
 }
-.land-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold-2);}
 
 .land-h1{
-  font-family:'Syne',sans-serif;
-  font-size:clamp(2.6rem,7vw,4.8rem);
-  font-weight:800;line-height:1.04;
-  color:#fff;letter-spacing:-.03em;
+  font-family:'Montserrat',sans-serif;
+  font-size:clamp(2.2rem,6vw,4rem);
+  font-weight:700;line-height:1.08;
+  color:#fff;letter-spacing:-.02em;
   margin-bottom:1.25rem;
   animation:fadeUp .5s .08s var(--ease) both;
 }
 .land-h1 em{font-style:normal;color:var(--gold-2);}
 
 .land-sub{
-  font-size:1rem;color:rgba(255,255,255,.45);
-  max-width:460px;margin:0 auto 3rem;line-height:1.75;
+  font-size:.9rem;color:rgba(255,255,255,.4);
+  max-width:440px;margin:0 auto 3rem;line-height:1.8;font-weight:400;
   animation:fadeUp .5s .16s var(--ease) both;
 }
 
 .land-cards{
   display:grid;grid-template-columns:1fr 1fr;
-  max-width:740px;margin:0 auto;
+  max-width:700px;margin:0 auto;
   border:1px solid rgba(255,255,255,.1);
-  border-radius:var(--r-xl);overflow:hidden;
+  border-radius:var(--r-lg);overflow:hidden;
   animation:fadeUp .5s .24s var(--ease) both;
 }
 .land-card{
-  background:rgba(255,255,255,.04);
-  padding:2.5rem 2.25rem;
+  background:rgba(255,255,255,.03);
+  padding:2.25rem 2rem;
   cursor:pointer;text-align:left;border:none;
-  font-family:'DM Sans',sans-serif;color:inherit;
+  font-family:'Montserrat',sans-serif;color:inherit;
   transition:background .2s var(--ease);
   border-right:1px solid rgba(255,255,255,.1);
   position:relative;
 }
 .land-card:last-child{border-right:none;}
-.land-card:hover{background:rgba(255,255,255,.08);}
+.land-card:hover{background:rgba(255,255,255,.07);}
 .land-card-tag{
-  font-size:.65rem;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--gold-2);
-  margin-bottom:1rem;display:block;
+  font-size:.62rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.35);
+  margin-bottom:.85rem;display:block;
 }
 .land-card-title{
-  font-family:'Syne',sans-serif;font-size:1.3rem;
-  font-weight:700;color:#fff;margin-bottom:.6rem;line-height:1.2;
+  font-family:'Montserrat',sans-serif;font-size:1.1rem;
+  font-weight:600;color:#fff;margin-bottom:.55rem;line-height:1.25;
 }
-.land-card-body{font-size:.83rem;color:rgba(255,255,255,.4);line-height:1.7;}
+.land-card-body{font-size:.78rem;color:rgba(255,255,255,.35);line-height:1.75;font-weight:400;}
 .land-card-cta{
-  margin-top:1.75rem;display:inline-flex;align-items:center;gap:.4rem;
-  font-size:.78rem;font-weight:600;color:var(--gold-2);
-  transition:gap .2s var(--ease);
+  margin-top:1.5rem;display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.75rem;font-weight:600;color:rgba(255,255,255,.5);
+  transition:all .2s var(--ease);
 }
-.land-card:hover .land-card-cta{gap:.65rem;}
+.land-card:hover .land-card-cta{gap:.65rem;color:#fff;}
 
 .land-foot{
-  margin-top:2.25rem;font-size:.7rem;color:rgba(255,255,255,.2);
+  margin-top:2rem;font-size:.68rem;color:rgba(255,255,255,.18);font-weight:400;
   animation:fadeUp .5s .32s var(--ease) both;
 }
 
@@ -151,22 +135,22 @@ img{display:block;max-width:100%;}
    NAV
 ════════════════════════════ */
 .top-nav{
-  height:54px;padding:0 1.75rem;
+  height:56px;padding:0 1.75rem;
   display:flex;align-items:center;justify-content:space-between;
-  background:var(--paper);border-bottom:1px solid var(--paper-3);
+  background:#000;border-bottom:none;
   position:sticky;top:0;z-index:50;
 }
-.nav-brand{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--ink);letter-spacing:-.01em;}
-.nav-brand span{color:var(--gold);}
-.nav-ctx{font-size:.72rem;color:var(--ink-4);margin-left:.6rem;}
+.nav-brand{font-family:'Montserrat',sans-serif;font-size:.9rem;font-weight:600;color:#fff;letter-spacing:-.01em;}
+.nav-brand span{color:var(--gold-2);}
+.nav-ctx{font-size:.7rem;color:rgba(255,255,255,.3);margin-left:.6rem;font-weight:400;}
 .nav-right{display:flex;align-items:center;gap:.6rem;}
 .nav-badge{
   display:flex;align-items:center;gap:.4rem;
-  background:var(--paper-2);border:1px solid var(--paper-3);
-  border-radius:100px;padding:.28rem .75rem;
-  font-size:.72rem;color:var(--ink-3);
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:4px;padding:.28rem .75rem;
+  font-size:.7rem;color:rgba(255,255,255,.5);
 }
-.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;}
 
 /* ════════════════════════════
    BUTTONS
@@ -174,18 +158,20 @@ img{display:block;max-width:100%;}
 .btn{
   display:inline-flex;align-items:center;gap:.4rem;
   padding:.6rem 1.1rem;border-radius:var(--r);
-  font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;
+  font-family:'Montserrat',sans-serif;font-size:.78rem;font-weight:600;
   cursor:pointer;border:none;transition:all .15s var(--ease);
-  white-space:nowrap;
+  white-space:nowrap;letter-spacing:.01em;
 }
-.btn-ink{background:var(--ink);color:#fff;}
-.btn-ink:hover{background:var(--ink-2);transform:translateY(-1px);box-shadow:var(--sh-md);}
+.btn-ink{background:#000;color:#fff;}
+.btn-ink:hover{background:#222;transform:translateY(-1px);box-shadow:var(--sh-md);}
 .btn-gold{background:var(--gold);color:#fff;font-weight:600;}
 .btn-gold:hover{background:var(--gold-2);transform:translateY(-1px);box-shadow:var(--sh-md);}
-.btn-ghost{background:transparent;color:var(--ink-3);border:1px solid var(--paper-3);}
-.btn-ghost:hover{background:var(--paper-2);color:var(--ink);border-color:var(--ink-5);}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.15);}
+.btn-ghost:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.3);}
+.btn-ghost-dark{background:transparent;color:var(--ink-3);border:1px solid var(--paper-3);}
+.btn-ghost-dark:hover{background:var(--paper-2);color:var(--ink);border-color:var(--ink-5);}
 .btn-full{width:100%;justify-content:center;}
-.btn-lg{padding:.75rem 1.5rem;font-size:.88rem;}
+.btn-lg{padding:.75rem 1.5rem;font-size:.82rem;}
 
 /* ════════════════════════════
    FORMS
@@ -200,7 +186,7 @@ img{display:block;max-width:100%;}
   width:100%;padding:.62rem .85rem;
   border:1.5px solid var(--paper-3);border-radius:var(--r);
   background:var(--paper);
-  font-family:'DM Sans',sans-serif;font-size:.875rem;color:var(--ink);
+  font-family:'Montserrat',sans-serif;font-size:.875rem;color:var(--ink);
   outline:none;transition:border-color .15s,box-shadow .15s;
   -webkit-appearance:none;
 }
@@ -247,14 +233,14 @@ img{display:block;max-width:100%;}
 }
 .login-wrap{width:100%;max-width:400px;}
 .login-brand{text-align:center;margin-bottom:1.75rem;}
-.login-brand-name{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
+.login-brand-name{font-family:'Montserrat',sans-serif;font-size:1.35rem;font-weight:800;color:var(--ink);letter-spacing:-.02em;}
 .login-brand-name span{color:var(--gold);}
 .login-brand-sub{font-size:.75rem;color:var(--ink-4);margin-top:.25rem;}
 .login-card{
   background:var(--paper);border:1.5px solid var(--paper-3);
   border-radius:var(--r-xl);padding:2.25rem;box-shadow:var(--sh-md);
 }
-.login-card-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:.2rem;}
+.login-card-title{font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:.2rem;}
 .login-card-sub{font-size:.78rem;color:var(--ink-4);margin-bottom:1.75rem;}
 .login-err{
   background:var(--red-bg);border:1px solid rgba(192,57,43,.2);
@@ -262,7 +248,7 @@ img{display:block;max-width:100%;}
   font-size:.78rem;color:var(--red);margin-bottom:1rem;display:none;
 }
 .login-back{text-align:center;margin-top:1.25rem;}
-.link-btn{background:none;border:none;color:var(--gold);font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:underline;}
+.link-btn{background:none;border:none;color:var(--gold);font-size:.78rem;cursor:pointer;font-family:'Montserrat',sans-serif;text-decoration:underline;}
 
 /* ════════════════════════════
    REGISTRATION
@@ -270,34 +256,35 @@ img{display:block;max-width:100%;}
 #view-register{min-height:100vh;background:var(--paper-2);}
 
 .reg-layout{
-  display:grid;grid-template-columns:1fr 520px;
-  min-height:calc(100vh - 54px);
+  display:grid;grid-template-columns:1fr 560px;
+  min-height:calc(100vh - 56px);
 }
 /* Sidebar */
 .reg-sidebar{
-  background:var(--navy);padding:3rem 2.5rem;
+  background:#000;padding:3rem 2.5rem;
   display:flex;flex-direction:column;justify-content:space-between;
-  position:sticky;top:54px;height:calc(100vh - 54px);overflow-y:auto;
+  position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;
 }
 .reg-s-title{
-  font-family:'Syne',sans-serif;font-size:1.65rem;font-weight:800;
-  color:#fff;line-height:1.15;letter-spacing:-.025em;margin-bottom:.75rem;
+  font-family:'Montserrat',sans-serif;font-size:1.4rem;font-weight:700;
+  color:#fff;line-height:1.2;letter-spacing:-.02em;margin-bottom:.75rem;
 }
 .reg-s-title em{font-style:normal;color:var(--gold-2);}
-.reg-s-sub{font-size:.82rem;color:rgba(255,255,255,.38);line-height:1.7;margin-bottom:2.5rem;}
-.reg-s-perks{display:flex;flex-direction:column;gap:1.1rem;}
+.reg-s-sub{font-size:.78rem;color:rgba(255,255,255,.32);line-height:1.75;margin-bottom:2.5rem;font-weight:400;}
+.reg-s-perks{display:flex;flex-direction:column;gap:1.25rem;}
 .reg-perk{display:flex;align-items:flex-start;gap:.85rem;}
 .reg-perk-icon{
-  width:34px;height:34px;border-radius:10px;
-  background:rgba(255,255,255,.07);flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.95rem;
+  width:30px;height:30px;border-radius:4px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;
+  color:rgba(255,255,255,.4);font-weight:700;
 }
-.reg-perk-text strong{display:block;font-size:.8rem;color:rgba(255,255,255,.8);margin-bottom:.1rem;}
-.reg-perk-text span{font-size:.75rem;color:rgba(255,255,255,.35);line-height:1.55;}
-.reg-s-foot{font-size:.68rem;color:rgba(255,255,255,.18);line-height:1.6;}
+.reg-perk-text strong{display:block;font-size:.75rem;color:rgba(255,255,255,.7);margin-bottom:.1rem;font-weight:600;}
+.reg-perk-text span{font-size:.72rem;color:rgba(255,255,255,.28);line-height:1.6;}
+.reg-s-foot{font-size:.65rem;color:rgba(255,255,255,.14);line-height:1.6;letter-spacing:.02em;}
 
 /* Main form */
-.reg-main{padding:2.25rem 3rem 3rem;max-width:520px;width:100%;}
+.reg-main{padding:2.25rem 2rem 3rem;max-width:560px;width:100%;}
 
 /* Step pip bar */
 .pip-bar{display:flex;gap:.3rem;margin-bottom:1.75rem;}
@@ -305,7 +292,7 @@ img{display:block;max-width:100%;}
 .pip.on{background:var(--gold);}
 
 .step-eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.3rem;}
-.step-title{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;margin-bottom:.4rem;}
+.step-title{font-family:'Montserrat',sans-serif;font-size:1.45rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;margin-bottom:.4rem;}
 .step-desc{font-size:.82rem;color:var(--ink-3);line-height:1.65;margin-bottom:1.75rem;}
 
 .fcard{
@@ -319,7 +306,7 @@ img{display:block;max-width:100%;}
 }
 .step-nav{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;}
 .step-back-btn{
-  background:none;border:none;font-family:'DM Sans',sans-serif;
+  background:none;border:none;font-family:'Montserrat',sans-serif;
   font-size:.78rem;color:var(--ink-4);cursor:pointer;
   display:flex;align-items:center;gap:.3rem;transition:color .15s;
 }
@@ -337,7 +324,7 @@ img{display:block;max-width:100%;}
 .btn-add-row{
   width:100%;padding:.5rem;border:1.5px dashed var(--paper-3);border-radius:var(--r);
   background:transparent;color:var(--ink-4);font-size:.75rem;
-  cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .15s;font-family:'Montserrat',sans-serif;
 }
 .btn-add-row:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-bg);}
 
@@ -366,7 +353,7 @@ img{display:block;max-width:100%;}
   font-size:1.8rem;margin:0 auto 1.5rem;
   animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
 }
-.success-h{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;margin-bottom:.65rem;}
+.success-h{font-family:'Montserrat',sans-serif;font-size:1.9rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;margin-bottom:.65rem;}
 .success-body{font-size:.88rem;color:var(--ink-3);max-width:400px;margin:0 auto 2rem;line-height:1.75;}
 .success-ref{
   background:var(--paper);border:1.5px solid var(--paper-3);
@@ -374,7 +361,7 @@ img{display:block;max-width:100%;}
   margin-bottom:1.75rem;box-shadow:var(--sh);
 }
 .success-ref-lbl{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.3rem;}
-.success-ref-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);letter-spacing:-.01em;}
+.success-ref-num{font-family:'Montserrat',sans-serif;font-size:1.6rem;font-weight:800;color:var(--gold);letter-spacing:-.01em;}
 .upsell-box{
   background:var(--gold-bg);border:1.5px solid rgba(201,138,26,.2);
   border-radius:var(--r-lg);padding:1.25rem 1.5rem;
@@ -422,7 +409,7 @@ img{display:block;max-width:100%;}
 .panel{display:none;}
 .panel.on{display:block;}
 .panel-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.75rem;gap:1rem;flex-wrap:wrap;}
-.panel-h1{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;}
+.panel-h1{font-family:'Montserrat',sans-serif;font-size:1.45rem;font-weight:800;color:var(--ink);letter-spacing:-.025em;}
 .panel-sub{font-size:.78rem;color:var(--ink-4);margin-top:.15rem;}
 
 /* Stat cards */
@@ -433,7 +420,7 @@ img{display:block;max-width:100%;}
 }
 .stat-card.hi{border-color:rgba(201,138,26,.3);background:var(--gold-bg);}
 .stat-lbl{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:.45rem;}
-.stat-val{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-.03em;}
+.stat-val{font-family:'Montserrat',sans-serif;font-size:2rem;font-weight:800;color:var(--ink);line-height:1;letter-spacing:-.03em;}
 .stat-card.hi .stat-val{color:var(--gold);}
 .stat-sub{font-size:.7rem;color:var(--ink-4);margin-top:.25rem;}
 
@@ -455,7 +442,7 @@ img{display:block;max-width:100%;}
 .tsearch{
   flex:1;min-width:180px;padding:.58rem .85rem;
   border:1.5px solid var(--paper-3);border-radius:var(--r);
-  background:var(--paper);font-family:'DM Sans',sans-serif;
+  background:var(--paper);font-family:'Montserrat',sans-serif;
   font-size:.82rem;color:var(--ink);outline:none;
   transition:border-color .15s;
 }
@@ -464,7 +451,7 @@ img{display:block;max-width:100%;}
 .tfilter{
   padding:.55rem 2rem .55rem .75rem;
   border:1.5px solid var(--paper-3);border-radius:var(--r);
-  background:var(--paper);font-family:'DM Sans',sans-serif;
+  background:var(--paper);font-family:'Montserrat',sans-serif;
   font-size:.76rem;color:var(--ink-2);outline:none;cursor:pointer;
   -webkit-appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a8a8a3' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -491,7 +478,7 @@ img{display:block;max-width:100%;}
   border-radius:4px;padding:.15rem .45rem;
   font-family:'Courier New',monospace;font-size:.7rem;color:var(--ink-3);
 }
-.id-reveal{background:none;border:none;cursor:pointer;color:var(--gold);font-size:.62rem;font-weight:700;font-family:'DM Sans',sans-serif;}
+.id-reveal{background:none;border:none;cursor:pointer;color:var(--gold);font-size:.62rem;font-weight:700;font-family:'Montserrat',sans-serif;}
 .tpag{
   display:flex;align-items:center;justify-content:space-between;
   padding:.7rem 1rem;border-top:1.5px solid var(--paper-3);
@@ -508,7 +495,7 @@ img{display:block;max-width:100%;}
 .ppill.on{background:var(--ink);color:#fff;border-color:var(--ink);}
 .act-btn{
   padding:.28rem .6rem;border-radius:5px;font-size:.68rem;font-weight:600;
-  cursor:pointer;font-family:'DM Sans',sans-serif;
+  cursor:pointer;font-family:'Montserrat',sans-serif;
   transition:all .15s;border:1.5px solid;
 }
 .act-view{background:var(--paper);border-color:var(--paper-3);color:var(--ink-2);}
@@ -542,7 +529,7 @@ img{display:block;max-width:100%;}
   padding:1.5rem 1.75rem;border-bottom:1.5px solid var(--paper-3);
   display:flex;align-items:center;justify-content:space-between;
 }
-.modal-name{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;color:var(--ink);}
+.modal-name{font-family:'Montserrat',sans-serif;font-size:1.15rem;font-weight:700;color:var(--ink);}
 .modal-ref{font-size:.7rem;color:var(--ink-4);margin-top:.15rem;}
 .modal-x{
   width:28px;height:28px;border-radius:50%;border:1.5px solid var(--paper-3);
@@ -621,8 +608,8 @@ img{display:block;max-width:100%;}
     </div>
     <div class="modal-body" id="m-body"></div>
     <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="dlModal()">⬇ Download</button>
-      <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+      <button class="btn btn-ghost-dark" onclick="dlModal()">Download</button>
+      <button class="btn btn-ghost-dark" onclick="closeModal()">Close</button>
     </div>
   </div>
 </div>
@@ -647,7 +634,7 @@ img{display:block;max-width:100%;}
         <div class="land-card-cta">Sign in <span>→</span></div>
       </button>
     </div>
-    <p class="land-foot">🔒 Handled in compliance with POPIA (Act 4 of 2013) · Johannesburg · Cape Town · Durban</p>
+    <p class="land-foot">Handled in compliance with POPIA (Act 4 of 2013) · Johannesburg · Cape Town · Durban</p>
   </div>
 </div>
 
@@ -689,10 +676,10 @@ img{display:block;max-width:100%;}
           <div class="reg-s-title">Your next role<br>starts <em>here.</em></div>
           <div class="reg-s-sub">Register in 60 seconds. Our consultants match you with opportunities across Johannesburg, Cape Town, and Durban.</div>
           <div class="reg-s-perks">
-            <div class="reg-perk"><div class="reg-perk-icon">⚡</div><div class="reg-perk-text"><strong>Fast, frictionless</strong><span>Just the essentials to start. No lengthy forms upfront.</span></div></div>
-            <div class="reg-perk"><div class="reg-perk-icon">🎯</div><div class="reg-perk-text"><strong>Matched opportunities</strong><span>We send you roles that fit your sector, level, and location.</span></div></div>
-            <div class="reg-perk"><div class="reg-perk-icon">🤝</div><div class="reg-perk-text"><strong>A real consultant</strong><span>You'll speak to a person who knows your industry.</span></div></div>
-            <div class="reg-perk"><div class="reg-perk-icon">🔒</div><div class="reg-perk-text"><strong>Your data is safe</strong><span>Stored securely and handled under POPIA.</span></div></div>
+            <div class="reg-perk"><div class="reg-perk-icon">01</div><div class="reg-perk-text"><strong>Fast, frictionless</strong><span>Just the essentials to start. No lengthy forms upfront.</span></div></div>
+            <div class="reg-perk"><div class="reg-perk-icon">02</div><div class="reg-perk-text"><strong>Matched opportunities</strong><span>We send you roles that fit your sector, level, and location.</span></div></div>
+            <div class="reg-perk"><div class="reg-perk-icon">03</div><div class="reg-perk-text"><strong>A real consultant</strong><span>You'll speak to a person who knows your industry.</span></div></div>
+            <div class="reg-perk"><div class="reg-perk-icon">04</div><div class="reg-perk-text"><strong>Your data is safe</strong><span>Stored securely and handled under POPIA.</span></div></div>
           </div>
         </div>
         <div class="reg-s-foot">Lee Botti & Associates (Pty) Ltd<br>Johannesburg · Cape Town · Durban · Est. 1977</div>
@@ -864,7 +851,7 @@ img{display:block;max-width:100%;}
 
           <div class="step-nav">
             <button class="step-back-btn" onclick="prevS(3)">← Back</button>
-            <button class="btn btn-gold btn-lg" onclick="submitReg()">Submit registration ✓</button>
+            <button class="btn btn-gold btn-lg" onclick="submitReg()">Submit registration</button>
           </div>
         </div>
 
@@ -910,7 +897,7 @@ img{display:block;max-width:100%;}
   <div class="admin-wrap">
     <aside class="admin-sidebar">
       <div class="sb-section">Overview</div>
-      <div class="sb-item on" onclick="showP('dashboard',this)"><span class="sb-icon">📊</span>Dashboard</div>
+      <div class="sb-item on" onclick="showP('dashboard',this)">Dashboard</div>
       <div class="sb-section">Candidates</div>
       <div class="sb-item" onclick="showP('candidates',this)"><span class="sb-icon">👥</span>All Candidates<span class="sb-badge" id="sb-count">0</span></div>
       <div class="sb-item" onclick="showP('newreg',this)"><span class="sb-icon">🆕</span>New This Week</div>
@@ -919,7 +906,7 @@ img{display:block;max-width:100%;}
       <div class="sb-item" onclick="filterReg('Cape Town',this)"><span class="sb-icon">🌊</span>Cape Town</div>
       <div class="sb-item" onclick="filterReg('Durban',this)"><span class="sb-icon">☀️</span>Durban</div>
       <div class="sb-section">Data</div>
-      <div class="sb-item" onclick="showP('exports',this)"><span class="sb-icon">⬇️</span>Export Data</div>
+      <div class="sb-item" onclick="showP('exports',this)">Export Data</div>
     </aside>
 
     <main class="admin-main">
@@ -945,7 +932,7 @@ img{display:block;max-width:100%;}
       <div class="panel" id="panel-candidates">
         <div class="panel-head">
           <div><div class="panel-h1" id="c-title">All Candidates</div><div class="panel-sub" id="c-sub">Full register</div></div>
-          <button class="btn btn-ink" onclick="exportCSV(getFiltered())">⬇ Export CSV</button>
+          <button class="btn btn-ink" onclick="exportCSV(getFiltered())">Export CSV</button>
         </div>
         <div class="tbar">
           <input class="tsearch" id="t-search" placeholder="Search name, email, region..." oninput="renderT()">
@@ -974,7 +961,7 @@ img{display:block;max-width:100%;}
       <div class="panel" id="panel-newreg">
         <div class="panel-head">
           <div><div class="panel-h1">New This Week</div><div class="panel-sub">Registered in the last 7 days</div></div>
-          <button class="btn btn-ink" onclick="exportCSV(getNewWeek())">⬇ Export CSV</button>
+          <button class="btn btn-ink" onclick="exportCSV(getNewWeek())">Export CSV</button>
         </div>
         <div class="twrap">
           <table class="dtable">
@@ -988,10 +975,10 @@ img{display:block;max-width:100%;}
       <div class="panel" id="panel-exports">
         <div class="panel-head"><div><div class="panel-h1">Export Data</div><div class="panel-sub">Download candidate data as CSV (ID numbers masked)</div></div></div>
         <div class="exp-grid">
-          <div class="exp-card"><div class="exp-card-title">All Candidates</div><div class="exp-card-desc">Complete register. ID numbers are masked for security.</div><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates)">⬇ Export All</button></div>
-          <div class="exp-card"><div class="exp-card-title">By Region</div><div class="exp-card-desc">Export candidates from a specific office region.</div><select class="fselect" id="exp-r" style="margin-bottom:.75rem;"><option value="">All</option><option>Johannesburg</option><option>Cape Town</option><option>Durban</option></select><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>!document.getElementById('exp-r').value||c.region===document.getElementById('exp-r').value))">⬇ Export</button></div>
-          <div class="exp-card"><div class="exp-card-title">By Sector</div><div class="exp-card-desc">Export candidates from a specific industry sector.</div><select class="fselect" id="exp-s" style="margin-bottom:.75rem;"><option value="">All</option><option>Supply Chain / Logistics</option><option>Shipping / Freight</option><option>Travel</option><option>Warehousing</option><option>Procurement</option></select><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>!document.getElementById('exp-s').value||c.sector===document.getElementById('exp-s').value))">⬇ Export</button></div>
-          <div class="exp-card"><div class="exp-card-title">Immediately Available</div><div class="exp-card-desc">Only candidates who can start right away.</div><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>c.notice==='Immediately available'))">⬇ Export</button></div>
+          <div class="exp-card"><div class="exp-card-title">All Candidates</div><div class="exp-card-desc">Complete register. ID numbers are masked for security.</div><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates)">Export All</button></div>
+          <div class="exp-card"><div class="exp-card-title">By Region</div><div class="exp-card-desc">Export candidates from a specific office region.</div><select class="fselect" id="exp-r" style="margin-bottom:.75rem;"><option value="">All</option><option>Johannesburg</option><option>Cape Town</option><option>Durban</option></select><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>!document.getElementById('exp-r').value||c.region===document.getElementById('exp-r').value))">Export</button></div>
+          <div class="exp-card"><div class="exp-card-title">By Sector</div><div class="exp-card-desc">Export candidates from a specific industry sector.</div><select class="fselect" id="exp-s" style="margin-bottom:.75rem;"><option value="">All</option><option>Supply Chain / Logistics</option><option>Shipping / Freight</option><option>Travel</option><option>Warehousing</option><option>Procurement</option></select><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>!document.getElementById('exp-s').value||c.sector===document.getElementById('exp-s').value))">Export</button></div>
+          <div class="exp-card"><div class="exp-card-title">Immediately Available</div><div class="exp-card-desc">Only candidates who can start right away.</div><button class="btn btn-ink btn-full" onclick="exportCSV(allCandidates.filter(c=>c.notice==='Immediately available'))">Export</button></div>
         </div>
       </div>
 
@@ -1178,7 +1165,7 @@ function renderT(){
     <td style="font-size:.72rem;color:var(--ink-3);">${c.notice||'—'}</td>
     <td><span class="id-chip" id="id-${c.id}">${maskId(c.idNum||c.passport||'N/A')}<button class="id-reveal" onclick="toggleId('${c.id}','${c.idNum||c.passport||'N/A'}')">👁</button></span></td>
     <td style="font-size:.7rem;color:var(--ink-4);">${c.reg}</td>
-    <td style="white-space:nowrap;"><button class="act-btn act-view" onclick="viewC('${c.id}')" style="margin-right:.3rem;">View</button><button class="act-btn act-dl" onclick="exportCSV([allCandidates.find(x=>x.id==='${c.id}')])">⬇</button></td>
+    <td style="white-space:nowrap;"><button class="act-btn act-view" onclick="viewC('${c.id}')" style="margin-right:.3rem;">View</button><button class="act-btn act-dl" onclick="exportCSV([allCandidates.find(x=>x.id==='${c.id}')])">CSV</button></td>
   </tr>`).join('')||'<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--ink-4);">No candidates match these filters.</td></tr>';
   const pag=document.getElementById('t-pag');if(!pag)return;
   let pills='';for(let i=1;i<=pages;i++)pills+=`<button class="ppill ${i===curPage?'on':''}" onclick="goP(${i})">${i}</button>`;
@@ -1241,7 +1228,7 @@ function exportCSV(data){
   const rows=data.map(c=>[c.id,c.sn,c.fn,c.email,c.phone||'',c.region||'',c.sector||'',c.jobtype||'',c.seniority||'',c.notice||'',c.salary||'',c.nat||'',maskId(c.idNum||c.passport||'N/A'),c.employer||'',c.criminal?'Declared':'None',c.reg]);
   const csv=[H,...rows].map(r=>r.map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`LeeBotti_${new Date().toISOString().split('T')[0]}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
-  toast(`✓ Exported ${data.length} candidate${data.length!==1?'s':''}`);
+  toast(`Exported ${data.length} candidate${data.length!==1?'s':''}`);
 }
 
 /* ── TOAST ── */
