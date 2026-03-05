@@ -7,10 +7,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Leaflet maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <!-- React + Babel via CDN — no build step needed -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -134,7 +137,8 @@
     .demo-sep { color: #444; margin: 0 4px; }
     /* ANIMATIONS */
     @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    @keyframes pulse  { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+    @keyframes spin   { to { transform: rotate(360deg); } }
     .fade-up { animation: fadeUp 0.45s ease both; }
     /* ABOUT */
     .about-hero { min-height: 38vh; display: flex; align-items: center; background: linear-gradient(135deg,#0a0a0a,#1a1a08); padding-top: 64px; }
@@ -144,6 +148,35 @@
     .bar-wrap { display:flex; gap:3px; align-items:flex-end; height:72px; }
     .bar { flex:1; border-radius:2px 2px 0 0; transition:height 0.6s ease; min-height:4px; }
     .bar-label { font-size:9px; color:var(--muted); text-transform:uppercase; text-align:center; margin-top:4px; }
+    /* WA BUTTON */
+    .btn-wa { background: #25d366 !important; color: white !important; border: none; }
+    .btn-wa:hover { background: #1db954 !important; transform: translateY(-1px); }
+    /* ADMIN ADD FORM */
+    .admin-add-form { background: rgba(232,255,62,0.04); border: 1px solid rgba(232,255,62,0.2); border-radius: 12px; padding: 24px; margin-bottom: 28px; }
+    /* EVENT LEVEL BADGES */
+    .event-level { padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; }
+    .level-easy { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+    .level-moderate { background: rgba(251,191,36,0.15); color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+    .level-hard { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    /* TAB BAR SCROLL */
+    .tab-bar { overflow-x: auto; }
+    .tab-btn { white-space: nowrap; }
+    /* TRAILS */
+    .trail-card { padding:0; overflow:hidden; }
+    .trail-map-mini { width:100%; background:#0d1a0d; position:relative; }
+    .trail-map-mini .leaflet-container { background:#0d1117; }
+    .diff-badge { display:inline-flex; padding:2px 9px; border-radius:100px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+    .diff-easy         { background:rgba(74,222,128,.15); color:var(--green);  border:1px solid rgba(74,222,128,.3); }
+    .diff-intermediate { background:rgba(251,191,36,.15); color:var(--amber);  border:1px solid rgba(251,191,36,.3); }
+    .diff-hard         { background:rgba(248,113,113,.15); color:var(--red);   border:1px solid rgba(248,113,113,.3); }
+    .diff-extreme      { background:rgba(168,85,247,.15); color:#c084fc;       border:1px solid rgba(168,85,247,.3); }
+    .trail-stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:10px; }
+    .trail-stat { background:var(--dark); border-radius:8px; padding:10px 14px; border:1px solid var(--border); }
+    .trail-stat-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:3px; }
+    .trail-stat-val   { font-size:15px; font-weight:600; }
+    /* IMPORT FORM */
+    .import-bar { display:flex; gap:10px; align-items:stretch; }
+    .import-bar input { flex:1; }
     /* RESPONSIVE */
     @media(max-width:768px){
       .nav-links { display:none; }
@@ -164,7 +197,7 @@
 <div id="root"></div>
 
 <script type="text/babel">
-const { useState, useEffect, useCallback } = React;
+const { useState, useEffect, useCallback, useRef } = React;
 
 // ── CONSTANTS ──────────────────────────────────────────────
 const MEMBERSHIP_FEE = 450;
@@ -182,6 +215,53 @@ const DUMMY_MEMBERS = [
 
 const fmt = d => d ? new Date(d).toLocaleDateString("en-ZA",{day:"2-digit",month:"short",year:"numeric"}) : "—";
 
+const waShareURL = text => `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+
+const INIT_POSTS = [
+  {id:1, title:"New Season, New Goals — 2026 Club Update", category:"Club News", author:"James Hendricks", date:"2026-01-10",
+   excerpt:"As we kick off another year of riding in paradise, the committee shares plans for the season ahead.",
+   body:"As we kick off another year of riding in paradise, the committee is excited to share our plans for 2026.\n\nThis year we have over 50 organised rides planned, three major challenge events, and a brand new skills clinic for newer members. We are also partnering with local businesses for exclusive member discounts on gear and nutrition.\n\nThe Tuesday evening social rides continue from October to April, and we are adding a mountain bike day on the last Sunday of each month.\n\nSee you on the road!"},
+  {id:2, title:"Ride Report: Tsitsikamma Classic 2025", category:"Ride Report", author:"Ruan Prinsloo", date:"2025-11-28",
+   excerpt:"Thirty-two brave souls tackled the 90km Tsitsikamma challenge in November. Here is how the day unfolded.",
+   body:"Thirty-two riders tackled the 90km Tsitsikamma challenge on a perfect November morning.\n\nConditions were near-perfect — cool at the 5:30 AM start, a light tailwind on the N2, and the Tsitsikamma coastal road delivered its usual spectacular views.\n\nTop finisher was Ruan Prinsloo (2:54), followed by Craig Botha (2:58) and newcomer Tom Swart (3:10). The coffee stop at Storms River Village was perfectly timed for recovery before the return leg.\n\nThanks to all marshals and the committee for making it a seamless event."},
+  {id:3, title:"Member Spotlight: Nomsa Dlamini", category:"Member Spotlight", author:"James Hendricks", date:"2025-10-15",
+   excerpt:"We sat down with Nomsa to learn how she went from absolute beginner to riding her first 50km in just four months.",
+   body:"We sat down with Nomsa Dlamini — one of our newest members — to hear her story.\n\n'I had never owned a road bike before joining PCC,' Nomsa told us. 'I bought a second-hand Trek from Plett Cycles and nervously showed up to my first group ride in August.'\n\nFour months later, Nomsa completed her first 50km and is now a regular at Saturday rides. 'The club is incredibly welcoming. Nobody makes you feel slow. You just ride your own ride and the group waits.'\n\nNomsa's tip for new riders: Don't worry about the hills. Just spin and breathe. You will surprise yourself."},
+];
+
+// Mock trail data that simulates a Strava/Trailforks import
+const MOCK_IMPORT_DB = {
+  "puff-adder": { name:"Puff Adder", type:"MTB", difficulty:"Intermediate", distance:"8.2km", elevation:"245m", time:"1–2 hrs", surface:"Singletrack", description:"A technical MTB singletrack weaving through indigenous coastal forest near Plettenberg Bay. Fun berms, rooty sections and rewarding views over the Bitou valley. Best ridden Oct–Apr.", lat:-34.068, lng:23.334, route:[[-34.065,23.332],[-34.062,23.338],[-34.059,23.345],[-34.055,23.348],[-34.052,23.343],[-34.054,23.336],[-34.059,23.330],[-34.063,23.328],[-34.065,23.332]] },
+  "robberg":     { name:"Robberg Peninsula Loop", type:"Gravel/Road", difficulty:"Moderate", distance:"9.1km", elevation:"210m", time:"45–90 min", surface:"Gravel & Tarmac", description:"Iconic coastal loop around the Robberg Nature Reserve peninsula. Technical rocky sections meet sweeping ocean views — a club favourite. Starts at the reserve entrance.", lat:-34.094, lng:23.407, route:[[-34.077,23.392],[-34.083,23.400],[-34.091,23.412],[-34.099,23.422],[-34.107,23.418],[-34.112,23.408],[-34.108,23.398],[-34.099,23.392],[-34.090,23.390],[-34.082,23.391],[-34.077,23.392]] },
+  "keurbooms":   { name:"Keurbooms Lagoon Cruise", type:"Gravel", difficulty:"Easy", distance:"22km", elevation:"180m", time:"1–2 hrs", surface:"Gravel road", description:"Relaxed gravel ride along the beautiful Keurbooms lagoon and river estuary. Mostly flat with gentle rollers — perfect for a recovery ride or introducing newcomers to the club.", lat:-34.003, lng:23.451, route:[[-34.015,23.435],[-34.010,23.445],[-34.004,23.458],[-33.998,23.466],[-33.992,23.471],[-33.988,23.467],[-33.993,23.456],[-34.000,23.448],[-34.007,23.441],[-34.012,23.437],[-34.015,23.435]] },
+  "kranshoek":   { name:"Kranshoek Clifftop Trail", type:"MTB", difficulty:"Hard", distance:"16km", elevation:"480m", time:"2–3 hrs", surface:"Singletrack", description:"Demanding clifftop MTB trail east of Plett with dramatic views of the Indian Ocean. Long technical descents, punchy climbs and exposed ridge riding. Not for the faint-hearted.", lat:-34.121, lng:23.461, route:[[-34.108,23.447],[-34.114,23.455],[-34.120,23.463],[-34.127,23.470],[-34.131,23.465],[-34.128,23.457],[-34.122,23.450],[-34.115,23.445],[-34.108,23.447]] },
+};
+// Resolve a URL slug to mock trail data
+const resolveTrailUrl = url => {
+  const u = url.toLowerCase();
+  if(u.includes("puff-adder"))  return MOCK_IMPORT_DB["puff-adder"];
+  if(u.includes("robberg"))     return MOCK_IMPORT_DB["robberg"];
+  if(u.includes("keurbooms"))   return MOCK_IMPORT_DB["keurbooms"];
+  if(u.includes("kranshoek"))   return MOCK_IMPORT_DB["kranshoek"];
+  // Fallback: generic mock
+  const slug = u.split("/").filter(Boolean).pop() || "trail";
+  return { name:slug.replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase()), type:"MTB", difficulty:"Intermediate", distance:"10km", elevation:"300m", time:"1–2 hrs", surface:"Singletrack", description:"Imported trail from "+url, lat:-34.058, lng:23.370, route:[[-34.055,23.368],[-34.052,23.374],[-34.057,23.380],[-34.062,23.376],[-34.060,23.369],[-34.055,23.368]] };
+};
+
+const INIT_TRAILS = [
+  {...MOCK_IMPORT_DB["puff-adder"],   id:1, source:"Trailforks", sourceUrl:"https://www.trailforks.com/trails/puff-adder-133834/"},
+  {...MOCK_IMPORT_DB["robberg"],      id:2, source:"Strava",     sourceUrl:"https://www.strava.com/segments/robberg-peninsula"},
+  {...MOCK_IMPORT_DB["keurbooms"],    id:3, source:"Strava",     sourceUrl:"https://www.strava.com/segments/keurbooms-lagoon"},
+  {...MOCK_IMPORT_DB["kranshoek"],    id:4, source:"Trailforks", sourceUrl:"https://www.trailforks.com/trails/kranshoek-clifftop"},
+];
+
+const INIT_EVENTS = [
+  {id:1, date:"2026-03-15", name:"Robberg Peninsula Loop",   distance:"42km", level:"Moderate", meetTime:"6:00 AM",  meetPoint:"Central Beach Parking Lot", description:"Our favourite Saturday morning loop. Multiple pace groups to suit all abilities.", maxRiders:30, riders:18, trailId:2},
+  {id:2, date:"2026-03-22", name:"Knysna Forest Challenge",  distance:"78km", level:"Hard",     meetTime:"5:30 AM",  meetPoint:"BP Garage, N2 Plett",       description:"Epic forest ride for experienced riders. Bring extra nutrition and tubeless repair kits.", maxRiders:20, riders:12, trailId:null},
+  {id:3, date:"2026-03-29", name:"Puff Adder MTB Ride",      distance:"8km",  level:"Moderate", meetTime:"7:00 AM",  meetPoint:"Kurland Trail Carpark",     description:"Club MTB morning on the Puff Adder singletrack. Bikes with at least 80mm travel recommended.", maxRiders:20, riders:11, trailId:1},
+  {id:4, date:"2026-04-05", name:"Keurbooms Lagoon Cruise",  distance:"22km", level:"Easy",     meetTime:"7:30 AM",  meetPoint:"Piesang Valley Bridge",     description:"A leisurely morning ride along the lagoon — perfect for new members joining their first club ride.", maxRiders:35, riders:8, trailId:3},
+];
+
 // ── ICONS ──────────────────────────────────────────────────
 const icons = {
   bike:     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 0 0-1-1h-1l-3.5 9H14"/><path d="m9 15 3-9"/><path d="M5.5 14H13"/><line x1="19" y1="10" x2="22" y2="10"/></svg>,
@@ -198,6 +278,12 @@ const icons = {
   credit:   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
   alert:    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
   calendar: <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+  wa:       <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>,
+  plus:     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+  pencil:   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+  trash:    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>,
+  route:    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>,
+  link:     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>,
 };
 const I = ({n, style={}}) => <span style={{fontSize:"1em",display:"inline-flex",alignItems:"center",...style}}>{icons[n]||null}</span>;
 
@@ -215,7 +301,7 @@ function Toasts({toasts}){
 function Navbar({page,setPage,user,logout}){
   const [mob,setMob]=useState(false);
   const go=p=>{setPage(p);setMob(false);};
-  const links=[{k:"home",l:"Home"},{k:"about",l:"About"},{k:"gallery",l:"Gallery"},{k:"join",l:"Join"},{k:"contact",l:"Contact"}];
+  const links=[{k:"home",l:"Home"},{k:"events",l:"Events"},{k:"trails",l:"Trails"},{k:"blog",l:"Blog"},{k:"about",l:"About"},{k:"gallery",l:"Gallery"},{k:"join",l:"Join"},{k:"contact",l:"Contact"}];
   return(
     <>
     <nav className="nav">
@@ -263,7 +349,7 @@ function DemoBar({simMonth,setSimMonth,setPage,setUser,members}){
 }
 
 // ── HOME ───────────────────────────────────────────────────
-function HomePage({setPage}){
+function HomePage({setPage, events, posts}){
   const feats=[
     {i:"bike",t:"Weekly Rides",d:"Group rides through the Garden Route every Saturday morning from Central Beach."},
     {i:"map",t:"Epic Routes",d:"From Robberg to Knysna — we explore the most beautiful roads in the Western Cape."},
@@ -314,31 +400,63 @@ function HomePage({setPage}){
 
       <section style={{background:"var(--dark)",borderTop:"1px solid var(--border)"}}>
         <div className="section">
-          <div className="section-label">Upcoming</div>
-          <h2 className="section-title">NEXT RIDES</h2>
-          <div style={{display:"grid",gap:12,marginTop:32}}>
-            {[
-              {date:"15 Mar",name:"Robberg Peninsula Loop",dist:"42km",level:"Moderate"},
-              {date:"22 Mar",name:"Knysna Forest Challenge",dist:"78km",level:"Hard"},
-              {date:"29 Mar",name:"Lookout Beach Sprint",dist:"25km",level:"Easy"},
-            ].map(r=>(
-              <div key={r.name} className="card" style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12}}>
-                <div style={{display:"flex",gap:20,alignItems:"center"}}>
-                  <div style={{textAlign:"center",minWidth:48}}>
-                    <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,color:"var(--accent)",lineHeight:1}}>{r.date.split(" ")[0]}</div>
-                    <div style={{fontSize:11,color:"var(--muted)",textTransform:"uppercase"}}>{r.date.split(" ")[1]}</div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:32,flexWrap:"wrap",gap:12}}>
+            <div>
+              <div className="section-label">Upcoming</div>
+              <h2 className="section-title" style={{marginBottom:0}}>NEXT RIDES</h2>
+            </div>
+            <button className="btn btn-ghost btn-sm" onClick={()=>setPage("events")}>All Events →</button>
+          </div>
+          <div style={{display:"grid",gap:12}}>
+            {[...events]
+              .filter(e=>new Date(e.date)>=new Date())
+              .sort((a,b)=>new Date(a.date)-new Date(b.date))
+              .slice(0,3)
+              .map(r=>{
+                const d=new Date(r.date);
+                return(
+                  <div key={r.id} className="card" style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12}}>
+                    <div style={{display:"flex",gap:20,alignItems:"center"}}>
+                      <div style={{textAlign:"center",minWidth:48}}>
+                        <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,color:"var(--accent)",lineHeight:1}}>{d.getDate()}</div>
+                        <div style={{fontSize:11,color:"var(--muted)",textTransform:"uppercase"}}>{MONTHS[d.getMonth()]}</div>
+                      </div>
+                      <div>
+                        <div style={{fontWeight:600}}>{r.name}</div>
+                        <div style={{fontSize:13,color:"var(--muted)"}}>{r.distance} · {r.level}</div>
+                      </div>
+                    </div>
+                    <button className="btn btn-sm btn-ghost" onClick={()=>setPage("login")}>Join Ride →</button>
                   </div>
-                  <div>
-                    <div style={{fontWeight:600}}>{r.name}</div>
-                    <div style={{fontSize:13,color:"var(--muted)"}}>{r.dist} · {r.level}</div>
-                  </div>
-                </div>
-                <button className="btn btn-sm btn-ghost" onClick={()=>setPage("login")}>Join Ride →</button>
-              </div>
-            ))}
+                );
+              })
+            }
           </div>
         </div>
       </section>
+
+      {posts&&posts.length>0&&(
+        <section style={{background:"var(--dark)",borderTop:"1px solid var(--border)"}}>
+          <div className="section">
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:32,flexWrap:"wrap",gap:12}}>
+              <div>
+                <div className="section-label">Latest</div>
+                <h2 className="section-title" style={{marginBottom:0}}>NEWS & BLOG</h2>
+              </div>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setPage("blog")}>All Posts →</button>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:16}}>
+              {[...posts].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,3).map(p=>(
+                <div key={p.id} className="card card-hover" onClick={()=>setPage("blog")} style={{cursor:"pointer"}}>
+                  <div style={{fontSize:11,fontWeight:700,color:"var(--accent)",textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:10}}>{p.category} · {fmt(p.date)}</div>
+                  <h3 style={{fontWeight:600,fontSize:15,lineHeight:1.4,marginBottom:8}}>{p.title}</h3>
+                  <p style={{fontSize:13,color:"var(--muted)",lineHeight:1.6}}>{p.excerpt||p.body.slice(0,90)+"…"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="section" style={{textAlign:"center"}}>
         <div className="section-label">Membership</div>
@@ -422,6 +540,387 @@ function GalleryPage(){
         </div>
         <p style={{color:"var(--muted)",fontSize:13,marginTop:20,textAlign:"center"}}>📸 Gallery images are placeholders — production version will display real member photos.</p>
       </div>
+    </div>
+  );
+}
+
+// ── EVENTS PAGE ────────────────────────────────────────────
+function EventsPage({events, setPage, trails}) {
+  const levelClass = l => `event-level level-${l.toLowerCase()}`;
+
+  const waShare = ev => {
+    const msg = [
+      "Plett Cycling Club - Upcoming Ride",
+      "",
+      ev.name,
+      "Date: " + fmt(ev.date),
+      "Meet point: " + ev.meetPoint,
+      "Meet time: " + ev.meetTime,
+      "Distance: " + ev.distance + " / " + ev.level,
+      "",
+      ev.description,
+      "",
+      "Spots: " + ev.riders + "/" + ev.maxRiders,
+      "RSVP & details: plettcycling.co.za"
+    ].join("\n");
+    window.open(waShareURL(msg), "_blank");
+  };
+
+  const now = new Date();
+  const upcoming = [...events].filter(e => new Date(e.date) >= now).sort((a,b) => new Date(a.date)-new Date(b.date));
+  const past     = [...events].filter(e => new Date(e.date) <  now).sort((a,b) => new Date(b.date)-new Date(a.date));
+
+  return (
+    <div style={{paddingTop:64}}>
+      <div style={{background:"var(--dark)",borderBottom:"1px solid var(--border)"}}>
+        <div className="section" style={{paddingBottom:48}}>
+          <div className="section-label">Rides</div>
+          <h1 className="section-title">UPCOMING EVENTS</h1>
+          <p style={{color:"var(--muted)",fontSize:16,maxWidth:600}}>All scheduled club rides. Log in to RSVP. Use the WhatsApp share button to post an event to your group chat.</p>
+        </div>
+      </div>
+      <div className="section">
+        {upcoming.length === 0
+          ? <div className="card" style={{textAlign:"center",padding:"48px",color:"var(--muted)"}}><div style={{fontSize:40,marginBottom:12}}>🗓️</div><div>No upcoming events. Check back soon!</div></div>
+          : <div style={{display:"grid",gap:16}}>
+              {upcoming.map(ev => {
+                const d = new Date(ev.date);
+                const spotsLeft = ev.maxRiders - ev.riders;
+                return (
+                  <div key={ev.id} className="card" style={{display:"flex",gap:20,flexWrap:"wrap",alignItems:"flex-start"}}>
+                    <div style={{textAlign:"center",minWidth:56,flexShrink:0}}>
+                      <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:36,color:"var(--accent)",lineHeight:1}}>{d.getDate()}</div>
+                      <div style={{fontSize:11,color:"var(--muted)",textTransform:"uppercase"}}>{MONTHS[d.getMonth()]}</div>
+                      <div style={{fontSize:11,color:"var(--muted)"}}>{d.getFullYear()}</div>
+                    </div>
+                    <div style={{flex:1,minWidth:200}}>
+                      <div style={{display:"flex",gap:10,alignItems:"center",flexWrap:"wrap",marginBottom:6}}>
+                        <h3 style={{fontWeight:600,fontSize:16}}>{ev.name}</h3>
+                        <span className={levelClass(ev.level)}>{ev.level}</span>
+                      </div>
+                      <p style={{fontSize:13,color:"var(--muted)",lineHeight:1.6,marginBottom:10}}>{ev.description}</p>
+                      <div style={{display:"flex",gap:16,fontSize:12,color:"var(--muted)",flexWrap:"wrap"}}>
+                        <span>📍 {ev.meetPoint}</span>
+                        <span>🕐 {ev.meetTime}</span>
+                        <span>📏 {ev.distance}</span>
+                        <span style={{color:spotsLeft<=5?"var(--amber)":"var(--muted)"}}>
+                          👥 {ev.riders}/{ev.maxRiders}{spotsLeft<=5?" — Almost full!":""}
+                        </span>
+                      </div>
+                      {ev.trailId&&trails&&(()=>{const t=trails.find(x=>x.id===ev.trailId); return t?<div style={{marginTop:8}}><button className="btn btn-sm btn-ghost" style={{fontSize:12}} onClick={()=>setPage("trails")}><I n="route"/> Trail: {t.name} ({t.distance})</button></div>:null;})()}
+                    </div>
+                    <div style={{display:"flex",gap:8,flexShrink:0,flexDirection:"column",alignItems:"stretch"}}>
+                      <button className="btn btn-sm btn-wa" onClick={()=>waShare(ev)}><I n="wa"/> Share on WhatsApp</button>
+                      <button className="btn btn-sm btn-ghost" onClick={()=>setPage("login")}>RSVP →</button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+        }
+
+        {past.length > 0 && (
+          <div style={{marginTop:48}}>
+            <h2 style={{fontFamily:"Bebas Neue,sans-serif",fontSize:32,marginBottom:20}}>PAST EVENTS</h2>
+            <div style={{display:"grid",gap:10}}>
+              {past.map(ev => (
+                <div key={ev.id} className="card" style={{opacity:0.55,display:"flex",gap:16,alignItems:"center",flexWrap:"wrap",padding:"16px 20px"}}>
+                  <div style={{minWidth:48,textAlign:"center"}}>
+                    <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:26,color:"var(--muted)",lineHeight:1}}>{new Date(ev.date).getDate()}</div>
+                    <div style={{fontSize:10,color:"var(--muted)",textTransform:"uppercase"}}>{MONTHS[new Date(ev.date).getMonth()]}</div>
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontWeight:500}}>{ev.name}</div>
+                    <div style={{fontSize:12,color:"var(--muted)"}}>{ev.distance} · {ev.level} · {ev.riders} riders attended</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── TRAIL MAP (shared by mini-card and detail modal) ───────
+function TrailMap({trail, interactive, height}){
+  const ref     = useRef(null);
+  const mapInst = useRef(null);
+
+  useEffect(()=>{
+    if(!ref.current || mapInst.current) return;
+    const L = window.L;
+    if(!L) return;
+
+    const map = L.map(ref.current, {
+      zoomControl:      interactive,
+      scrollWheelZoom:  interactive,
+      dragging:         interactive,
+      touchZoom:        interactive,
+      doubleClickZoom:  interactive,
+      boxZoom:          interactive,
+      keyboard:         interactive,
+      attributionControl: false,
+    }).setView([trail.lat, trail.lng], 13);
+    mapInst.current = map;
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19}).addTo(map);
+
+    if(trail.route && trail.route.length > 1){
+      const poly = L.polyline(trail.route, {color:"#e8ff3e", weight: interactive?4:3, opacity:0.9}).addTo(map);
+      map.fitBounds(poly.getBounds(), {padding: interactive?[24,24]:[12,12]});
+
+      // Start dot
+      const dot = L.divIcon({html:'<div style="background:#4ade80;width:10px;height:10px;border-radius:50%;border:2px solid #111;box-shadow:0 2px 4px rgba(0,0,0,.6)"></div>', className:"", iconSize:[10,10], iconAnchor:[5,5]});
+      L.marker(trail.route[0], {icon:dot}).addTo(map);
+    }
+
+    if(interactive) L.control.attribution({prefix:false}).addTo(map);
+    setTimeout(()=>{ if(mapInst.current) mapInst.current.invalidateSize(); }, 150);
+
+    return ()=>{ if(mapInst.current){ mapInst.current.remove(); mapInst.current=null; } };
+  }, [trail.id, interactive]);
+
+  return <div ref={ref} style={{width:"100%", height, background:"#0d1117"}}/>;
+}
+
+// ── TRAIL DETAIL PAGE ──────────────────────────────────────
+function TrailDetailPage({trail, setPage, addToast}){
+  const downloadGPX = ()=>{
+    const pts = trail.route.map(([lat,lng])=>`      <trkpt lat="${lat}" lon="${lng}"><ele>0</ele></trkpt>`).join("\n");
+    const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Plett Cycling Club" xmlns="http://www.topografix.com/GPX/1/1">\n  <trk>\n    <name>${trail.name}</name>\n    <type>${trail.type}</type>\n    <trkseg>\n${pts}\n    </trkseg>\n  </trk>\n</gpx>`;
+    const blob = new Blob([gpx], {type:"application/gpx+xml"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = trail.name.toLowerCase().replace(/\s+/g,"-")+".gpx";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    addToast("GPX downloaded: "+trail.name,"success");
+  };
+
+  return(
+    <div style={{paddingTop:64}}>
+      {/* Full-width map hero */}
+      <div style={{position:"relative", height:"55vh", minHeight:320}}>
+        <TrailMap trail={trail} interactive={true} height="100%"/>
+        {/* Back button overlaid on map */}
+        <button className="btn btn-ghost btn-sm"
+          style={{position:"absolute",top:16,left:16,zIndex:1000,background:"rgba(10,10,10,.85)",backdropFilter:"blur(8px)",border:"1px solid rgba(255,255,255,.15)"}}
+          onClick={()=>setPage("trails")}>
+          ← Back to Trails
+        </button>
+        {/* Source link overlaid on map */}
+        {trail.sourceUrl&&(
+          <a href={trail.sourceUrl} target="_blank" rel="noreferrer"
+            style={{position:"absolute",bottom:16,left:16,zIndex:1000,background:"rgba(10,10,10,.85)",backdropFilter:"blur(8px)",color:"var(--accent)",fontSize:12,padding:"6px 14px",borderRadius:100,textDecoration:"none",border:"1px solid rgba(232,255,62,.3)",display:"inline-flex",alignItems:"center",gap:6}}>
+            <I n="link"/> View on {trail.source}
+          </a>
+        )}
+        <div style={{position:"absolute",bottom:16,right:16,zIndex:1000,fontSize:11,color:"rgba(255,255,255,.4)"}}>
+          OpenStreetMap · route is approximate
+        </div>
+      </div>
+
+      {/* Content */}
+      <div style={{maxWidth:860,margin:"0 auto",padding:"40px 24px 100px"}}>
+        {/* Header row */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:16,marginBottom:24}}>
+          <div>
+            <div className="section-label" style={{marginBottom:8}}>Trail</div>
+            <h1 style={{fontFamily:"Bebas Neue,sans-serif",fontSize:"clamp(36px,6vw,60px)",lineHeight:1,marginBottom:12}}>{trail.name.toUpperCase()}</h1>
+            <div style={{display:"flex",gap:10,flexWrap:"wrap",alignItems:"center"}}>
+              <span className={"diff-badge diff-"+trail.difficulty.toLowerCase()}>{trail.difficulty}</span>
+              <span style={{fontSize:13,color:"var(--muted)"}}>{trail.type}</span>
+              <span style={{color:"var(--border)"}}>·</span>
+              <span style={{fontSize:13,color:"var(--muted)"}}>{trail.surface}</span>
+              <span style={{color:"var(--border)"}}>·</span>
+              <span style={{fontSize:13,color:"var(--muted)",fontFamily:"DM Mono,monospace"}}>{trail.source}</span>
+            </div>
+          </div>
+          <button className="btn btn-primary" onClick={downloadGPX}><I n="download"/> Download GPX</button>
+        </div>
+
+        {/* Stats */}
+        <div className="trail-stat-grid" style={{marginBottom:28}}>
+          {[["Distance",trail.distance],["Elevation Gain",trail.elevation],["Est. Time",trail.time],["Surface",trail.surface]].map(([k,v])=>(
+            <div key={k} className="trail-stat">
+              <div className="trail-stat-label">{k}</div>
+              <div className="trail-stat-val">{v}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Description */}
+        <div className="card" style={{marginBottom:24}}>
+          <h3 style={{fontWeight:600,marginBottom:12}}>About this Trail</h3>
+          <p style={{fontSize:15,color:"var(--muted)",lineHeight:1.85}}>{trail.description}</p>
+        </div>
+
+        {/* GPX info card */}
+        <div className="card" style={{display:"flex",gap:16,alignItems:"center",flexWrap:"wrap"}}>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:600,marginBottom:4}}>Download GPX File</div>
+            <div style={{fontSize:13,color:"var(--muted)"}}>Load this route directly into Garmin, Wahoo, Komoot, or any GPS device that accepts GPX files.</div>
+          </div>
+          <button className="btn btn-ghost" onClick={downloadGPX}><I n="download"/> {trail.name.replace(/\s+/g,"-").toLowerCase()}.gpx</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── TRAILS PAGE ────────────────────────────────────────────
+function TrailsPage({trails, addToast, setPage, setSelectedTrail}){
+  const DIFF_COLOR = {Easy:"var(--green)", Intermediate:"var(--amber)", Hard:"var(--red)", Extreme:"#c084fc"};
+  const TYPE_EMOJI = {MTB:"🚵", Road:"🚴", Gravel:"🪨", "Gravel/Road":"🚴"};
+
+  return(
+    <div style={{paddingTop:64}}>
+      <div style={{background:"var(--dark)",borderBottom:"1px solid var(--border)"}}>
+        <div className="section" style={{paddingBottom:48}}>
+          <div className="section-label">Explore</div>
+          <h1 className="section-title">TRAILS & ROUTES</h1>
+          <p style={{color:"var(--muted)",fontSize:16,maxWidth:580,lineHeight:1.7}}>
+            Plettenberg Bay's best cycling trails, sourced from Strava and Trailforks. Each trail shows a live route map. Download GPX to load into your GPS device.
+          </p>
+        </div>
+      </div>
+
+      <div className="section">
+        {trails.length===0
+          ?(
+            <div className="card" style={{textAlign:"center",padding:"56px",color:"var(--muted)"}}>
+              <div style={{fontSize:44,marginBottom:12}}>🗺️</div>
+              <div style={{fontWeight:600,marginBottom:6}}>No trails yet</div>
+              <div style={{fontSize:14}}>An admin can import trails from Strava or Trailforks in the Admin panel.</div>
+            </div>
+          ):(
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(340px,1fr))",gap:24}}>
+              {trails.map(t=>(
+                <div key={t.id} className="card card-hover trail-card" onClick={()=>{setSelectedTrail(t);setPage("trail");}}>
+                  {/* Mini map preview */}
+                  <div className="trail-map-mini" style={{height:190}}>
+                    <TrailMap trail={t} interactive={false} height={190}/>
+                  </div>
+
+                  <div style={{padding:20}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                      <h3 style={{fontWeight:600,fontSize:16,lineHeight:1.3,flex:1}}>{t.name}</h3>
+                      <span style={{fontSize:18,marginLeft:10,flexShrink:0}}>{TYPE_EMOJI[t.type]||"🚴"}</span>
+                    </div>
+
+                    <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center",marginBottom:12}}>
+                      <span className={"diff-badge diff-"+t.difficulty.toLowerCase()}>{t.difficulty}</span>
+                      <span style={{fontSize:12,color:"var(--muted)"}}>{t.type}</span>
+                      <span style={{fontSize:11,color:"var(--muted)"}}>·</span>
+                      <span style={{fontSize:11,color:"var(--muted)",fontFamily:"DM Mono,monospace"}}>{t.source}</span>
+                    </div>
+
+                    <div style={{display:"flex",gap:16,fontSize:12,color:"var(--muted)",marginBottom:14,flexWrap:"wrap"}}>
+                      <span>📏 {t.distance}</span>
+                      <span>⛰️ {t.elevation}</span>
+                      <span>⏱️ {t.time}</span>
+                    </div>
+
+                    <p style={{fontSize:13,color:"var(--muted)",lineHeight:1.6,marginBottom:14}}>{t.description.slice(0,110)}…</p>
+
+                    <div style={{display:"flex",gap:8}}>
+                      <button className="btn btn-sm btn-primary" style={{flex:1}} onClick={e=>{e.stopPropagation();setSelectedTrail(t);setPage("trail");}}><I n="map"/> View Map</button>
+                      <button className="btn btn-sm btn-ghost" onClick={e=>{
+                        e.stopPropagation();
+                        const pts=t.route.map(([la,ln])=>`      <trkpt lat="${la}" lon="${ln}"><ele>0</ele></trkpt>`).join("\n");
+                        const gpx=`<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Plett Cycling Club">\n  <trk><name>${t.name}</name><trkseg>\n${pts}\n  </trkseg></trk>\n</gpx>`;
+                        const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([gpx],{type:"application/gpx+xml"}));a.download=t.name.toLowerCase().replace(/\s+/g,"-")+".gpx";a.click();
+                        addToast("GPX downloaded: "+t.name,"success");
+                      }}><I n="download"/> GPX</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+    </div>
+  );
+}
+
+// ── BLOG PAGE ──────────────────────────────────────────────
+function BlogPage({posts, setPage}){
+  const [sel, setSel] = useState(null);
+  const sorted = [...posts].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  const CATEGORY_COLORS = {
+    "Club News":       {bg:"rgba(232,255,62,0.1)",  color:"var(--accent)",  border:"rgba(232,255,62,0.25)"},
+    "Ride Report":     {bg:"rgba(74,222,128,0.1)",  color:"var(--green)",   border:"rgba(74,222,128,0.25)"},
+    "Member Spotlight":{bg:"rgba(255,107,53,0.1)",  color:"var(--accent2)", border:"rgba(255,107,53,0.25)"},
+    "General":         {bg:"rgba(136,136,136,0.1)", color:"var(--muted)",   border:"rgba(136,136,136,0.25)"},
+  };
+  const catStyle = c => CATEGORY_COLORS[c] || CATEGORY_COLORS["General"];
+
+  return(
+    <div style={{paddingTop:64}}>
+      {/* Page header */}
+      <div style={{background:"var(--dark)",borderBottom:"1px solid var(--border)"}}>
+        <div className="section" style={{paddingBottom:48}}>
+          <div className="section-label">Latest</div>
+          <h1 className="section-title">NEWS & BLOG</h1>
+          <p style={{color:"var(--muted)",fontSize:16,maxWidth:560,lineHeight:1.7}}>
+            Club updates, ride reports, and stories from the saddle — written by your committee and fellow riders.
+          </p>
+        </div>
+      </div>
+
+      <div className="section">
+        {sorted.length === 0
+          ? <div className="card" style={{textAlign:"center",padding:"56px 24px",color:"var(--muted)"}}>
+              <div style={{fontSize:44,marginBottom:12}}>📝</div>
+              <div style={{fontWeight:600,marginBottom:6}}>No posts yet</div>
+              <div style={{fontSize:14}}>Check back soon — the committee will post updates here.</div>
+            </div>
+          : <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(320px,1fr))",gap:20}}>
+              {sorted.map(p => {
+                const cs = catStyle(p.category);
+                return(
+                  <div key={p.id} className="card card-hover" onClick={()=>setSel(p)}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+                      <span style={{fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:100,background:cs.bg,color:cs.color,border:"1px solid "+cs.border,textTransform:"uppercase",letterSpacing:"0.05em"}}>{p.category}</span>
+                      <span style={{fontSize:12,color:"var(--muted)"}}>{fmt(p.date)}</span>
+                    </div>
+                    <h3 style={{fontWeight:600,fontSize:16,lineHeight:1.4,marginBottom:10}}>{p.title}</h3>
+                    <p style={{fontSize:13,color:"var(--muted)",lineHeight:1.7,marginBottom:16}}>{p.excerpt}</p>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <div style={{width:26,height:26,borderRadius:"50%",background:"linear-gradient(135deg,var(--accent),var(--accent2))",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"var(--black)",flexShrink:0}}>{p.author[0]}</div>
+                      <span style={{fontSize:12,color:"var(--muted)"}}>{p.author}</span>
+                      <span style={{marginLeft:"auto",fontSize:12,color:"var(--accent)"}}>Read more →</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+        }
+      </div>
+
+      {/* Post detail modal */}
+      {sel && (
+        <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&setSel(null)}>
+          <div className="modal" style={{maxWidth:620}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20}}>
+              <span style={{fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:100,background:catStyle(sel.category).bg,color:catStyle(sel.category).color,border:"1px solid "+catStyle(sel.category).border,textTransform:"uppercase",letterSpacing:"0.05em"}}>{sel.category}</span>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setSel(null)}><I n="x"/></button>
+            </div>
+            <h2 style={{fontFamily:"Bebas Neue,sans-serif",fontSize:30,lineHeight:1.1,marginBottom:14}}>{sel.title.toUpperCase()}</h2>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:20,paddingBottom:20,borderBottom:"1px solid var(--border)"}}>
+              <div style={{width:28,height:28,borderRadius:"50%",background:"linear-gradient(135deg,var(--accent),var(--accent2))",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:"var(--black)"}}>{sel.author[0]}</div>
+              <span style={{fontSize:13,fontWeight:500}}>{sel.author}</span>
+              <span style={{color:"var(--muted)",fontSize:13}}>· {fmt(sel.date)}</span>
+            </div>
+            <div style={{fontSize:15,lineHeight:1.9,color:"var(--text)",whiteSpace:"pre-line"}}>{sel.body}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -615,17 +1114,36 @@ function PaymentModal({onClose,onSuccess,member,year,addToast}){
   const [exp,setExp]=useState("");
   const [cvv,setCvv]=useState("");
 
+  const waMsg =
+    "Hi "+member.firstName+"!\n\n"+
+    "Your Plett Cycling Club *"+year+"* membership has been confirmed.\n\n"+
+    "Amount paid: R"+MEMBERSHIP_FEE+"\n"+
+    "Valid: 1 Jan "+year+" - 31 Dec "+year+"\n\n"+
+    "See you on the road!\n"+
+    "- PCC Committee";
+
+  const emailBody =
+    "Dear "+member.firstName+" "+member.surname+",\n\n"+
+    "Thank you for your payment of R"+MEMBERSHIP_FEE+".\n\n"+
+    "Your "+year+" Plett Cycling Club membership is now active.\n"+
+    "Membership period: 1 January "+year+" to 31 December "+year+".\n\n"+
+    "Please ensure your emergency contact details are up to date in your dashboard.\n\n"+
+    "Ride safe,\n"+
+    "The PCC Committee\n"+
+    "info@plettcycling.co.za";
+
   const pay=()=>{
     setStep("processing");
     setTimeout(()=>{
+      onSuccess(year);
+      addToast("Payment of R"+MEMBERSHIP_FEE+" confirmed! "+year+" membership active.","success");
       setStep("success");
-      setTimeout(()=>{onSuccess(year);addToast(`✅ Payment of R${MEMBERSHIP_FEE} successful! ${year} membership activated.`,"success");onClose();},2000);
     },2000);
   };
 
   return(
-    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="modal">
+    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&step!=="success"&&onClose()}>
+      <div className="modal" style={{maxWidth: step==="success"?560:480}}>
         {step==="confirm"&&(<>
           <div style={{fontSize:12,color:"var(--muted)",textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:8}}>Membership Payment</div>
           <div className="modal-title">PAY NOW</div>
@@ -669,11 +1187,55 @@ function PaymentModal({onClose,onSuccess,member,year,addToast}){
         )}
 
         {step==="success"&&(
-          <div style={{textAlign:"center",padding:"40px 0"}}>
-            <div style={{width:72,height:72,background:"rgba(74,222,128,0.15)",border:"2px solid var(--green)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px",color:"var(--green)",fontSize:32}}><I n="check"/></div>
-            <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:36,color:"var(--green)",marginBottom:8}}>PAYMENT SUCCESSFUL</div>
-            <div style={{color:"var(--muted)",fontSize:14}}>Your {year} membership is now active!</div>
-          </div>
+          <>
+            {/* Header */}
+            <div style={{textAlign:"center",marginBottom:24}}>
+              <div style={{width:64,height:64,background:"rgba(74,222,128,0.15)",border:"2px solid var(--green)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",color:"var(--green)",fontSize:28}}><I n="check"/></div>
+              <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:34,color:"var(--green)",lineHeight:1}}>PAYMENT SUCCESSFUL</div>
+              <div style={{color:"var(--muted)",fontSize:13,marginTop:6}}>R{MEMBERSHIP_FEE} · {year} membership activated · {fmt(new Date().toISOString())}</div>
+            </div>
+
+            {/* Notifications heading */}
+            <div style={{fontSize:11,fontWeight:700,color:"var(--muted)",textTransform:"uppercase",letterSpacing:"0.12em",marginBottom:12}}>Notifications Sent</div>
+
+            {/* WhatsApp preview */}
+            <div style={{background:"#0b1f16",border:"1px solid rgba(37,211,102,0.35)",borderRadius:12,padding:16,marginBottom:12}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+                <div style={{width:32,height:32,background:"#25d366",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:"white",fontSize:16}}><I n="wa"/></div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:600,color:"#25d366"}}>WhatsApp</div>
+                  <div style={{fontSize:11,color:"var(--muted)"}}>To: {member.phone}</div>
+                </div>
+                <span style={{fontSize:11,color:"var(--green)",background:"rgba(74,222,128,0.1)",padding:"2px 8px",borderRadius:100}}>Delivered</span>
+              </div>
+              {/* message bubble */}
+              <div style={{background:"#1a3326",borderRadius:"4px 12px 12px 12px",padding:"10px 14px",display:"inline-block",maxWidth:"95%"}}>
+                <div style={{fontSize:12,fontFamily:"DM Mono,monospace",color:"#d4f5d4",lineHeight:1.7,whiteSpace:"pre-line"}}>{waMsg}</div>
+                <div style={{fontSize:10,color:"rgba(255,255,255,0.35)",textAlign:"right",marginTop:4}}>
+                  {new Date().toLocaleTimeString("en-ZA",{hour:"2-digit",minute:"2-digit"})} ✓✓
+                </div>
+              </div>
+            </div>
+
+            {/* Email preview */}
+            <div style={{background:"var(--card)",border:"1px solid var(--border)",borderRadius:12,padding:16,marginBottom:24}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+                <div style={{width:32,height:32,background:"rgba(232,255,62,0.1)",border:"1px solid rgba(232,255,62,0.25)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:"var(--accent)",fontWeight:700,fontSize:15}}>@</div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:600,color:"var(--accent)"}}>Email</div>
+                  <div style={{fontSize:11,color:"var(--muted)"}}>To: {member.email}</div>
+                </div>
+                <span style={{fontSize:11,color:"var(--green)",background:"rgba(74,222,128,0.1)",padding:"2px 8px",borderRadius:100}}>Delivered</span>
+              </div>
+              <div style={{borderTop:"1px solid var(--border)",paddingTop:12}}>
+                <div style={{fontSize:11,color:"var(--muted)",marginBottom:2}}>From: <span style={{color:"var(--text)"}}>noreply@plettcycling.co.za</span></div>
+                <div style={{fontSize:11,color:"var(--muted)",marginBottom:10}}>Subject: <span style={{color:"var(--text)",fontWeight:600}}>PCC Membership {year} — Payment Confirmed</span></div>
+                <div style={{fontSize:12,fontFamily:"DM Mono,monospace",color:"#ccc",lineHeight:1.75,whiteSpace:"pre-line",background:"var(--dark)",borderRadius:8,padding:"10px 12px"}}>{emailBody}</div>
+              </div>
+            </div>
+
+            <button className="btn btn-primary" style={{width:"100%"}} onClick={onClose}>Done</button>
+          </>
         )}
       </div>
     </div>
@@ -695,8 +1257,8 @@ function MemberDashboard({user,updateMember,addToast,simMonth}){
   const isOct  = simMonth>=9;
 
   const payOpts=[];
-  if(!paid26) payOpts.push({year:CURRENT_YEAR,label:`${CURRENT_YEAR} Membership (Current Year)`});
-  if(isOct)   payOpts.push({year:CURRENT_YEAR+1,label:`${CURRENT_YEAR+1} Membership (Next Year — Early Bird 🎉)`});
+  if(!paid26) payOpts.push({year:CURRENT_YEAR, label:CURRENT_YEAR+" Membership (Current Year)"});
+  if(paid26)  payOpts.push({year:CURRENT_YEAR+1, label:CURRENT_YEAR+1+" Membership (Next Year"+(isOct?" — Early Bird":"")+")"});
 
   const handlePaySuccess=yr=>{
     updateMember(user.id,{status:"paid",paidYear:yr,paymentDate:new Date().toISOString().split("T")[0]});
@@ -853,12 +1415,60 @@ function MemberDashboard({user,updateMember,addToast,simMonth}){
 }
 
 // ── ADMIN DASHBOARD ─────────────────────────────────────────
-function AdminDashboard({members,updateMember,addToast}){
+function AdminDashboard({members,updateMember,addToast,events,addEvent,removeEvent,posts,addPost,removePost,trails,addTrail,removeTrail,user}){
   const [filter,setFilter]=useState("all");
   const [yearF,setYearF]=useState("all");
   const [search,setSearch]=useState("");
   const [sel,setSel]=useState(null);
   const [tab,setTab]=useState("members");
+
+  const emptyEvent={name:"",date:"",distance:"",level:"Moderate",meetTime:"",meetPoint:"",description:"",maxRiders:30,trailId:null};
+  const [newEvent,setNewEvent]=useState({...emptyEvent});
+  const nef=k=>e=>setNewEvent(f=>({...f,[k]:e.target.value}));
+
+  const submitEvent=()=>{
+    if(!newEvent.name||!newEvent.date)return addToast("Name and date are required.","error");
+    const saved=newEvent.name;
+    addEvent({...newEvent,id:Date.now(),riders:0,maxRiders:parseInt(newEvent.maxRiders)||30});
+    addToast("Event \""+saved+"\" added!","success");
+    setNewEvent({...emptyEvent});
+  };
+
+  const levelClass=l=>`event-level level-${l.toLowerCase()}`;
+
+  // ── TRAIL IMPORT STATE ──
+  const [importUrl,setImportUrl]     = useState("");
+  const [importStatus,setImportStatus] = useState("idle"); // idle | loading | preview
+  const [importPreview,setImportPreview] = useState(null);
+
+  const runImport = ()=>{
+    if(!importUrl.trim()) return addToast("Paste a Trailforks or Strava URL first.","error");
+    setImportStatus("loading");
+    setTimeout(()=>{
+      const data = resolveTrailUrl(importUrl);
+      setImportPreview(data);
+      setImportStatus("preview");
+    }, 1600);
+  };
+
+  const confirmImport = ()=>{
+    addTrail({...importPreview, id:Date.now(), source: importUrl.includes("strava")?"Strava":"Trailforks", sourceUrl:importUrl});
+    addToast("Trail \""+importPreview.name+"\" added to library.","success");
+    setImportUrl(""); setImportPreview(null); setImportStatus("idle");
+  };
+
+  const CATEGORIES = ["Club News","Ride Report","Member Spotlight","General"];
+  const emptyPost  = {title:"",category:"Club News",excerpt:"",body:""};
+  const [newPost,setNewPost]  = useState({...emptyPost});
+  const npf = k => e => setNewPost(f=>({...f,[k]:e.target.value}));
+
+  const submitPost=()=>{
+    if(!newPost.title||!newPost.body)return addToast("Title and body are required.","error");
+    const saved=newPost.title;
+    addPost({...newPost, id:Date.now(), author:(user?user.firstName+" "+user.surname:"Admin"), date:new Date().toISOString().split("T")[0]});
+    addToast("\""+saved+"\" published!","success");
+    setNewPost({...emptyPost});
+  };
 
   const rows=members.filter(m=>{
     if(filter==="paid"&&m.paidYear!==CURRENT_YEAR)return false;
@@ -901,7 +1511,7 @@ function AdminDashboard({members,updateMember,addToast}){
 
         {/* Tabs */}
         <div className="tab-bar">
-          {[["members","Members"],["reminders","Renewal Reminders"],["analytics","Analytics"]].map(([k,l])=>(
+          {[["members","Members"],["events","Events"],["trails","Trails"],["news","News"],["reminders","Renewal Reminders"],["analytics","Analytics"]].map(([k,l])=>(
             <button key={k} className={`tab-btn${tab===k?" active":""}`} onClick={()=>setTab(k)}>{l}</button>
           ))}
         </div>
@@ -944,6 +1554,235 @@ function AdminDashboard({members,updateMember,addToast}){
               </div>
             </div>
           </>
+        )}
+
+        {tab==="events"&&(
+          <div className="fade-up">
+
+            {/* ── ADD EVENT FORM (always visible) ── */}
+            <div className="admin-add-form">
+              <h3 style={{fontWeight:600,fontSize:16,marginBottom:20}}>Add New Event</h3>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Event Name *</label>
+                  <input className="form-input" value={newEvent.name} onChange={nef("name")} placeholder="Robberg Peninsula Loop"/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Date *</label>
+                  <input type="date" className="form-input" value={newEvent.date} onChange={nef("date")}/>
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Distance</label>
+                  <input className="form-input" value={newEvent.distance} onChange={nef("distance")} placeholder="42km"/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Level</label>
+                  <select className="form-input" value={newEvent.level} onChange={nef("level")}>
+                    <option>Easy</option><option>Moderate</option><option>Hard</option>
+                  </select>
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Meet Time</label>
+                  <input className="form-input" value={newEvent.meetTime} onChange={nef("meetTime")} placeholder="6:00 AM"/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Max Riders</label>
+                  <input type="number" className="form-input" value={newEvent.maxRiders} onChange={nef("maxRiders")} min={1}/>
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Meet Point</label>
+                <input className="form-input" value={newEvent.meetPoint} onChange={nef("meetPoint")} placeholder="Central Beach Parking Lot"/>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea className="form-input" rows={3} value={newEvent.description} onChange={nef("description")} placeholder="Brief description of the ride..." style={{resize:"vertical"}}/>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Link a Trail <span style={{color:"var(--muted)",textTransform:"none",fontWeight:400}}>(optional — from Trail Library)</span></label>
+                <select className="form-input" value={newEvent.trailId||""} onChange={e=>setNewEvent(f=>({...f,trailId:e.target.value?Number(e.target.value):null}))}>
+                  <option value="">— No trail linked —</option>
+                  {trails.map(t=><option key={t.id} value={t.id}>{t.name} ({t.distance} · {t.difficulty})</option>)}
+                </select>
+              </div>
+              <button className="btn btn-primary" onClick={submitEvent}><I n="plus"/> Add Event</button>
+            </div>
+
+            {/* ── EVENTS LIST ── */}
+            <h3 style={{fontWeight:600,marginBottom:16}}>All Events ({events.length})</h3>
+            {events.length===0
+              ? <div className="card" style={{textAlign:"center",padding:"40px",color:"var(--muted)"}}>No events yet. Add one above.</div>
+              : <div style={{display:"grid",gap:12}}>
+                  {[...events].sort((a,b)=>new Date(a.date)-new Date(b.date)).map(ev=>{
+                    const past=new Date(ev.date)<new Date();
+                    const waMsg=[
+                      "Plett Cycling Club - Upcoming Ride",
+                      "",
+                      ev.name,
+                      "Date: "+fmt(ev.date),
+                      "Meet: "+ev.meetPoint,
+                      "Time: "+ev.meetTime,
+                      "Distance: "+ev.distance+" / "+ev.level,
+                      "",
+                      ev.description,
+                      "",
+                      "Spots: "+ev.riders+"/"+ev.maxRiders,
+                      "RSVP: plettcycling.co.za"
+                    ].join("\n");
+                    return(
+                      <div key={ev.id} className="card" style={{opacity:past?0.6:1,display:"flex",gap:16,alignItems:"center",flexWrap:"wrap"}}>
+                        <div style={{minWidth:56,textAlign:"center",flexShrink:0}}>
+                          <div style={{fontFamily:"Bebas Neue,sans-serif",fontSize:28,color:past?"var(--muted)":"var(--accent)",lineHeight:1}}>{new Date(ev.date).getDate()}</div>
+                          <div style={{fontSize:10,color:"var(--muted)",textTransform:"uppercase"}}>{MONTHS[new Date(ev.date).getMonth()]}</div>
+                          <div style={{fontSize:10,color:"var(--muted)"}}>{new Date(ev.date).getFullYear()}</div>
+                        </div>
+                        <div style={{flex:1}}>
+                          <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",marginBottom:4}}>
+                            <span style={{fontWeight:600}}>{ev.name}</span>
+                            <span className={levelClass(ev.level)}>{ev.level}</span>
+                            {past&&<span style={{fontSize:11,color:"var(--muted)"}}>— past</span>}
+                          </div>
+                          <div style={{fontSize:12,color:"var(--muted)"}}>{ev.meetPoint} · {ev.meetTime} · {ev.distance} · {ev.riders}/{ev.maxRiders} riders</div>
+                          {ev.trailId&&(()=>{const t=trails.find(x=>x.id===ev.trailId); return t?<div style={{fontSize:11,color:"var(--accent)",marginTop:2}}><I n="route"/> Linked trail: {t.name}</div>:null;})()}
+                        </div>
+                        <div style={{display:"flex",gap:8,flexShrink:0}}>
+                          {!past&&<button className="btn btn-sm btn-wa" onClick={()=>window.open(waShareURL(waMsg),"_blank")}><I n="wa"/> Share to Group</button>}
+                          <button className="btn btn-sm btn-ghost" title="Remove event" onClick={()=>{removeEvent(ev.id);addToast("Event removed.","success");}}><I n="trash"/></button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+            }
+          </div>
+        )}
+
+        {tab==="trails"&&(
+          <div className="fade-up">
+            {/* ── URL IMPORT ── */}
+            <div className="admin-add-form">
+              <h3 style={{fontWeight:600,fontSize:16,marginBottom:6}}>Import Trail from Strava or Trailforks</h3>
+              <p style={{fontSize:13,color:"var(--muted)",marginBottom:16}}>Paste a Trailforks or Strava trail URL — we'll pull the route data automatically.</p>
+
+              <div className="import-bar" style={{marginBottom: importStatus==="idle"?0:16}}>
+                <input className="form-input" value={importUrl} onChange={e=>setImportUrl(e.target.value)} placeholder="https://www.trailforks.com/trails/puff-adder-133834/" onKeyDown={e=>e.key==="Enter"&&runImport()}/>
+                <button className="btn btn-primary" onClick={runImport} disabled={importStatus==="loading"}>
+                  {importStatus==="loading" ? "Importing…" : <><I n="link"/> Import</>}
+                </button>
+              </div>
+
+              {importStatus==="loading"&&(
+                <div style={{display:"flex",alignItems:"center",gap:12,padding:"12px 0",color:"var(--muted)",fontSize:13}}>
+                  <div style={{width:16,height:16,borderRadius:"50%",border:"2px solid var(--accent)",borderTopColor:"transparent",animation:"spin 0.8s linear infinite"}}/>
+                  Fetching trail data…
+                </div>
+              )}
+
+              {importStatus==="preview"&&importPreview&&(
+                <div>
+                  <div style={{fontSize:12,color:"var(--green)",fontWeight:600,marginBottom:12}}>Trail found — review before adding:</div>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:10,marginBottom:16}}>
+                    {[["Name",importPreview.name],["Type",importPreview.type],["Difficulty",importPreview.difficulty],["Distance",importPreview.distance],["Elevation",importPreview.elevation],["Surface",importPreview.surface]].map(([k,v])=>(
+                      <div key={k} style={{background:"var(--card)",borderRadius:8,padding:"8px 12px",border:"1px solid var(--border)"}}>
+                        <div style={{fontSize:10,color:"var(--muted)",textTransform:"uppercase",letterSpacing:".08em",marginBottom:2}}>{k}</div>
+                        <div style={{fontSize:14,fontWeight:500}}>{v}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{height:200,borderRadius:10,overflow:"hidden",marginBottom:16,border:"1px solid var(--border)"}}>
+                    <TrailMap trail={importPreview} interactive={false} height={200}/>
+                  </div>
+                  <div style={{display:"flex",gap:10}}>
+                    <button className="btn btn-primary" onClick={confirmImport}><I n="plus"/> Add to Trail Library</button>
+                    <button className="btn btn-ghost" onClick={()=>{setImportStatus("idle");setImportPreview(null);}}>Cancel</button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* ── TRAIL LIBRARY ── */}
+            <h3 style={{fontWeight:600,marginBottom:16}}>Trail Library ({trails.length})</h3>
+            {trails.length===0
+              ?<div className="card" style={{textAlign:"center",padding:"40px",color:"var(--muted)"}}>No trails yet. Import one above.</div>
+              :<div style={{display:"grid",gap:12}}>
+                {trails.map(t=>(
+                  <div key={t.id} className="card" style={{display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap"}}>
+                    <div style={{width:120,height:80,borderRadius:8,overflow:"hidden",flexShrink:0,border:"1px solid var(--border)"}}>
+                      <TrailMap trail={t} interactive={false} height={80}/>
+                    </div>
+                    <div style={{flex:1,minWidth:180}}>
+                      <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",marginBottom:4}}>
+                        <span style={{fontWeight:600}}>{t.name}</span>
+                        <span className={"diff-badge diff-"+t.difficulty.toLowerCase()}>{t.difficulty}</span>
+                      </div>
+                      <div style={{fontSize:12,color:"var(--muted)",marginBottom:2}}>{t.type} · {t.distance} · {t.elevation} · {t.source}</div>
+                      {t.sourceUrl&&<a href={t.sourceUrl} target="_blank" rel="noreferrer" style={{fontSize:11,color:"var(--accent)",textDecoration:"none"}}><I n="link"/> {t.sourceUrl.slice(0,50)}…</a>}
+                    </div>
+                    <button className="btn btn-sm btn-ghost" style={{flexShrink:0}} onClick={()=>{removeTrail(t.id);addToast("Trail removed.","success");}}><I n="trash"/> Remove</button>
+                  </div>
+                ))}
+              </div>
+            }
+          </div>
+        )}
+
+        {tab==="news"&&(
+          <div className="fade-up">
+
+            {/* ── ADD POST FORM (always visible) ── */}
+            <div className="admin-add-form">
+              <h3 style={{fontWeight:600,fontSize:16,marginBottom:20}}>Publish New Post</h3>
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Title *</label>
+                  <input className="form-input" value={newPost.title} onChange={npf("title")} placeholder="Ride report, club update..."/>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Category</label>
+                  <select className="form-input" value={newPost.category} onChange={npf("category")}>
+                    {CATEGORIES.map(c=><option key={c}>{c}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Excerpt <span style={{color:"var(--muted)",textTransform:"none",fontWeight:400}}>(short summary shown on cards)</span></label>
+                <input className="form-input" value={newPost.excerpt} onChange={npf("excerpt")} placeholder="One or two sentences summarising the post..."/>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Body *</label>
+                <textarea className="form-input" rows={6} value={newPost.body} onChange={npf("body")} placeholder="Full post content. Use blank lines to separate paragraphs." style={{resize:"vertical"}}/>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
+                <button className="btn btn-primary" onClick={submitPost}><I n="plus"/> Publish Post</button>
+                <span style={{fontSize:12,color:"var(--muted)"}}>Will appear immediately on the public Blog page</span>
+              </div>
+            </div>
+
+            {/* ── POST LIST ── */}
+            <h3 style={{fontWeight:600,marginBottom:16}}>Published Posts ({posts.length})</h3>
+            {posts.length===0
+              ? <div className="card" style={{textAlign:"center",padding:"40px",color:"var(--muted)"}}>No posts yet. Write one above.</div>
+              : <div style={{display:"grid",gap:12}}>
+                  {[...posts].sort((a,b)=>new Date(b.date)-new Date(a.date)).map(p=>(
+                    <div key={p.id} className="card" style={{display:"flex",gap:16,alignItems:"flex-start",flexWrap:"wrap"}}>
+                      <div style={{flex:1,minWidth:200}}>
+                        <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",marginBottom:6}}>
+                          <span style={{fontWeight:600,fontSize:14}}>{p.title}</span>
+                          <span style={{fontSize:11,padding:"2px 8px",borderRadius:100,background:"rgba(232,255,62,0.08)",color:"var(--accent)",border:"1px solid rgba(232,255,62,0.2)"}}>{p.category}</span>
+                        </div>
+                        <div style={{fontSize:12,color:"var(--muted)"}}>{p.author} · {fmt(p.date)}</div>
+                        {p.excerpt&&<div style={{fontSize:13,color:"var(--muted)",marginTop:4,lineHeight:1.5}}>{p.excerpt}</div>}
+                      </div>
+                      <button className="btn btn-sm btn-ghost" style={{flexShrink:0}} title="Delete post" onClick={()=>{removePost(p.id);addToast("Post deleted.","success");}}><I n="trash"/> Delete</button>
+                    </div>
+                  ))}
+                </div>
+            }
+          </div>
         )}
 
         {tab==="reminders"&&(
@@ -1067,12 +1906,23 @@ function App(){
   const [page,setPage]     = useState("home");
   const [user,setUser]     = useState(null);
   const [members,setMembers] = useState(DUMMY_MEMBERS);
+  const [events,setEvents] = useState(INIT_EVENTS);
+  const [trails,setTrails] = useState(INIT_TRAILS);
+  const [posts,setPosts]   = useState(INIT_POSTS);
+  const [selectedTrail, setSelectedTrail] = useState(null);
   const [toasts,setToasts] = useState([]);
   const [simMonth,setSimMonth] = useState(new Date().getMonth());
 
+  const addEvent    = ev  => setEvents(es=>[...es,ev]);
+  const removeEvent = id  => setEvents(es=>es.filter(e=>e.id!==id));
+  const addTrail    = t   => setTrails(ts=>[...ts,t]);
+  const removeTrail = id  => setTrails(ts=>ts.filter(t=>t.id!==id));
+  const addPost     = p   => setPosts(ps=>[...ps,p]);
+  const removePost  = id  => setPosts(ps=>ps.filter(p=>p.id!==id));
+
   const addToast=(msg,type="info")=>{
     const id=Date.now();
-    setToasts(t=>[...t,{id,msg,type}]);
+    setToasts(t=>[...t,{id,message:msg,type}]);
     setTimeout(()=>setToasts(t=>t.filter(x=>x.id!==id)),4000);
   };
 
@@ -1104,14 +1954,18 @@ function App(){
     <>
       <Navbar page={page} setPage={setPage} user={user} logout={logout}/>
       <main style={{paddingBottom:72}}>
-        {page==="home"    && <HomePage {...sp}/>}
+        {page==="home"    && <HomePage {...sp} events={events} posts={posts}/>}
+        {page==="events"  && <EventsPage events={events} setPage={setPage} trails={trails}/>}
+        {page==="trails"  && <TrailsPage trails={trails} addToast={addToast} setPage={setPage} setSelectedTrail={setSelectedTrail}/>}
+        {page==="trail"   && selectedTrail && <TrailDetailPage trail={selectedTrail} setPage={setPage} addToast={addToast}/>}
+        {page==="blog"    && <BlogPage posts={posts} setPage={setPage}/>}
         {page==="about"   && <AboutPage/>}
         {page==="gallery" && <GalleryPage/>}
         {page==="join"    && <SignupPage {...sp} addMember={addMember}/>}
         {page==="contact" && <ContactPage {...sp}/>}
         {page==="login"   && <LoginPage {...sp} members={members} setUser={setUser}/>}
         {page==="dashboard"&&user&&<MemberDashboard user={user} updateMember={updateMember} addToast={addToast} simMonth={simMonth}/>}
-        {page==="admin"   &&user?.isAdmin&&<AdminDashboard members={members} updateMember={updateMember} addToast={addToast}/>}
+        {page==="admin"   &&user?.isAdmin&&<AdminDashboard members={members} updateMember={updateMember} addToast={addToast} events={events} addEvent={addEvent} removeEvent={removeEvent} trails={trails} addTrail={addTrail} removeTrail={removeTrail} posts={posts} addPost={addPost} removePost={removePost} user={user}/>}
       </main>
       <DemoBar simMonth={simMonth} setSimMonth={setSimMonth} setPage={setPage} setUser={setUser} members={members}/>
       <Toasts toasts={toasts}/>
