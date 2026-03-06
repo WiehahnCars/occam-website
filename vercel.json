@@ -10,7 +10,8 @@
     { "source": "/beyond-the-frontier", "destination": "/beyond-the-frontier.html" },
     { "source": "/proposals/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4", "destination": "/proposals/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4.html" },
     { "source": "/proposals/lee_botti_recruitment", "destination": "/proposals/lee_botti_recruitment.html" },
-    { "source": "/proposals/mmed_b34r87gwrfub34r897gwrfiubw479gsciubcr7g", "destination": "/proposals/mmed_b34r87gwrfub34r897gwrfiubw479gsciubcr7g.html" }
+    { "source": "/proposals/mmed_b34r87gwrfub34r897gwrfiubw479gsciubcr7g", "destination": "/proposals/mmed_b34r87gwrfub34r897gwrfiubw479gsciubcr7g.html" },
+    { "source": "/team_internal/what_we_do_draft", "destination": "/team_internal/what_we_do_draft.html" }
 
   ]
 }
