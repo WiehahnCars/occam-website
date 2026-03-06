@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Occam — AI-Native Advisory & Implementation</title>
+<title>Occam — Working Business Model</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
@@ -16,10 +16,11 @@
     --grey-dark: #141414;
     --grey-mid: #1e1e1e;
     --grey-light: #2a2a2a;
-    --grey-text: #888;
-    --grey-muted: #555;
+    --grey-text: #9a9a9a;
+    --grey-muted: #666;
     --gold: #c9a84c;
-    --gold-dim: rgba(201,168,76,0.08);
+    --red: #e05050;
+    --red-dim: rgba(224,80,80,0.08);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,7 +34,6 @@
     overflow-x: hidden;
   }
 
-  /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
@@ -53,18 +53,14 @@
     font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
     transition: color 0.2s;
   }
-  .nav-links a:hover, .nav-links a.active { color: var(--cyan); }
-  .nav-cta {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem; font-weight: 500;
-    color: var(--black); background: var(--cyan);
-    padding: 0.5rem 1.25rem;
-    text-decoration: none; letter-spacing: 0.04em;
-    transition: background 0.2s;
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-tag {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    color: var(--cyan); letter-spacing: 0.1em;
+    border: 1px solid var(--cyan-border);
+    padding: 0.3rem 0.75rem; border-radius: 2px;
   }
-  .nav-cta:hover { background: #00ddf5; }
 
-  /* ── HERO ── */
   #hero {
     min-height: 100vh;
     display: flex; flex-direction: column;
@@ -75,12 +71,12 @@
   .hero-bg {
     position: absolute; inset: 0;
     background:
-      radial-gradient(ellipse 70% 60% at 65% 35%, rgba(0,200,224,0.07) 0%, transparent 65%),
-      radial-gradient(ellipse 40% 50% at 15% 75%, rgba(201,168,76,0.04) 0%, transparent 55%),
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(0,200,224,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
       var(--black);
   }
   .hero-grid {
-    position: absolute; inset: 0; opacity: 0.035;
+    position: absolute; inset: 0; opacity: 0.04;
     background-image:
       linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
@@ -90,79 +86,50 @@
   .hero-eyebrow {
     font-family: 'DM Mono', monospace;
     font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--cyan); margin-bottom: 2rem;
+    color: var(--cyan); margin-bottom: 1.5rem;
     opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
     display: flex; align-items: center; gap: 1rem;
   }
-  .hero-eyebrow::before {
-    content: ''; display: block;
-    width: 32px; height: 1px; background: var(--cyan);
-  }
+  .hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--cyan); }
   .hero-title {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(3.2rem, 7.5vw, 7rem);
-    line-height: 0.95; letter-spacing: -0.03em;
-    margin-bottom: 2rem;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1.0; letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
     opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
   }
   .hero-title em { font-style: italic; color: var(--cyan); }
-  .hero-title .line-muted { color: rgba(245,245,240,0.45); }
   .hero-sub {
     font-size: 1.1rem; color: var(--grey-text);
-    max-width: 560px; line-height: 1.75; margin-bottom: 3rem;
+    max-width: 700px; line-height: 1.75; margin-bottom: 2.5rem;
     opacity: 0; animation: fadeUp 0.8s 0.6s forwards;
   }
-  .hero-sub strong { color: var(--white); font-weight: 400; }
-  .hero-actions {
-    display: flex; gap: 1.5rem; align-items: center;
-    opacity: 0; animation: fadeUp 0.8s 0.75s forwards;
-    margin-bottom: 4rem;
-  }
-  .btn-primary {
-    display: inline-flex; align-items: center; gap: 0.75rem;
-    padding: 0.9rem 2rem; background: var(--cyan); color: var(--black);
-    text-decoration: none; font-weight: 500; font-size: 0.875rem;
-    letter-spacing: 0.04em; transition: all 0.2s;
-  }
-  .btn-primary:hover { background: #00ddf5; transform: translateY(-2px); }
-  .btn-ghost {
-    font-size: 0.8rem; color: var(--grey-text); text-decoration: none;
-    letter-spacing: 0.06em; transition: color 0.2s;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-ghost:hover { color: var(--white); }
-  .hero-stats {
+  .hero-meta {
     display: flex; gap: 0; align-items: stretch;
     border: 1px solid rgba(255,255,255,0.08);
-    opacity: 0; animation: fadeUp 0.8s 0.9s forwards;
+    opacity: 0; animation: fadeUp 0.8s 0.8s forwards;
+    width: fit-content;
   }
-  .hero-stat {
+  .hero-meta-item {
     padding: 1.25rem 2rem;
     border-right: 1px solid rgba(255,255,255,0.08);
-    transition: background 0.3s;
+    display: flex; flex-direction: column; gap: 0.25rem;
   }
-  .hero-stat:last-child { border-right: none; }
-  .hero-stat:hover { background: var(--grey-mid); }
-  .hero-stat-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.8rem; line-height: 1; letter-spacing: -0.02em;
-    color: var(--white); margin-bottom: 0.25rem;
+  .hero-meta-item:last-child { border-right: none; }
+  .hero-meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--grey-muted);
   }
-  .hero-stat-num span { color: var(--cyan); }
-  .hero-stat-label {
-    font-family: 'DM Mono', monospace; font-size: 0.6rem;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey-muted);
-  }
-
+  .hero-meta-value { font-size: 0.95rem; color: var(--white); }
   .scroll-hint {
-    position: absolute; bottom: 2rem; right: 3rem;
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
     display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
     opacity: 0; animation: fadeIn 1s 1.4s forwards;
   }
   .scroll-hint span {
     font-family: 'DM Mono', monospace;
-    font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--grey-muted);
+    font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey-muted);
   }
   .scroll-line {
     width: 1px; height: 40px;
@@ -170,279 +137,196 @@
     animation: scrollPulse 1.5s ease-in-out infinite;
   }
 
-  /* ── SHARED SECTION STYLES ── */
-  section { padding: 7rem 3rem; }
+  section { padding: 6rem 3rem; }
   .section-inner { max-width: 1100px; margin: 0 auto; }
   .section-label {
     font-family: 'DM Mono', monospace;
     font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--cyan); margin-bottom: 2.5rem;
+    color: var(--cyan); margin-bottom: 3rem;
     display: flex; align-items: center; gap: 1rem;
   }
-  .section-label::after {
-    content: ''; flex: 1; max-width: 60px;
-    height: 1px; background: var(--cyan-border);
-  }
+  .section-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--cyan-border); }
   .section-title {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 4vw, 3.4rem);
-    line-height: 1.05; letter-spacing: -0.025em; margin-bottom: 1.5rem;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1.5rem;
   }
   .section-title em { font-style: italic; color: var(--cyan); }
-  .section-body {
-    font-size: 1rem; color: var(--grey-text);
-    max-width: 640px; line-height: 1.85;
-  }
-
-  /* ── DIVIDER ── */
+  .section-body { font-size: 1rem; color: var(--grey-text); max-width: 760px; line-height: 1.8; }
   .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 0 3rem; }
 
-  /* ── TRIGGER SECTION ── */
-  #trigger { padding: 5rem 3rem; }
-  .trigger-inner { max-width: 1100px; margin: 0 auto; }
-  .trigger-label {
-    font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--grey-muted); margin-bottom: 2.5rem;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  .trigger-label::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: rgba(255,255,255,0.08); }
-  .trigger-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 1px; background: rgba(255,255,255,0.06);
+  .problem-statement {
+    margin-top: 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.06);
   }
-  .trigger-item {
-    background: var(--black); padding: 2rem;
-    transition: background 0.3s;
-    display: flex; gap: 1rem; align-items: flex-start;
+  .problem-card {
+    background: var(--grey-dark); padding: 2.5rem;
+    transition: background 0.3s; position: relative; overflow: hidden;
   }
-  .trigger-item:hover { background: var(--grey-dark); }
-  .trigger-icon { color: var(--cyan); font-size: 0.7rem; flex-shrink: 0; padding-top: 0.3rem; font-family: 'DM Mono', monospace; }
-  .trigger-text { font-size: 0.875rem; color: var(--grey-text); line-height: 1.65; }
-  .trigger-text strong { color: var(--white); font-weight: 500; display: block; margin-bottom: 0.2rem; }
-
-  /* ── THESIS STATEMENT ── */
-  #thesis { background: var(--grey-dark); padding: 5rem 3rem; }
-  .thesis-inner { max-width: 1100px; margin: 0 auto; }
-  .thesis-quote {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.6rem, 3vw, 2.6rem);
-    line-height: 1.25; letter-spacing: -0.02em;
-    color: var(--white); max-width: 820px;
-    border-left: 3px solid var(--cyan); padding-left: 2.5rem;
+  .problem-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--cyan); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
   }
-  .thesis-quote em { font-style: italic; color: var(--cyan); }
-  .thesis-attr {
-    margin-top: 2rem; padding-left: 2.5rem;
+  .problem-card:hover { background: var(--grey-mid); }
+  .problem-card:hover::before { transform: scaleX(1); }
+  .problem-card.full { grid-column: 1 / -1; background: var(--cyan-dim); border-top: 2px solid var(--cyan); }
+  .problem-card.full:hover { background: rgba(0,200,224,0.14); }
+  .problem-num {
     font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey-muted);
+    letter-spacing: 0.1em; color: var(--grey-muted); margin-bottom: 1.2rem;
   }
-
-  /* ── HOW WE WORK ── */
-  #how { }
-  .phase-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 0; margin-top: 3.5rem; position: relative;
-  }
-  .phase-grid::before {
-    content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 2px;
-    background: rgba(255,255,255,0.06); z-index: 0;
-  }
-  .phase-step {
-    padding: 2.5rem 2rem 2rem;
-    position: relative; z-index: 1;
-    border-right: 1px solid rgba(255,255,255,0.06);
-    transition: all 0.3s; cursor: default;
-    border-top: 2px solid transparent;
-  }
-  .phase-step:last-child { border-right: none; }
-  .phase-step:hover { border-top-color: var(--cyan); background: var(--grey-dark); }
-  .phase-num {
+  .problem-title { font-size: 1.05rem; font-weight: 500; margin-bottom: 0.75rem; color: var(--white); }
+  .problem-body { font-size: 0.92rem; color: var(--grey-text); line-height: 1.72; }
+  .problem-thesis {
     font-family: 'DM Serif Display', serif;
-    font-size: 3rem; line-height: 1; letter-spacing: -0.04em;
-    color: rgba(255,255,255,0.06); margin-bottom: 1.25rem;
-    transition: color 0.3s;
+    font-size: clamp(1.2rem, 2vw, 1.7rem);
+    line-height: 1.3; letter-spacing: -0.01em; color: var(--white);
+    margin-bottom: 0.5rem;
   }
-  .phase-step:hover .phase-num { color: rgba(0,200,224,0.15); }
-  .phase-tag {
-    font-family: 'DM Mono', monospace; font-size: 0.6rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--cyan); margin-bottom: 0.5rem;
-  }
-  .phase-title { font-size: 1rem; font-weight: 500; color: var(--white); margin-bottom: 1rem; }
-  .phase-body { font-size: 0.82rem; color: var(--grey-text); line-height: 1.75; }
-  .phase-items { list-style: none; margin-top: 1rem; }
-  .phase-items li {
-    font-size: 0.78rem; color: var(--grey-text);
-    padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
-    display: flex; gap: 0.5rem;
-  }
-  .phase-items li::before { content: '—'; color: var(--grey-muted); flex-shrink: 0; }
+  .problem-thesis em { font-style: italic; color: var(--cyan); }
 
-  /* ── PROOF / OUTCOMES ── */
-  #proof { background: var(--grey-dark); }
-  .proof-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem; margin-top: 3.5rem;
+  #offerings { background: var(--grey-dark); }
+  .offerings-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem;
   }
-  .proof-card {
-    border: 1px solid rgba(255,255,255,0.06); padding: 2.5rem;
+  .offering-card {
+    border: 1px solid rgba(255,255,255,0.06); padding: 3rem;
     transition: all 0.3s; position: relative; overflow: hidden;
   }
-  .proof-card::before {
+  .offering-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
     background: var(--cyan); transform: scaleX(0); transform-origin: left;
     transition: transform 0.4s;
   }
-  .proof-card:hover { border-color: var(--cyan-border); background: var(--cyan-dim); }
-  .proof-card:hover::before { transform: scaleX(1); }
-  .proof-client {
-    font-family: 'DM Mono', monospace; font-size: 0.6rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--grey-muted); margin-bottom: 1.25rem;
-    display: flex; align-items: center; gap: 0.75rem;
+  .offering-card:hover { border-color: var(--cyan-border); background: var(--cyan-dim); }
+  .offering-card:hover::before { transform: scaleX(1); }
+  .offering-num {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 1.5rem;
   }
-  .proof-client::before {
-    content: ''; display: block; width: 20px; height: 1px;
-    background: var(--grey-muted);
-  }
-  .proof-outcome {
+  .offering-title {
     font-family: 'DM Serif Display', serif;
-    font-size: 1.3rem; line-height: 1.2; letter-spacing: -0.01em;
+    font-size: 1.6rem; letter-spacing: -0.01em; line-height: 1.2;
     color: var(--white); margin-bottom: 1rem;
   }
-  .proof-detail { font-size: 0.82rem; color: var(--grey-text); line-height: 1.7; }
-  .proof-metric {
-    margin-top: 1.5rem; padding-top: 1.5rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.1em; color: var(--cyan);
+  .offering-title em { font-style: italic; color: var(--cyan); }
+  .offering-body { font-size: 0.92rem; color: var(--grey-text); line-height: 1.75; margin-bottom: 1.5rem; }
+  .offering-items { list-style: none; }
+  .offering-items li {
+    font-size: 0.9rem; color: var(--grey-text);
+    padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; gap: 0.6rem; align-items: flex-start;
   }
+  .offering-items li:last-child { border-bottom: none; }
+  .offering-items li::before { content: '→'; color: var(--cyan); font-size: 0.7rem; flex-shrink: 0; padding-top: 0.1rem; }
 
-  /* ── FRAMEWORK STRIP ── */
-  #framework { }
-  .framework-intro {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 5rem; margin-bottom: 4rem;
-    align-items: start;
+  .phase-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 3rem; position: relative;
   }
+  .phase-row::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: rgba(255,255,255,0.06); z-index: 0;
+  }
+  .phase-card {
+    padding: 2.5rem 2rem 2rem; position: relative; z-index: 1;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s; cursor: default;
+    border-top: 2px solid transparent;
+  }
+  .phase-card:last-child { border-right: none; }
+  .phase-card:hover { border-top-color: var(--cyan); background: var(--grey-dark); }
+  .phase-n {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3.5rem; line-height: 1; letter-spacing: -0.04em;
+    color: rgba(255,255,255,0.05); margin-bottom: 1.25rem;
+    transition: color 0.3s;
+  }
+  .phase-card:hover .phase-n { color: rgba(0,200,224,0.12); }
+  .phase-tag {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 0.5rem;
+  }
+  .phase-title { font-size: 1rem; font-weight: 500; color: var(--white); margin-bottom: 1rem; }
+  .phase-items { list-style: none; }
+  .phase-items li {
+    font-size: 0.88rem; color: var(--grey-text);
+    padding: 0.38rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; gap: 0.5rem;
+  }
+  .phase-items li:last-child { border-bottom: none; }
+  .phase-items li::before { content: '—'; color: var(--grey-muted); flex-shrink: 0; }
+
+  #framework { background: var(--grey-dark); }
   .pillar-strip {
     display: grid; grid-template-columns: repeat(6, 1fr);
     gap: 1px; background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.06);
+    margin-top: 3rem;
   }
-  .pillar-item {
-    background: var(--black); padding: 2rem 1.5rem;
+  .pillar-cell {
+    background: var(--grey-dark); padding: 2rem 1.5rem;
     transition: background 0.3s; position: relative; overflow: hidden;
     cursor: default;
   }
-  .pillar-item::after {
+  .pillar-cell::after {
     content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
     background: var(--cyan); transform: scaleY(0); transform-origin: bottom;
     transition: transform 0.3s;
   }
-  .pillar-item:hover { background: var(--grey-dark); }
-  .pillar-item:hover::after { transform: scaleY(1); }
+  .pillar-cell:hover { background: #1a1a1a; }
+  .pillar-cell:hover::after { transform: scaleY(1); }
+  .pillar-cell.core { background: rgba(0,200,224,0.06); }
+  .pillar-cell.core .pillar-name { color: var(--cyan); }
   .pillar-n {
     font-family: 'DM Mono', monospace; font-size: 0.58rem;
     letter-spacing: 0.1em; color: var(--grey-muted); margin-bottom: 1rem;
   }
   .pillar-name {
-    font-size: 0.85rem; font-weight: 500; color: var(--white);
-    margin-bottom: 0.5rem; line-height: 1.3;
+    font-size: 0.95rem; font-weight: 500; color: var(--white);
+    margin-bottom: 0.4rem; line-height: 1.3;
   }
-  .pillar-q { font-size: 0.75rem; color: var(--grey-text); line-height: 1.5; }
-  .pillar-item.hero-pillar { background: var(--grey-dark); }
-  .pillar-item.hero-pillar .pillar-name { color: var(--cyan); }
+  .pillar-desc { font-size: 0.84rem; color: var(--grey-text); line-height: 1.58; }
 
-  /* ── COMPARISON ROW ── */
-  #different { background: var(--grey-dark); }
-  .comparison-table {
-    width: 100%; margin-top: 3.5rem; border-collapse: collapse;
+  .questions-list { list-style: none; margin-top: 3rem; }
+  .question-item {
+    display: flex; gap: 2rem; align-items: flex-start;
+    padding: 1.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s;
   }
-  .comparison-table th {
-    font-family: 'DM Mono', monospace; font-size: 0.6rem;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--grey-muted); text-align: left;
-    padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .comparison-table th.highlight { color: var(--cyan); }
-  .comparison-table td {
-    padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.875rem; color: var(--grey-text); vertical-align: top;
-  }
-  .comparison-table td.row-label { color: var(--white); font-weight: 500; font-size: 0.875rem; }
-  .comparison-table td.occam-col {
-    color: var(--white); background: var(--cyan-dim);
-    border-left: 1px solid var(--cyan-border);
-    border-right: 1px solid var(--cyan-border);
-  }
-  .comparison-table tr:last-child td { border-bottom: none; }
-  .comparison-table thead tr th.occam-col {
-    background: var(--cyan-dim);
-    border-left: 1px solid var(--cyan-border);
-    border-right: 1px solid var(--cyan-border);
-    color: var(--cyan);
-  }
-  .no { color: var(--grey-muted); }
-  .yes { color: var(--cyan); }
-
-  /* ── CLIENTS ── */
-  #clients { }
-  .client-logos { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.5rem; }
-  .client-logo-pill {
+  .question-item:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+  .question-item:hover { padding-left: 0.5rem; }
+  .q-num {
     font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.08em; padding: 0.4rem 0.9rem;
-    border: 1px solid rgba(255,255,255,0.1); color: var(--grey-muted);
-    text-transform: uppercase; transition: all 0.2s;
+    letter-spacing: 0.12em; color: var(--cyan);
+    flex-shrink: 0; padding-top: 0.15rem; min-width: 2rem;
   }
-  .client-logo-pill:hover { border-color: rgba(255,255,255,0.25); color: var(--white); }
+  .q-text { font-size: 0.98rem; color: var(--grey-text); line-height: 1.68; }
+  .q-text strong { color: var(--white); font-weight: 500; }
+  .q-arrow {
+    margin-left: auto; font-size: 0.8rem; color: var(--grey-muted);
+    align-self: center; transition: color 0.3s, transform 0.3s; flex-shrink: 0;
+  }
+  .question-item:hover .q-arrow { color: var(--cyan); transform: translateX(4px); }
 
-  /* ── CTA ── */
-  #cta { background: var(--black); text-align: center; padding: 9rem 3rem; position: relative; overflow: hidden; }
-  #cta::before {
-    content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,200,224,0.06) 0%, transparent 70%);
-  }
-  .cta-inner { max-width: 700px; margin: 0 auto; position: relative; z-index: 1; }
-  .cta-eyebrow {
-    font-family: 'DM Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--cyan); margin-bottom: 1.5rem;
-  }
-  .cta-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2.5rem, 5vw, 4.2rem);
-    line-height: 1.05; letter-spacing: -0.025em; margin-bottom: 1.5rem;
-  }
-  .cta-title em { font-style: italic; color: var(--cyan); }
-  .cta-body { font-size: 1rem; color: var(--grey-text); margin-bottom: 3rem; line-height: 1.75; max-width: 520px; margin-left: auto; margin-right: auto; }
-  .cta-buttons { display: flex; gap: 1.25rem; justify-content: center; align-items: center; margin-bottom: 2rem; }
-  .cta-sub {
-    font-family: 'DM Mono', monospace; font-size: 0.62rem;
-    letter-spacing: 0.1em; color: var(--grey-muted);
-  }
-
-  /* ── FOOTER ── */
   footer {
     border-top: 1px solid rgba(255,255,255,0.06);
     padding: 2rem 3rem;
     display: flex; justify-content: space-between; align-items: center;
   }
   .footer-logo { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 300; letter-spacing: 0.05em; }
-  .footer-legal { font-size: 0.7rem; color: var(--grey-muted); max-width: 500px; line-height: 1.5; }
+  .footer-legal { font-size: 0.8rem; color: var(--grey-muted); max-width: 600px; line-height: 1.55; }
 
-  /* ── REVEAL ── */
   .reveal {
     opacity: 0; transform: translateY(20px);
     transition: opacity 0.65s ease, transform 0.65s ease;
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ── KEYFRAMES ── */
   @keyframes fadeUp {
     to { opacity: 1; transform: translateY(0); }
     from { opacity: 0; transform: translateY(20px); }
@@ -453,73 +337,56 @@
     50% { opacity: 0.4; transform: scaleY(0.7); }
   }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
-    section { padding: 4.5rem 1.5rem; }
+    section { padding: 4rem 1.5rem; }
     #hero { padding: 0 1.5rem 4rem; }
-    .phase-grid, .proof-grid { grid-template-columns: 1fr; }
-    .pillar-strip { grid-template-columns: repeat(2, 1fr); }
-    .framework-intro { grid-template-columns: 1fr; gap: 2rem; }
-    .trigger-grid { grid-template-columns: 1fr 1fr; }
-    .hero-stats { flex-wrap: wrap; }
-    .hero-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .cta-buttons { flex-direction: column; }
+    .problem-statement, .offerings-grid { grid-template-columns: 1fr; }
+    .problem-card.full { grid-column: 1; }
+    .phase-row, .pillar-strip { grid-template-columns: 1fr 1fr; }
     footer { flex-direction: column; gap: 1rem; text-align: center; }
     .divider { margin: 0 1.5rem; }
-    .comparison-table { font-size: 0.8rem; }
+    .hero-meta { flex-wrap: wrap; }
+    .hero-meta-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">occam</a>
   <ul class="nav-links">
-    <li><a href="#how">How we work</a></li>
-    <li><a href="#proof">Work</a></li>
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#offerings">Offerings</a></li>
+    <li><a href="#delivery">Delivery</a></li>
     <li><a href="#framework">Framework</a></li>
-    <li><a href="#different">Why us</a></li>
+    <li><a href="#questions">Discussion</a></li>
   </ul>
-  <a href="#cta" class="nav-cta">Get in touch →</a>
+  <span class="nav-tag">Working hypothesis · 2026</span>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <p class="hero-eyebrow">AI-Native Advisory & Implementation</p>
-    <h1 class="hero-title">
-      We turn<br>
-      operational <em>complexity</em><br>
-      <span class="line-muted">into systems that run.</span>
-    </h1>
+    <p class="hero-eyebrow">Working Business Model</p>
+    <h1 class="hero-title">Occam —<br>a working <em>hypothesis.</em></h1>
     <p class="hero-sub">
-      Occam helps mid-market companies move from <strong>fragmented workflows and trapped decision logic</strong> to structured, AI-enabled operating systems — delivered in weeks, not months.
+      Occam is an <strong>AI-native advisory and implementation firm</strong>. This page presents the current working model of how we create value, how we go to market, how we deliver, and how we diagnose. It is a living document for internal discussion and challenge.
     </p>
-    <div class="hero-actions">
-      <a href="#cta" class="btn-primary">Work with us →</a>
-      <a href="#proof" class="btn-ghost">See our work ↓</a>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-num">4<span>×</span></div>
-        <div class="hero-stat-label">Faster than conventional delivery</div>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Category</span>
+        <span class="hero-meta-value">AI-Native Advisory &amp; Implementation Firm</span>
       </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">6</div>
-        <div class="hero-stat-label">Operational dimensions we cover</div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Target market</span>
+        <span class="hero-meta-value">Mid-market organisations</span>
       </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">2</div>
-        <div class="hero-stat-label">Offerings — packages & full advisory</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">100<span>%</span></div>
-        <div class="hero-stat-label">Engagements end with working systems</div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Status</span>
+        <span class="hero-meta-value">Working hypothesis — open for challenge</span>
       </div>
     </div>
   </div>
@@ -531,108 +398,131 @@
 
 <hr class="divider">
 
-<!-- TRIGGER — who this is for -->
-<section id="trigger">
-  <div class="trigger-inner">
-    <p class="trigger-label reveal">You are probably here because</p>
-    <div class="trigger-grid reveal">
-      <div class="trigger-item">
-        <span class="trigger-icon">01</span>
-        <div class="trigger-text">
-          <strong>Your operation is too manual</strong>
-          Workflows that used to work are now bottlenecks. Key decisions depend on one person who cannot scale.
-        </div>
-      </div>
-      <div class="trigger-item">
-        <span class="trigger-icon">02</span>
-        <div class="trigger-text">
-          <strong>Your systems don't connect</strong>
-          You have the tools. They don't talk to each other. Data moves by spreadsheet and email instead of integration.
-        </div>
-      </div>
-      <div class="trigger-item">
-        <span class="trigger-icon">03</span>
-        <div class="trigger-text">
-          <strong>Traditional options are too slow</strong>
-          Consulting firms take months to produce a recommendation. Vendors want to sell you software before they understand your problem.
-        </div>
-      </div>
-      <div class="trigger-item">
-        <span class="trigger-icon">04</span>
-        <div class="trigger-text">
-          <strong>You know AI should be helping</strong>
-          But every initiative feels like a pilot that never reaches production. The investment goes in, the value doesn't come out.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- THESIS -->
-<section id="thesis">
-  <div class="thesis-inner">
-    <div class="thesis-quote reveal">
-      Most mid-market companies are not struggling because they lack ambition or technology.<br>They are struggling because their <em>operating model has not been engineered</em> to carry the load they are placing on it.
-    </div>
-    <p class="thesis-attr reveal">The Occam thesis — what we have found to be true across every engagement</p>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- HOW WE WORK -->
-<section id="how">
+<section id="problem">
   <div class="section-inner">
-    <p class="section-label reveal">How we work</p>
-    <h2 class="section-title reveal">Four phases. One continuous thread.<br><em>Business understanding to working system.</em></h2>
-    <p class="section-body reveal">We apply the same disciplined sequence to every engagement — whether it is a two-week diagnostic or a six-month implementation. The phases ensure nothing is built before it is understood, and nothing is understood without being acted on.</p>
+    <p class="section-label reveal">The problem we solve</p>
+    <h2 class="section-title reveal">Growing businesses develop<br>operational complexity they <em>can't outrun.</em></h2>
 
-    <div class="phase-grid reveal">
-      <div class="phase-step">
-        <div class="phase-num">01</div>
+    <div class="problem-statement">
+      <div class="problem-card reveal">
+        <div class="problem-num">01 — Decision logic</div>
+        <div class="problem-title">Trapped in people</div>
+        <p class="problem-body">Key decisions depend on individuals who cannot scale. When those people aren't available, the business stalls. When they leave, the logic walks out with them.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-num">02 — Manual workarounds</div>
+        <div class="problem-title">Processes held together by spreadsheets</div>
+        <p class="problem-body">Workflows that worked at smaller scale now require manual stitching. Data moves by email and copy-paste. Errors accumulate. Speed suffers.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-num">03 — Fragmented systems</div>
+        <div class="problem-title">Tools that don't talk to each other</div>
+        <p class="problem-body">Systems were introduced at different stages to solve different problems. Nobody engineered them to connect. The integration gap becomes the operational bottleneck.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-num">04 — Execution lag</div>
+        <div class="problem-title">The business moves slower than its strategy</div>
+        <p class="problem-body">Leadership sets direction but the operating model can't keep up. Decisions that should take hours take days. Opportunities are missed. Growth stalls at the operational ceiling.</p>
+      </div>
+      <div class="problem-card full reveal">
+        <div class="problem-thesis">Occam <em>identifies the constraint</em> and fixes it — faster than any conventional method.</div>
+        <p class="problem-body" style="margin-top: 0.75rem;">Most organisations try to solve this with more software or more consulting. The deeper issue is that the underlying operating system of the business has never been properly engineered. We enter at the point of operational friction, translate messy business reality into structured, machine-readable logic, and use AI-assisted engineering to implement systems that remove the bottleneck.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="offerings">
+  <div class="section-inner">
+    <p class="section-label reveal">The two offerings</p>
+    <h2 class="section-title reveal">Two ways to engage.<br>One <em>coherent commercial logic.</em></h2>
+    <p class="section-body reveal">
+      <strong>Commercial logic:</strong> Pre-built packages create entry and diagnostic insight. Core advisory and implementation delivers the solution that removes the constraint — and therefore captures the majority of the value and revenue.
+    </p>
+
+    <div class="offerings-grid">
+      <div class="offering-card reveal">
+        <div class="offering-num">Offering 01</div>
+        <div class="offering-title">Pre-Built <em>Packages</em></div>
+        <p class="offering-body">Structured, repeatable entry points that diagnose, frame, and accelerate engagement. Designed to reduce friction for new clients, create commercial clarity, and open the door to deeper work. They are not the whole business — they are the entry mechanism.</p>
+        <ul class="offering-items">
+          <li>AI Readiness Score</li>
+          <li>AI Readiness Assessments</li>
+          <li>Operational opportunity diagnostic</li>
+          <li>Pillar-specific diagnostic scans</li>
+          <li>Rapid maturity assessments</li>
+        </ul>
+      </div>
+      <div class="offering-card reveal">
+        <div class="offering-num">Offering 02</div>
+        <div class="offering-title">Core Advisory &amp; <em>Implementation</em></div>
+        <p class="offering-body">The main engine of value creation. Bespoke, flexible, and high-value — delivered through the four-phase operating model and accelerated through AI-assisted engineering, which compresses timelines that traditionally took months into weeks. This is where the firm's real commercial weight sits and where fees should reflect the impact created.</p>
+        <ul class="offering-items">
+          <li>Business analysis and operating model design</li>
+          <li>Solution architecture and technical specification</li>
+          <li>Rapid AI-assisted system development</li>
+          <li>System integration and workflow automation</li>
+          <li>Ongoing support, optimisation, and value tracking</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="delivery">
+  <div class="section-inner">
+    <p class="section-label reveal">Delivery model</p>
+    <h2 class="section-title reveal">Four phases. One continuous thread.<br><em>Concept → Design → Implementation → Support.</em></h2>
+    <p class="section-body reveal">Every substantive engagement runs through some or all of these phases. The sequence ensures nothing is implemented before it is understood — and nothing is understood without being acted on.</p>
+
+    <div class="phase-row">
+      <div class="phase-card reveal">
+        <div class="phase-n">01</div>
         <div class="phase-tag">Concept</div>
-        <div class="phase-title">Understand before designing</div>
-        <p class="phase-body">We map the business reality — not the one on the org chart, but the one that actually runs. Where is decision logic trapped? Where are the real bottlenecks? What does the data actually look like?</p>
+        <div class="phase-title">Diagnose the constraint</div>
         <ul class="phase-items">
           <li>Business and operating context</li>
-          <li>Value chain and process mapping</li>
+          <li>Process mapping and value chain</li>
           <li>Pain identification and root cause</li>
+          <li>Understanding the actual business</li>
           <li>AI insertion point analysis</li>
         </ul>
       </div>
-      <div class="phase-step">
-        <div class="phase-num">02</div>
+      <div class="phase-card reveal">
+        <div class="phase-n">02</div>
         <div class="phase-tag">Design</div>
-        <div class="phase-title">Translate ambiguity into architecture</div>
-        <p class="phase-body">We convert what we learned into a future state that is specific enough to build. System architecture, workflow redesign, technical specification, and a prototype or demo that validates the direction.</p>
+        <div class="phase-title">Translate into architecture</div>
         <ul class="phase-items">
           <li>Solution and system architecture</li>
+          <li>Technical specification</li>
           <li>Process redesign and workflow logic</li>
-          <li>Technical specification and data mapping</li>
-          <li>Prototype to validate before committing</li>
+          <li>Prototype to validate direction</li>
+          <li>Roadmap and prioritisation</li>
         </ul>
       </div>
-      <div class="phase-step">
-        <div class="phase-num">03</div>
-        <div class="phase-tag">Build</div>
-        <div class="phase-title">Implement rapidly, without cutting corners</div>
-        <p class="phase-body">We build using AI-assisted engineering. What used to take quarters takes weeks. Integrations, platforms, scoring models, workflow automation — delivered and deployed, not just specced.</p>
+      <div class="phase-card reveal">
+        <div class="phase-n">03</div>
+        <div class="phase-tag">Implementation</div>
+        <div class="phase-title">Implement rapidly and deploy</div>
         <ul class="phase-items">
           <li>AI-assisted rapid development</li>
           <li>System integration and automation</li>
+          <li>Process redesign in practice</li>
           <li>Platform and model construction</li>
           <li>Testing, deployment, go-live</li>
         </ul>
       </div>
-      <div class="phase-step">
-        <div class="phase-num">04</div>
+      <div class="phase-card reveal">
+        <div class="phase-n">04</div>
         <div class="phase-tag">Support</div>
-        <div class="phase-title">Optimise, extend, and measure value</div>
-        <p class="phase-body">We stay after go-live. We monitor performance, track the value we committed to deliver, fix what needs fixing, and extend capability as the business evolves. This is where most relationships become long-term.</p>
+        <div class="phase-title">Optimise and track value</div>
         <ul class="phase-items">
-          <li>Performance monitoring and optimisation</li>
+          <li>Performance monitoring</li>
+          <li>Optimisation and refinement</li>
           <li>Value tracking against business case</li>
           <li>Ongoing capability extension</li>
           <li>Retainer or subscription model</li>
@@ -644,100 +534,42 @@
 
 <hr class="divider">
 
-<!-- PROOF / OUTCOMES -->
-<section id="proof">
-  <div class="section-inner">
-    <p class="section-label reveal">Selected work</p>
-    <h2 class="section-title reveal">Not case studies. <em>Outcomes.</em></h2>
-    <p class="section-body reveal">Every engagement below started with a business problem, moved through our operating model, and ended with a working system. The measure of success is always operational and financial — not technical.</p>
-
-    <div class="proof-grid reveal">
-      <div class="proof-card">
-        <div class="proof-client">Vehicle Leasing · Platform Build</div>
-        <div class="proof-outcome">From manual coordination to an end-to-end operating platform</div>
-        <p class="proof-detail">Multiple disconnected systems, no end-to-end visibility, growth constrained by manual process. We mapped the operating model, designed the architecture, and built a full platform covering lead onboarding, KYC, contract management with e-signature, GPS tracking, accounting integration, and automated customer communications.</p>
-        <div class="proof-metric">Outcome → Operations scaled without headcount increase. Manual handoffs eliminated across the core workflow.</div>
-      </div>
-      <div class="proof-card">
-        <div class="proof-client">Education Finance · AI Scoring Model</div>
-        <div class="proof-outcome">A working scoring model in weeks where months were expected</div>
-        <p class="proof-detail">No scoring model existed. Student assessment relied entirely on manual judgement — inconsistent, unscalable, and impossible to audit. We designed the scoring methodology from first principles and built the model using AI-assisted development.</p>
-        <div class="proof-metric">Outcome → Production-ready model delivered on a timeline that made traditional development irrelevant as an alternative.</div>
-      </div>
-      <div class="proof-card">
-        <div class="proof-client">Industrial Milling · Operations Platform</div>
-        <div class="proof-outcome">Real-time production intelligence replacing fully manual reporting</div>
-        <p class="proof-detail">Shift reporting and production tracking were entirely spreadsheet-based. No real-time visibility. Performance data reached management hours or days after the fact. We integrated live mill data, built production dashboards by shift, and rebuilt the reporting layer from the ground up.</p>
-        <div class="proof-metric">Outcome → Near real-time production visibility. Foundation in place for AI-enabled production optimisation.</div>
-      </div>
-    </div>
-
-    <div style="margin-top: 4rem;" class="reveal">
-      <p class="trigger-label" style="color: var(--grey-muted); margin-bottom: 1.5rem;">Organisations our team has worked with across engagements</p>
-      <div class="client-logos">
-        <span class="client-logo-pill">Investec</span>
-        <span class="client-logo-pill">Planet42</span>
-        <span class="client-logo-pill">Nedbank</span>
-        <span class="client-logo-pill">Sasol</span>
-        <span class="client-logo-pill">Europcar</span>
-        <span class="client-logo-pill">DHL</span>
-        <span class="client-logo-pill">MTN</span>
-        <span class="client-logo-pill">Exxaro</span>
-        <span class="client-logo-pill">Anglo American</span>
-        <span class="client-logo-pill">Mr Price</span>
-        <span class="client-logo-pill">Bayport</span>
-        <span class="client-logo-pill">OfferZen</span>
-        <span class="client-logo-pill">Total</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider">
-
-<!-- FRAMEWORK -->
 <section id="framework">
   <div class="section-inner">
-    <p class="section-label reveal">The framework</p>
-    <div class="framework-intro reveal">
-      <div>
-        <h2 class="section-title" style="margin-bottom: 0;">Six dimensions.<br>One integrated <em>diagnostic.</em></h2>
-      </div>
-      <div>
-        <p class="section-body">Our six-pillar framework is the intellectual architecture of every engagement. In a diagnostic, it reveals where a business is blocked and where the highest-value work lies. In a full engagement, it shapes how we design and build the solution — ensuring nothing structurally important is missed.</p>
-      </div>
-    </div>
+    <p class="section-label reveal">Diagnosis framework</p>
+    <h2 class="section-title reveal">Six dimensions we assess,<br>design, and <em>deliver across.</em></h2>
+    <p class="section-body reveal">In packages, the six pillars diagnose. In consulting, they shape design and delivery. They are the intellectual architecture of Occam and the mechanism through which we determine where a business is blocked and what must change for the solution to work.</p>
 
-    <div class="pillar-strip reveal">
-      <div class="pillar-item">
+    <div class="pillar-strip">
+      <div class="pillar-cell reveal">
         <div class="pillar-n">01</div>
         <div class="pillar-name">Strategy</div>
-        <p class="pillar-q">Is AI genuinely connected to how the business competes — or is it running as a disconnected experiment?</p>
+        <p class="pillar-desc">Is AI genuinely connected to how the business competes — or running as a disconnected experiment?</p>
       </div>
-      <div class="pillar-item">
+      <div class="pillar-cell reveal">
         <div class="pillar-n">02</div>
         <div class="pillar-name">Governance</div>
-        <p class="pillar-q">Are compliance and risk engineered into operations, or bolted on as an afterthought?</p>
+        <p class="pillar-desc">Are compliance and risk engineered into operations, or bolted on as costly afterthoughts?</p>
       </div>
-      <div class="pillar-item">
+      <div class="pillar-cell reveal">
         <div class="pillar-n">03</div>
         <div class="pillar-name">People</div>
-        <p class="pillar-q">Can the workforce absorb AI without capability gaps, resistance, or unmanaged displacement?</p>
+        <p class="pillar-desc">Can the workforce absorb AI without capability gaps, low adoption, or unmanaged displacement?</p>
       </div>
-      <div class="pillar-item hero-pillar">
+      <div class="pillar-cell core reveal">
         <div class="pillar-n">04 — Core</div>
         <div class="pillar-name">Business Engineering</div>
-        <p class="pillar-q">Is the operating model structured in a way that AI can actually run inside it at scale?</p>
+        <p class="pillar-desc">Is the operating model structured in a way that AI can actually run inside it at scale? This is the central pillar.</p>
       </div>
-      <div class="pillar-item">
+      <div class="pillar-cell reveal">
         <div class="pillar-n">05</div>
         <div class="pillar-name">Data</div>
-        <p class="pillar-q">Is data sufficient, reliable, and accessible enough for real AI deployment — or still stuck in silos?</p>
+        <p class="pillar-desc">Is data sufficient, reliable, and accessible enough for real AI deployment — or still stuck in silos?</p>
       </div>
-      <div class="pillar-item">
+      <div class="pillar-cell reveal">
         <div class="pillar-n">06</div>
         <div class="pillar-name">Value Realisation</div>
-        <p class="pillar-q">Can the business define, measure, and financially attribute the value AI creates — with capital allocation discipline?</p>
+        <p class="pillar-desc">Can the business define, measure, and financially attribute the value AI creates — with real discipline?</p>
       </div>
     </div>
   </div>
@@ -745,96 +577,38 @@
 
 <hr class="divider">
 
-<!-- COMPARISON -->
-<section id="different">
+<section id="questions">
   <div class="section-inner">
-    <p class="section-label reveal">Why Occam</p>
-    <h2 class="section-title reveal">What separates us from<br>every <em>conventional alternative.</em></h2>
-    <p class="section-body reveal" style="margin-bottom: 3.5rem;">The market offers consultants who advise and vendors who sell. We sit in a different category — one that did not previously exist for mid-market organisations.</p>
+    <p class="section-label reveal">Discussion</p>
+    <h2 class="section-title reveal">Three questions this model<br>is asking you to <em>challenge.</em></h2>
+    <p class="section-body reveal">This is a working hypothesis. It should be stress-tested, not accepted. The three questions below are the most important unresolved tensions in the current model — and where honest challenge will create the most value.</p>
 
-    <table class="comparison-table reveal">
-      <thead>
-        <tr>
-          <th style="width: 24%;">Dimension</th>
-          <th style="width: 19%;">Traditional consultant</th>
-          <th style="width: 19%;">Technology vendor</th>
-          <th style="width: 19%;">Digital transformation firm</th>
-          <th style="width: 19%;" class="occam-col highlight">Occam</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="row-label">Starts with</td>
-          <td class="no">The framework they sell</td>
-          <td class="no">The product they build</td>
-          <td class="no">The change programme</td>
-          <td class="occam-col yes">The business problem</td>
-        </tr>
-        <tr>
-          <td class="row-label">Primary output</td>
-          <td class="no">Report or recommendation</td>
-          <td class="no">Licensed software</td>
-          <td class="no">Transformation roadmap</td>
-          <td class="occam-col yes">A working system</td>
-        </tr>
-        <tr>
-          <td class="row-label">Time to value</td>
-          <td class="no">Months to first insight</td>
-          <td class="no">Months to deployment</td>
-          <td class="no">Quarters to years</td>
-          <td class="occam-col yes">Weeks to working outcome</td>
-        </tr>
-        <tr>
-          <td class="row-label">Business engineering</td>
-          <td class="no">Rarely</td>
-          <td class="no">Not the focus</td>
-          <td class="no">Sometimes</td>
-          <td class="occam-col yes">Central capability</td>
-        </tr>
-        <tr>
-          <td class="row-label">Implementation</td>
-          <td class="no">Hand-off to client</td>
-          <td class="no">Vendor-dependent</td>
-          <td class="no">Managed programme</td>
-          <td class="occam-col yes">We build it ourselves</td>
-        </tr>
-        <tr>
-          <td class="row-label">Post-go-live</td>
-          <td class="no">Engagement ends</td>
-          <td class="no">Support contract</td>
-          <td class="no">Separate workstream</td>
-          <td class="occam-col yes">Ongoing value tracking</td>
-        </tr>
-      </tbody>
-    </table>
+    <ul class="questions-list">
+      <li class="question-item reveal">
+        <span class="q-num">Q1</span>
+        <span class="q-text"><strong>Does this accurately describe what Occam does?</strong> Is the framing of <em>“AI-native advisory and implementation firm”</em> the right identity — or does it leave something important out, or overclaim something we have not yet earned?</span>
+        <span class="q-arrow">→</span>
+      </li>
+      <li class="question-item reveal">
+        <span class="q-num">Q2</span>
+        <span class="q-text"><strong>Are the two offerings correctly framed?</strong> Does the distinction between pre-built packages and core advisory and implementation hold up commercially — or is there a different structure that better reflects how clients actually engage with us?</span>
+        <span class="q-arrow">→</span>
+      </li>
+      <li class="question-item reveal">
+        <span class="q-num">Q3</span>
+        <span class="q-text"><strong>Are the six pillars the right diagnostic framework?</strong> Do they cover what actually matters in the engagements we run — or are some missing, some redundant, or some in the wrong sequence?</span>
+        <span class="q-arrow">→</span>
+      </li>
+    </ul>
   </div>
 </section>
 
-<hr class="divider">
-
-<!-- CTA -->
-<section id="cta">
-  <div class="cta-inner">
-    <p class="cta-eyebrow reveal">The next step</p>
-    <h2 class="cta-title reveal">The right starting point<br>is a <em>focused conversation.</em></h2>
-    <p class="cta-body reveal">Tell us what is slowing your business down. We will tell you honestly whether we can help — and if we can, what the fastest path to a working outcome looks like. No long sales process. No pitch deck unless you want one.</p>
-    <div class="cta-buttons reveal">
-      <a href="mailto:hello@occamco.com" class="btn-primary" style="font-size: 0.95rem; padding: 1rem 2.5rem;">
-        Start a conversation →
-      </a>
-    </div>
-    <p class="cta-sub reveal">Cape Town · South Africa · hello@occamco.com</p>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
   <span class="footer-logo">occam</span>
-  <p class="footer-legal">OCCAM HOLDINGS (PTY) LTD. Registered in South Africa: 2024/102148/07. 241 High-Level Road, Sea Point, Cape Town, 8005. AI-native advisory and implementation for mid-market organisations.</p>
+  <p class="footer-legal">OCCAM HOLDINGS (PTY) LTD. Registered in South Africa: 2024/102148/07. 241 High-Level Road, Sea Point, Cape Town, 8005. This document is a working internal hypothesis and is intended for discussion purposes only.</p>
 </footer>
 
 <script>
-  // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -846,23 +620,21 @@
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Stagger grids
-  document.querySelectorAll('.trigger-grid, .phase-grid, .proof-grid, .pillar-strip').forEach(grid => {
+  document.querySelectorAll('.problem-statement, .phase-row, .pillar-strip, .questions-list, .offerings-grid').forEach(grid => {
     Array.from(grid.children).forEach((child, i) => {
-      child.style.transitionDelay = `${i * 75}ms`;
-      child.classList.add('reveal');
+      child.style.transitionDelay = `${i * 80}ms`;
+      if (!child.classList.contains('reveal')) child.classList.add('reveal');
       observer.observe(child);
     });
   });
 
-  // Nav active highlight
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
   window.addEventListener('scroll', () => {
     let current = '';
     sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
     navLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === `#${current}`);
+      a.style.color = a.getAttribute('href') === `#${current}` ? 'var(--cyan)' : '';
     });
   });
 </script>
