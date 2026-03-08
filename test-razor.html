@@ -75,6 +75,28 @@
     }
     .hover-container:hover .hover-hint { opacity:0; }
 
+    /* ===== 4. PROCESS FLOW ===== */
+    .flow-container {
+      width:100%; max-width:1000px; position:relative;
+    }
+    canvas#flowCanvas {
+      width:100%; height:auto; display:block;
+    }
+    .flow-phase {
+      position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.25em;
+      text-transform:uppercase; color:rgba(245,243,238,0.25);
+      transition:color 0.6s, opacity 0.6s; white-space:nowrap;
+    }
+    .flow-phase.active { color:var(--amber); }
+    .flow-outcome {
+      position:absolute; right:2rem; top:50%; transform:translateY(-50%);
+      font-family:var(--font-display); font-size:1.1rem; font-weight:400;
+      color:var(--amber); opacity:0; transition:opacity 0.8s ease;
+      text-align:right; line-height:1.4;
+    }
+    .flow-outcome.visible { opacity:1; }
+
     /* ===== 3. COMPLEXITY COUNTER ===== */
     .counters {
       display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
@@ -137,6 +159,15 @@
         <span class="filler">We provide comprehensive, end-to-end </span><span class="core">business engineering</span><span class="filler"> solutions that leverage cutting-edge methodologies and </span><span class="core">AI</span><span class="filler"> technologies to holistically transform and strategically optimise your organisation's </span><span class="core">operations</span><span class="filler"> across all functional verticals, enabling sustainable competitive advantage through </span><span class="core">simplicity.</span>
       </p>
       <div class="hover-hint">Hover to apply Occam's razor</div>
+    </div>
+  </section>
+
+  <!-- 4. PROCESS FLOW -->
+  <section class="concept">
+    <div class="concept-label">Concept 4 — Critical path</div>
+    <div class="flow-container" id="flowSection">
+      <canvas id="flowCanvas" width="1000" height="500"></canvas>
+      <div class="flow-phase" id="flowPhase">Operational complexity</div>
     </div>
   </section>
 
@@ -268,6 +299,372 @@
 
       // Start after a brief delay
       setTimeout(tick, 800);
+    })();
+
+
+    // ===== 4. PROCESS FLOW =====
+    (function() {
+      var canvas = document.getElementById('flowCanvas');
+      var ctx = canvas.getContext('2d');
+      var phaseEl = document.getElementById('flowPhase');
+      var W = 1000, H = 500;
+      var started = false;
+
+      // Seeded random for reproducible layouts
+      var seed = 7;
+      function sr() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+      // --- Critical path nodes ---
+      var critical = [
+        { x: 60,  y: 250, ox: 60,  oy: 250, label: 'Start',   r: 18 },
+        { x: 220, y: 180, ox: 220, oy: 180, label: '',        r: 16 },
+        { x: 400, y: 220, ox: 400, oy: 220, label: '',        r: 16 },
+        { x: 580, y: 260, ox: 580, oy: 260, label: '',        r: 16 },
+        { x: 740, y: 200, ox: 740, oy: 200, label: '',        r: 16 },
+        { x: 920, y: 250, ox: 920, oy: 250, label: 'Outcome', r: 20 },
+      ];
+
+      // --- Noise nodes (lots of them, alive) ---
+      var noise = [];
+      for (var i = 0; i < 45; i++) {
+        var nx = 40 + sr() * 920;
+        var ny = 40 + sr() * 420;
+        noise.push({
+          x: nx, y: ny, ox: nx, oy: ny,
+          r: 4 + sr() * 7,
+          // Drift parameters — each node wanders
+          driftX: (sr() - 0.5) * 0.6,
+          driftY: (sr() - 0.5) * 0.5,
+          driftPhase: sr() * Math.PI * 2,
+          driftAmp: 8 + sr() * 20,
+          pulse: sr() * Math.PI * 2,  // for flickering alpha
+          pulseSpeed: 0.8 + sr() * 2
+        });
+      }
+
+      // --- Noise edges ---
+      var noiseEdges = [];
+      seed = 42;
+      for (var i = 0; i < noise.length; i++) {
+        var conns = 1 + Math.floor(sr() * 3);
+        for (var j = 0; j < conns; j++) {
+          var target = Math.floor(sr() * noise.length);
+          if (target !== i) {
+            // Only connect if reasonably close
+            var dx = noise[i].ox - noise[target].ox;
+            var dy = noise[i].oy - noise[target].oy;
+            if (Math.sqrt(dx * dx + dy * dy) < 300) {
+              noiseEdges.push({ a: noise[i], b: noise[target], flicker: sr() * Math.PI * 2 });
+            }
+          }
+        }
+        // Some connect to critical nodes
+        if (sr() > 0.35) {
+          var ci = Math.floor(sr() * critical.length);
+          noiseEdges.push({ a: noise[i], b: critical[ci], flicker: sr() * Math.PI * 2 });
+        }
+      }
+      // Cross-connections between critical nodes (non-critical)
+      noiseEdges.push({ a: critical[0], b: critical[2], flicker: 0 });
+      noiseEdges.push({ a: critical[1], b: critical[3], flicker: 1 });
+      noiseEdges.push({ a: critical[2], b: critical[4], flicker: 2 });
+      noiseEdges.push({ a: critical[1], b: critical[4], flicker: 3 });
+      noiseEdges.push({ a: critical[0], b: critical[3], flicker: 4 });
+      noiseEdges.push({ a: critical[3], b: critical[5], flicker: 5 });
+
+      // --- Data packets — little dots that flow along noise edges ---
+      var packets = [];
+      for (var i = 0; i < 30; i++) {
+        var ei = Math.floor(sr() * noiseEdges.length);
+        packets.push({
+          edge: ei,
+          progress: sr(),
+          speed: 0.003 + sr() * 0.008,
+          size: 1.5 + sr() * 2,
+          alpha: 0.15 + sr() * 0.25
+        });
+      }
+
+      // --- Critical path edges ---
+      var criticalEdges = [];
+      for (var i = 0; i < critical.length - 1; i++) {
+        criticalEdges.push({ a: critical[i], b: critical[i + 1], drawProgress: 0 });
+      }
+
+      // --- Animation state ---
+      var phase = 'complex';
+      var t = 0;
+      var criticalGlow = 0;
+      var outcomeOpacity = 0;
+      var phaseTime = 0;
+      var labelOpacity = 0;
+
+      function bezierPt(ax, ay, bx, by, t) {
+        var mx = (ax + bx) / 2;
+        var my = (ay + by) / 2 - 20 * (1 - Math.abs(ax - bx) / W);
+        var u = t;
+        return {
+          x: (1 - u) * (1 - u) * ax + 2 * (1 - u) * u * mx + u * u * bx,
+          y: (1 - u) * (1 - u) * ay + 2 * (1 - u) * u * my + u * u * by
+        };
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Noise dims slightly when critical path is visible, but never disappears
+        var noiseDim = (phase === 'critical' || phase === 'glow') ? 0.45 : 1;
+
+        // Update noise node positions (always alive)
+        for (var i = 0; i < noise.length; i++) {
+          var n = noise[i];
+          var drift = Math.sin(t * n.pulseSpeed + n.driftPhase);
+          var driftY = Math.cos(t * n.pulseSpeed * 0.7 + n.driftPhase + 1);
+          n.x = n.ox + drift * n.driftAmp;
+          n.y = n.oy + driftY * n.driftAmp * 0.6;
+        }
+
+        // Draw noise edges
+        for (var i = 0; i < noiseEdges.length; i++) {
+          var e = noiseEdges[i];
+          var flicker = 0.5 + 0.5 * Math.sin(t * 2.5 + e.flicker);
+          var alpha = noiseDim * 0.1 * flicker;
+          if (alpha < 0.005) continue;
+          ctx.beginPath();
+          var pm = bezierPt(e.a.x, e.a.y, e.b.x, e.b.y, 0.5);
+          ctx.moveTo(e.a.x, e.a.y);
+          ctx.quadraticCurveTo(pm.x, pm.y - 10, e.b.x, e.b.y);
+          ctx.strokeStyle = 'rgba(245,243,238,' + alpha + ')';
+          ctx.lineWidth = 0.6;
+          ctx.setLineDash([2, 3]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Draw data packets flowing along noise edges (always)
+        for (var i = 0; i < packets.length; i++) {
+          var pk = packets[i];
+          pk.progress += pk.speed;
+          if (pk.progress > 1) { pk.progress -= 1; pk.edge = Math.floor(Math.random() * noiseEdges.length); }
+          var e = noiseEdges[pk.edge];
+          if (!e) continue;
+          var pt = bezierPt(e.a.x, e.a.y, e.b.x, e.b.y, pk.progress);
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, pk.size, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(245,243,238,' + (pk.alpha * noiseDim) + ')';
+          ctx.fill();
+        }
+
+        // Draw noise nodes
+        for (var i = 0; i < noise.length; i++) {
+          var n = noise[i];
+          var pulse = 0.6 + 0.4 * Math.sin(t * n.pulseSpeed + n.pulse);
+          var alpha = noiseDim * pulse;
+          if (alpha < 0.01) continue;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r * (0.8 + pulse * 0.2), 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(245,243,238,' + (alpha * 0.06) + ')';
+          ctx.strokeStyle = 'rgba(245,243,238,' + (alpha * 0.18) + ')';
+          ctx.lineWidth = 0.6;
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        // Draw critical path edges
+        for (var i = 0; i < criticalEdges.length; i++) {
+          var e = criticalEdges[i];
+          var isCritPhase = (phase === 'critical' || phase === 'glow');
+
+          if (isCritPhase && e.drawProgress > 0) {
+            // Draw as progressive reveal
+            var steps = Math.floor(e.drawProgress * 30);
+            if (steps < 2) steps = 2;
+            ctx.beginPath();
+            var first = bezierPt(e.a.x, e.a.y, e.b.x, e.b.y, 0);
+            ctx.moveTo(first.x, first.y);
+            for (var s = 1; s <= steps; s++) {
+              var pt = bezierPt(e.a.x, e.a.y, e.b.x, e.b.y, s / 30);
+              ctx.lineTo(pt.x, pt.y);
+            }
+            ctx.strokeStyle = 'rgba(212,185,122,' + (0.6 + criticalGlow * 0.4) + ')';
+            ctx.lineWidth = 2 + criticalGlow * 0.8;
+            ctx.shadowColor = 'rgba(212,185,122,0.3)';
+            ctx.shadowBlur = 8 * criticalGlow;
+            ctx.stroke();
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+          } else if (!isCritPhase) {
+            // Faint during complex phase
+            ctx.beginPath();
+            var first = bezierPt(e.a.x, e.a.y, e.b.x, e.b.y, 0);
+            ctx.moveTo(first.x, first.y);
+            for (var s = 1; s <= 30; s++) {
+              var pt = bezierPt(e.a.x, e.a.y, e.b.x, e.b.y, s / 30);
+              ctx.lineTo(pt.x, pt.y);
+            }
+            ctx.strokeStyle = 'rgba(245,243,238,0.06)';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+
+        // Draw critical nodes
+        for (var i = 0; i < critical.length; i++) {
+          var n = critical[i];
+          var isCritPhase = (phase === 'critical' || phase === 'glow');
+          var isOutcome = (i === critical.length - 1);
+
+          if (isCritPhase) {
+            // Glow ring
+            if (criticalGlow > 0.2) {
+              ctx.beginPath();
+              ctx.arc(n.x, n.y, n.r + 6 + Math.sin(t * 2 + i) * 2, 0, Math.PI * 2);
+              ctx.strokeStyle = 'rgba(212,185,122,' + (criticalGlow * 0.1) + ')';
+              ctx.lineWidth = 1;
+              ctx.stroke();
+            }
+
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+            ctx.shadowColor = 'rgba(212,185,122,0.5)';
+            ctx.shadowBlur = 15 * criticalGlow;
+            if (isOutcome) {
+              ctx.fillStyle = 'rgba(212,185,122,' + (outcomeOpacity * 0.35) + ')';
+            } else {
+              ctx.fillStyle = 'rgba(212,185,122,' + (criticalGlow * 0.15) + ')';
+            }
+            ctx.strokeStyle = 'rgba(212,185,122,' + criticalGlow + ')';
+            ctx.lineWidth = 1.5;
+            ctx.fill();
+            ctx.stroke();
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+
+            // Label
+            if (labelOpacity > 0) {
+              ctx.font = '500 9px "DM Mono", monospace';
+              ctx.fillStyle = 'rgba(212,185,122,' + labelOpacity + ')';
+              ctx.textAlign = 'center';
+              ctx.fillText(n.label.toUpperCase(), n.x, n.y + n.r + 18);
+            }
+          } else {
+            // Faint in complex phase
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(245,243,238,0.03)';
+            ctx.strokeStyle = 'rgba(245,243,238,0.1)';
+            ctx.lineWidth = 0.6;
+            ctx.fill();
+            ctx.stroke();
+          }
+        }
+
+        // (Outcome label handled by node label)
+
+        // Animated particle along critical path
+        if (phase === 'glow') {
+          var pathProgress = (t % 3.5) / 3.5;
+          var totalLen = critical.length - 1;
+          var segment = pathProgress * totalLen;
+          var si = Math.floor(segment);
+          var sf = segment - si;
+          if (si < totalLen) {
+            var head = bezierPt(critical[si].x, critical[si].y, critical[si + 1].x, critical[si + 1].y, sf);
+
+            // Glow
+            ctx.beginPath();
+            ctx.arc(head.x, head.y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(245,243,238,0.9)';
+            ctx.shadowColor = 'rgba(212,185,122,0.8)';
+            ctx.shadowBlur = 20;
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+
+            // Trail
+            for (var ti = 1; ti <= 15; ti++) {
+              var tp = pathProgress - ti * 0.005;
+              if (tp < 0) continue;
+              var ts = tp * totalLen;
+              var tsi = Math.floor(ts);
+              var tsf = ts - tsi;
+              if (tsi >= 0 && tsi < totalLen) {
+                var trail = bezierPt(critical[tsi].x, critical[tsi].y, critical[tsi + 1].x, critical[tsi + 1].y, tsf);
+                var fade = 1 - ti / 16;
+                ctx.beginPath();
+                ctx.arc(trail.x, trail.y, 3 * fade, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(212,185,122,' + (0.5 * fade) + ')';
+                ctx.fill();
+              }
+            }
+          }
+        }
+      }
+
+      function animate() {
+        t += 0.016;
+        phaseTime += 0.016;
+
+        switch (phase) {
+          case 'complex':
+            // Show full complexity for 3.5s, then critical path emerges on top
+            if (phaseTime > 3.5) {
+              phase = 'critical';
+              phaseTime = 0;
+              phaseEl.textContent = 'Engineered into clarity';
+              phaseEl.classList.add('active');
+            }
+            break;
+
+          case 'critical':
+            // Critical path draws itself while complexity stays alive underneath
+            criticalGlow = Math.min(1, phaseTime / 1.5);
+            for (var i = 0; i < criticalEdges.length; i++) {
+              var edgeStart = i * 0.4;
+              var edgeTime = phaseTime - edgeStart;
+              if (edgeTime > 0) {
+                criticalEdges[i].drawProgress = Math.min(1, edgeTime / 0.6);
+              }
+            }
+            labelOpacity = Math.min(0.7, Math.max(0, (phaseTime - 1.5) / 1));
+            outcomeOpacity = Math.min(1, Math.max(0, (phaseTime - 2) / 1));
+            if (phaseTime > 3) {
+              phase = 'glow';
+              phaseTime = 0;
+              // Keep the same label through the glow phase
+            }
+            break;
+
+          case 'glow':
+            // Particle runs along path, complexity still alive behind
+            if (phaseTime > 7) {
+              // Reset — fade critical path back into the noise
+              phase = 'complex';
+              phaseTime = 0;
+              criticalGlow = 0;
+              outcomeOpacity = 0;
+              labelOpacity = 0;
+              for (var i = 0; i < criticalEdges.length; i++) criticalEdges[i].drawProgress = 0;
+              phaseEl.textContent = 'Operational complexity';
+              phaseEl.classList.remove('active');
+            }
+            break;
+        }
+
+        draw();
+        if (started) requestAnimationFrame(animate);
+      }
+
+      var flowIO = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting && !started) {
+            started = true;
+            animate();
+          }
+        });
+      }, { threshold: 0.3 });
+      flowIO.observe(document.getElementById('flowSection'));
+      draw();
     })();
 
 
