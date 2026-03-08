@@ -413,7 +413,7 @@
         ctx.clearRect(0, 0, W, H);
 
         // Noise dims slightly when critical path is visible, but never disappears
-        var noiseDim = (phase === 'critical' || phase === 'glow') ? 0.45 : 1;
+        var noiseDim = 1;
 
         // Update noise node positions (always alive)
         for (var i = 0; i < noise.length; i++) {
