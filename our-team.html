@@ -1,674 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>occam | Our team</title>
-
-    <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-52W0F5S3TM"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-52W0F5S3TM');
-  </script>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>occam | Our Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@200;300;400;500&family=DM+Mono:wght@300&family=Montserrat:wght@500&display=swap" rel="stylesheet">
   <style>
-    .prosto { font-family: 'Montserrat', sans-serif; }
-    html { scroll-behavior: smooth; }
-    @keyframes fade-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    :root {
+      --ink:     #0a0a0c;
+      --paper:   #f5f3ee;
+      --slate:   #1a1a22;
+      --amber:   #c8a96e;
+      --amber-lt:#d4bb8a;
+      --line:    rgba(245,243,238,0.1);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Jost', sans-serif;
+      --font-mono:    'DM Mono', monospace;
     }
-    .animate-fade-in {
-      animation: fade-in 1s ease-out forwards;
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: var(--font-body);
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .cursor-dot { position:fixed; top:0; left:0; width:8px; height:8px; background:var(--amber); border-radius:50%; pointer-events:none; z-index:99999; transform:translate(-50%,-50%); }
+    .cursor-ring { position:fixed; top:0; left:0; width:36px; height:36px; border:1px solid rgba(200,169,110,0.4); border-radius:50%; pointer-events:none; z-index:99998; transform:translate(-50%,-50%); }
+    canvas#stars { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:2rem 4rem; transition:background 0.4s, padding 0.4s; }
+    nav.scrolled { background:rgba(10,10,12,0.92); backdrop-filter:blur(20px); padding:1.2rem 4rem; border-bottom:1px solid var(--line); }
+    .nav-logo { font-family:'Montserrat', sans-serif; font-size:1.2rem; font-weight:500; letter-spacing:0.12em; color:var(--paper); text-decoration:none; text-transform:lowercase; }
+    .nav-links { display:flex; gap:3rem; list-style:none; align-items:center; }
+    .nav-links a { font-size:0.78rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,243,238,0.5); text-decoration:none; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--paper); }
+    .nav-cta { font-size:0.78rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:#050506; background:var(--amber); padding:0.65rem 1.5rem; text-decoration:none; transition:background 0.2s, transform 0.2s; }
+    .nav-cta:hover { background:var(--amber-lt); transform:translateY(-1px); }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; z-index:101; }
+    .hamburger span { width:24px; height:2px; background:rgba(245,243,238,0.7); transition:0.3s; }
+
+    section { position:relative; z-index:2; }
+    .section-inner { max-width:1200px; margin:0 auto; padding:0 4rem; }
+    .section-label { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--amber); margin-bottom:1.5rem; }
+
+    /* HERO */
+    .hero {
+      position:relative; z-index:1; min-height:60vh;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:8rem 2rem 4rem; overflow:hidden;
+    }
+    .hero::after {
+      content:''; position:absolute; bottom:0; left:10%; right:10%; height:1px;
+      background:linear-gradient(90deg,transparent,var(--amber),transparent); opacity:0.4;
+    }
+    .hero-eyebrow { font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--amber); margin-bottom:2rem; opacity:0; animation:fadeUp 0.8s 0.3s ease forwards; }
+    .hero-title { font-family:var(--font-display); font-size:clamp(2.8rem,6vw,5.5rem); font-weight:400; line-height:1.05; color:var(--paper); max-width:800px; opacity:0; animation:fadeUp 0.9s 0.5s ease forwards; }
+    .hero-title em { font-style:italic; color:var(--amber); }
+    .hero-sub { margin-top:2rem; font-size:1.05rem; font-weight:300; color:rgba(245,243,238,0.55); max-width:520px; line-height:1.8; opacity:0; animation:fadeUp 0.9s 0.7s ease forwards; }
+
+    /* TEAM MEMBERS */
+    .s-team-members { background:var(--slate); padding:8rem 0; }
+    .members-grid { display:flex; flex-direction:column; gap:2px; background:var(--line); }
+    .member-card { background:var(--slate); display:grid; grid-template-columns:auto 1fr; gap:3rem 4rem; padding:4rem; transition:background 0.3s; position:relative; overflow:hidden; }
+    .member-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--amber),transparent); transform:scaleX(0); transform-origin:left; transition:transform 0.4s ease; }
+    .member-card:hover { background:rgba(200,169,110,0.04); }
+    .member-card:hover::before { transform:scaleX(1); }
+    .member-left { min-width:200px; }
+    .member-photo { width:140px; height:140px; border-radius:50%; object-fit:cover; filter:grayscale(1) brightness(0.85); border:2px solid rgba(200,169,110,0.2); margin-bottom:1.5rem; transition:filter 0.4s, border-color 0.4s; }
+    .member-card:hover .member-photo { filter:grayscale(1) brightness(1); border-color:rgba(200,169,110,0.5); }
+    .member-name { font-family:var(--font-display); font-size:1.6rem; font-weight:400; color:var(--paper); margin-bottom:0.3rem; }
+    .member-name a { color:var(--paper); text-decoration:none; transition:color 0.2s; }
+    .member-name a:hover { color:var(--amber); }
+    .member-role { font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--amber); margin-bottom:1.5rem; }
+    .member-linkedin { display:inline-flex; align-items:center; gap:0.4rem; font-size:0.72rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); text-decoration:none; transition:color 0.2s; }
+    .member-linkedin:hover { color:var(--amber); }
+    .member-linkedin svg { width:14px; height:14px; fill:currentColor; }
+    .member-right {}
+    .member-bio { font-size:0.95rem; line-height:1.9; color:rgba(245,243,238,0.55); margin-bottom:1.5rem; }
+    .member-focus { font-size:0.88rem; line-height:1.8; color:rgba(245,243,238,0.4); margin-bottom:1.5rem; }
+    .member-focus strong { color:rgba(245,243,238,0.6); font-weight:400; }
+    .member-quote { font-family:var(--font-display); font-size:1.05rem; font-style:italic; line-height:1.6; color:rgba(245,243,238,0.3); padding-left:1.2rem; border-left:2px solid rgba(200,169,110,0.3); }
+
+    /* VALUES */
+    .s-values { background:var(--ink); padding:10rem 0; }
+    .values-grid { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:start; }
+    .values-title { font-family:var(--font-display); font-size:clamp(2.2rem,4vw,3.5rem); font-weight:400; color:var(--paper); line-height:1.2; }
+    .values-title em { font-style:italic; color:var(--amber); }
+    .values-body { margin-top:1.5rem; font-size:0.95rem; line-height:1.9; color:rgba(245,243,238,0.5); }
+    .values-list { display:flex; flex-direction:column; }
+    .value-item { display:flex; align-items:center; gap:1.5rem; padding:1.5rem 0; border-bottom:1px solid rgba(245,243,238,0.06); }
+    .value-item:first-child { border-top:1px solid rgba(245,243,238,0.06); }
+    .value-num { font-family:var(--font-mono); font-size:0.6rem; color:var(--amber); letter-spacing:0.1em; width:24px; flex-shrink:0; }
+    .value-text { font-size:0.95rem; color:rgba(245,243,238,0.6); line-height:1.6; }
+
+    /* CREDENTIALS */
+    .s-creds { background:var(--slate); padding:10rem 0; }
+    .creds-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem; margin-top:4rem; }
+    .cred-card { background:rgba(245,243,238,0.03); border:1px solid var(--line); padding:2.5rem; transition:border-color 0.3s, background 0.3s; }
+    .cred-card:hover { border-color:rgba(200,169,110,0.3); background:rgba(200,169,110,0.04); }
+    .cred-icon { width:32px; height:32px; border:1px solid rgba(200,169,110,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:1.2rem; font-size:0.8rem; }
+    .cred-title { font-family:var(--font-display); font-size:1.1rem; font-weight:400; color:var(--paper); margin-bottom:0.5rem; }
+    .cred-body { font-size:0.85rem; line-height:1.7; color:rgba(245,243,238,0.4); }
+
+    /* CTA */
+    .s-cta { background:var(--ink); padding:10rem 0 8rem; text-align:center; position:relative; overflow:hidden; }
+    .cta-glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:600px; height:300px; background:radial-gradient(ellipse,rgba(200,169,110,0.08),transparent 70%); pointer-events:none; }
+    .cta-title { font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4.5rem); font-weight:400; color:var(--paper); line-height:1.1; margin-bottom:1.5rem; }
+    .cta-title em { font-style:italic; color:var(--amber); }
+    .cta-sub { font-size:1rem; color:rgba(245,243,238,0.45); max-width:420px; margin:0 auto 3rem; line-height:1.8; }
+    .btn-primary { display:inline-block; padding:1rem 2.5rem; background:var(--amber); color:var(--ink); font-family:var(--font-body); font-size:0.8rem; font-weight:500; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; transition:background 0.2s,transform 0.2s,box-shadow 0.2s; }
+    .btn-primary:hover { background:var(--amber-lt); transform:translateY(-2px); box-shadow:0 16px 40px rgba(200,169,110,0.25); }
+
+    footer { background:var(--slate); padding:4rem; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); position:relative; z-index:2; }
+    .footer-logo { font-family:'Montserrat', sans-serif; font-size:1rem; font-weight:500; letter-spacing:0.12em; color:rgba(245,243,238,0.4); text-transform:lowercase; line-height:1; }
+    .footer-sub { font-family:var(--font-body); font-size:0.6rem; font-weight:300; letter-spacing:0.18em; text-transform:uppercase; color:rgba(245,243,238,0.2); margin-top:0.4rem; }
+    .footer-tagline { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.15em; color:rgba(245,243,238,0.2); }
+    .footer-links { display:flex; gap:2rem; list-style:none; }
+    .footer-links a { font-size:0.75rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); text-decoration:none; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--amber); }
+
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; }
+    .reveal-delay-2 { transition-delay:0.2s; }
+    .reveal-delay-3 { transition-delay:0.3s; }
+    .reveal-delay-4 { transition-delay:0.4s; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width:900px) {
+      nav { padding:1.5rem 2rem; }
+      nav.scrolled { padding:1rem 2rem; }
+      .nav-links { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,10,12,0.97); flex-direction:column; align-items:center; justify-content:center; gap:2.5rem; z-index:100; }
+      .nav-links.open { display:flex; }
+      .nav-links a { font-size:1rem; }
+      .nav-cta { font-size:0.85rem; padding:0.8rem 2rem; }
+      .hamburger { display:flex; }
+      .section-inner { padding:0 2rem; }
+      .values-grid { grid-template-columns:1fr; gap:3rem; }
+      .member-card { grid-template-columns:1fr; gap:2rem; padding:3rem 2rem; }
+      footer { flex-direction:column; gap:2rem; text-align:center; padding:3rem 2rem; }
+    }
+    @media (max-width:480px) {
+      nav { padding:1rem 1.2rem; }
+      .hero { padding:7rem 1.2rem 3rem; }
+      .section-inner { padding:0 1.2rem; }
+      .s-team-members,.s-values,.s-creds { padding:6rem 0; }
+      .s-cta { padding:6rem 0 5rem; }
+      .member-card { padding:2.5rem 1.5rem; }
+      .cred-card { padding:2rem 1.5rem; }
+      footer { padding:2.5rem 1.2rem; }
     }
   </style>
 </head>
+<body>
 
-<body class="bg-white text-gray-800 font-sans min-h-screen flex flex-col">
+  <div class="cursor-dot" id="dot"></div>
+  <div class="cursor-ring" id="ring"></div>
+  <canvas id="stars"></canvas>
 
-  <!-- Header -->
-  <header id="main-header" class="fixed top-0 left-0 w-full bg-black text-gray-100 z-50 transition-transform duration-500">
-    <div class="max-w-6xl mx-auto py-4 px-6 flex items-center justify-between">
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">occam</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="our-team.html">Our team</a></li>
+      <li><a href="insights.html">Insights</a></li>
+      <li><a href="case-studies.html">Case studies</a></li>
+      <li><a href="mailto:hello@occamco.com" class="nav-cta">Start a conversation</a></li>
+    </ul>
+  </nav>
 
-      <a href="https://www.occamco.com" class="text-[36px] sm:text-[40px] leading-none transform transition-transform duration-300 hover:scale-95 font-light">
-        occam
-      </a>
+  <section class="hero">
+    <div class="hero-eyebrow">Our Team</div>
+    <h1 class="hero-title">Operators who turn complexity into <em>clarity</em></h1>
+    <p class="hero-sub">Better decisions, disciplined processes, and durable systems. Built by people who have lived the problem.</p>
+  </section>
 
-      <!-- Desktop nav -->
-      <div class="hidden md:flex items-center gap-3">
-        <a href="/what-we-do" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
-          What we do
-        </a>
-        <a href="/our-team" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
-          Our team
-        </a>
-        <a href="/insights" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
-          Insights
-        </a>
-        <button class="open-contact-modal inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition">
-          Start a conversation
-        </button>
-      </div>
+  <!-- TEAM MEMBERS -->
+  <section class="s-team-members">
+    <div class="section-inner">
+      <div class="members-grid">
 
-      <!-- Mobile actions -->
-      <div class="md:hidden flex items-center gap-2">
-        <button
-          class="open-contact-modal inline-flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
-        >
-          Contact
-        </button>
-
-        <button
-          class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 hover:bg-white/20 transition"
-          aria-label="Open menu"
-          onclick="toggleMobileMenu()"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- Mobile menu -->
-  <div id="mobileMenu" class="fixed inset-0 z-40 hidden bg-black text-white">
-    <div class="max-w-6xl mx-auto px-6 pt-24 pb-10">
-      <div class="flex items-center justify-between">
-        <div class="text-xl font-light">Menu</div>
-        <button
-          class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 hover:bg-white/20 transition"
-          aria-label="Close menu"
-          onclick="toggleMobileMenu()"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-
-      <div class="mt-8 space-y-5 text-lg">
-        <a href="/what-we-do" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">What we do</a>
-        <a href="/our-team" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">Our team</a>
-        <a href="/insights" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">Insights</a>
-        <a href="/privacy-policy" class="block text-gray-300 hover:text-gray-200 transition" onclick="toggleMobileMenu()">Privacy policy</a>
-
-        <div class="pt-6 border-t border-white/15">
-          <button class="open-contact-modal w-full py-3 rounded-md bg-white text-gray-900 font-medium hover:bg-gray-100 transition" onclick="toggleMobileMenu()">
-            Start a conversation
-          </button>
+        <div class="member-card reveal">
+          <div class="member-left">
+            <img src="assets/wiehahn.jpeg" alt="Wiehahn Carstens" class="member-photo"/>
+            <div class="member-name">Wiehahn Carstens</div>
+            <div class="member-role">Founder</div>
+            <a href="https://www.linkedin.com/in/wiehahncarstens/" target="_blank" rel="noopener" class="member-linkedin"><svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>LinkedIn</a>
+          </div>
+          <div class="member-right">
+            <p class="member-bio">Wiehahn founded occam to bridge the gap between strategy and execution in mid-market businesses. With a background in management consulting, fintech, and AI-native product development, he brings a rare combination of operational rigour and technical depth. He has led delivery across insurance, vehicle leasing, education finance, and manufacturing.</p>
+            <p class="member-focus"><strong>Focus areas:</strong> Constraint diagnosis, operating model design, AI-enabled automation, and platform builds from concept through deployment.</p>
+            <div class="member-quote">&ldquo;Gets to the real issue quickly and ships changes that stick.&rdquo;</div>
+          </div>
         </div>
+
+        <div class="member-card reveal">
+          <div class="member-left">
+            <img src="assets/pj.jpeg" alt="PJ Nieuwoudt" class="member-photo"/>
+            <div class="member-name">PJ Nieuwoudt</div>
+            <div class="member-role">Director</div>
+            <a href="https://www.linkedin.com/in/pj-nieuwoudt-3627a575/" target="_blank" rel="noopener" class="member-linkedin"><svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>LinkedIn</a>
+          </div>
+          <div class="member-right">
+            <p class="member-bio">PJ brings deep experience in process improvement, performance management, and operational accountability. He has worked across multiple industries helping leadership teams simplify complex operations and install KPI frameworks that actually drive behaviour change. His strength is turning ambiguity into structured, measurable progress.</p>
+            <p class="member-focus"><strong>Focus areas:</strong> Core process simplification, KPI design and reliability, governance structures, and sustainable accountability frameworks.</p>
+            <div class="member-quote">&ldquo;Structured problem solving and practical implementation.&rdquo;</div>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <div class="member-left">
+            <img src="assets/iman.jpeg" alt="Iman Ahmed" class="member-photo"/>
+            <div class="member-name">Iman Ahmed</div>
+            <div class="member-role">Delivery Lead</div>
+            <a href="https://www.linkedin.com/in/iman-ahmed-1b6617160/" target="_blank" rel="noopener" class="member-linkedin"><svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>LinkedIn</a>
+          </div>
+          <div class="member-right">
+            <p class="member-bio">Iman is the operational backbone of occam's delivery engagements. With experience in programme management and business analysis across insurance and financial services, she ensures that complex workstreams stay on track, stakeholders stay aligned, and nothing falls between the cracks. She brings calm, structure, and pace to every engagement.</p>
+            <p class="member-focus"><strong>Focus areas:</strong> Delivery cadence, stakeholder management, workstream coordination, testing strategy, and operational readiness.</p>
+            <div class="member-quote">&ldquo;Clarity, pace, and calm execution in complex programmes.&rdquo;</div>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <div class="member-left">
+            <img src="assets/berniece.jpeg" alt="Berniece Hieckmann" class="member-photo"/>
+            <div class="member-name">Berniece Hieckmann</div>
+            <div class="member-role">Partner</div>
+            <a href="https://www.linkedin.com/in/berniece-hieckmann-49627611/" target="_blank" rel="noopener" class="member-linkedin"><svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>LinkedIn</a>
+          </div>
+          <div class="member-right">
+            <p class="member-bio">Berniece is a seasoned strategist and change practitioner who helps leadership teams move from intent to execution. With deep experience in organisational development, governance design, and transformation planning, she brings the strategic clarity needed to align teams and translate high-level direction into structured, executable plans.</p>
+            <p class="member-focus"><strong>Focus areas:</strong> Strategic clarity, change management, governance frameworks, leadership alignment, and transformation planning.</p>
+            <div class="member-quote">&ldquo;Structured thinking with a strong bias for practical execution.&rdquo;</div>
+          </div>
+        </div>
+
+        <div class="member-card reveal">
+          <div class="member-left">
+            <img src="assets/marc.jpeg" alt="Marc Landman" class="member-photo"/>
+            <div class="member-name">Marc Landman</div>
+            <div class="member-role">Partner</div>
+            <a href="https://www.linkedin.com/in/marc-landman-31109b64/" target="_blank" rel="noopener" class="member-linkedin"><svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>LinkedIn</a>
+          </div>
+          <div class="member-right">
+            <p class="member-bio">Marc is a senior operator with extensive experience across insurance, banking, and payments. He brings commercial acumen and deep operational knowledge to every engagement, helping clients derisk strategic decisions, simplify complex value chains, and build customer-centric growth models that hold up under real market pressure.</p>
+            <p class="member-focus"><strong>Focus areas:</strong> Insurance and financial services, commercial strategy, risk and compliance, customer-centric operating models, and value chain optimisation.</p>
+            <div class="member-quote">&ldquo;Combines commercial and operating experience to deliver sustainable value.&rdquo;</div>
+          </div>
+        </div>
+
       </div>
-    </div>
-  </div>
-  
-  
-  
-
-  <main class="flex-1 pt-28">
-
-  <!-- Page header -->
-  <section class="bg-white border-b border-gray-100">
-    <div class="max-w-4xl mx-auto px-6 py-20 text-center" data-aos="fade-up">
-      <p class="text-sm font-mono tracking-widest text-gray-500 uppercase mb-4">Ideas Made Simple</p>
-      <h1 class="prosto text-4xl sm:text-5xl lg:text-6xl font-semibold text-gray-900 mb-6">
-        Our team
-      </h1>
-      <p class="text-lg text-gray-700 leading-relaxed max-w-3xl mx-auto">
-        Operators who turn complexity into EBITDA through better decisions, disciplined processes, and durable systems.
-      </p>
     </div>
   </section>
 
-
-
-
-
-
-
-<!-- Team list (PE-focused update) -->
-<section class="bg-gray-50">
-  <div class="max-w-5xl mx-auto px-6 py-24">
-
-    <!-- How we plug into a portfolio -->
-    <!-- <div class="bg-white border border-gray-200 rounded-2xl p-10 mb-12" data-aos="fade-up">
-      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-        <div>
-          <div class="text-sm font-mono tracking-widest text-gray-500 uppercase mb-3">How we plug into a portfolio</div>
-          <h3 class="text-2xl font-semibold text-gray-900">Practical support across the value creation lifecycle</h3>
+  <!-- VALUES -->
+  <section class="s-values">
+    <div class="section-inner">
+      <div class="values-grid">
+        <div class="reveal">
+          <div class="section-label">How we work</div>
+          <h2 class="values-title">A different kind of <em>advisory firm</em></h2>
+          <p class="values-body">We are operators and engineers, not just advisors. Every person on an occam engagement has built and run systems under real operational pressure. We know what it takes to actually land change.</p>
         </div>
-        <div class="text-sm text-gray-500">
-          Hands-on delivery, measured on outcomes.
+        <div class="values-list reveal reveal-delay-2">
+          <div class="value-item"><div class="value-num">01</div><div class="value-text">We implement what we design. No handoff to junior execution.</div></div>
+          <div class="value-item"><div class="value-num">02</div><div class="value-text">We work at pace. Fast is not reckless, it is disciplined.</div></div>
+          <div class="value-item"><div class="value-num">03</div><div class="value-text">We are direct. Plain language, clear diagnosis, no hedging.</div></div>
+          <div class="value-item"><div class="value-num">04</div><div class="value-text">We build software where it creates value. Not as an afterthought.</div></div>
         </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
-        <div class="rounded-xl border border-gray-200 p-6 bg-gray-50/50">
-          <div class="text-sm font-semibold text-gray-900 mb-2">Diligence support</div>
-          <p class="text-gray-700 leading-relaxed">
-            Validate constraints, execution risk, and the first 90-day plan, with a bias for what is actionable.
-          </p>
-        </div>
-        <div class="rounded-xl border border-gray-200 p-6 bg-gray-50/50">
-          <div class="text-sm font-semibold text-gray-900 mb-2">First 100 days</div>
-          <p class="text-gray-700 leading-relaxed">
-            Stabilise delivery, install cadence, and create quick wins while building the operating system underneath.
-          </p>
-        </div>
-        <div class="rounded-xl border border-gray-200 p-6 bg-gray-50/50">
-          <div class="text-sm font-semibold text-gray-900 mb-2">Value creation</div>
-          <p class="text-gray-700 leading-relaxed">
-            Embed repeatable operating rhythms, analytics, and automation that reduce cost, increase throughput, and improve reliability.
-          </p>
-        </div>
-      </div>
-    </div> -->
-
-    <div class="relative">
-
-      <!-- subtle spine (desktop only) -->
-      <div class="absolute left-[3.75rem] top-0 bottom-0 w-px bg-gray-200 hidden sm:block"></div>
-
-      <div class="space-y-10">
-
-        <!-- Person 1 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-10 flex flex-col sm:flex-row gap-8 items-start hover:shadow-sm transition" data-aos="fade-up">
-          <!-- Photo -->
-          <div class="w-28 h-28 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 ring-4 ring-white sm:ml-2">
-            <img
-              src="./assets/wiehahn.jpeg"
-              alt="Wiehahn Carstens"
-              class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-300"
-            />
-          </div>
-
-          <!-- Content -->
-          <div class="flex-1">
-            <div class="flex items-start justify-between gap-6">
-              <div>
-                <div class="text-3xl font-semibold text-gray-900 leading-tight">Wiehahn Carstens</div>
-                <div class="text-sm text-gray-500 mt-2">Founder</div>
-              </div>
-
-              <!-- LinkedIn -->
-              <a
-                href="https://www.linkedin.com/in/wiehahncarstens/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-white transition"
-                aria-label="LinkedIn profile"
-                title="LinkedIn"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4V8.5zM8.5 8.5h3.8v2.1h.1c.5-.9 1.8-2.1 3.8-2.1 4.1 0 4.9 2.7 4.9 6.2V24h-4v-7.6c0-1.8 0-4.1-2.5-4.1s-2.9 1.9-2.9 4v7.7h-4V8.5z"/>
-                </svg>
-              </a>
-            </div>
-
-            <!-- PE-format content -->
-            <p class="text-gray-900 font-medium mt-5">
-              Leads value creation delivery across operating model, execution cadence, and automation.
-            </p>
-
-            <ul class="mt-4 space-y-2 text-gray-700">
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Constraint diagnosis: where performance is actually leaking across revenue, margin, and reliability
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Design and install operating rhythms: decision rights, KPIs, meeting cadence, accountability
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Build and embed tooling: analytics and automation shaped around real workflows
-              </li>
-            </ul>
-
-            <p class="mt-5 text-sm text-gray-500 max-w-3xl">
-              Known for getting to the real issue quickly and shipping changes that stick.
-            </p>
-          </div>
-        </div>
-
-        <div class="border-t border-gray-200/70"></div>
-
-        <!-- Person 2 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-10 flex flex-col sm:flex-row gap-8 items-start hover:shadow-sm transition" data-aos="fade-up">
-
-          <div class="w-28 h-28 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 ring-4 ring-white sm:ml-2">
-            <img
-              src="./assets/pj.jpeg"
-              alt="PJ Nieuwoudt"
-              class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-300"
-            />
-          </div>
-
-          <div class="flex-1">
-            <div class="flex items-start justify-between gap-6">
-              <div>
-                <div class="text-3xl font-semibold text-gray-900 leading-tight">PJ Nieuwoudt</div>
-                <div class="text-sm text-gray-500 mt-2">Director</div>
-              </div>
-
-              <a
-                href="https://www.linkedin.com/in/pj-nieuwoudt-3627a575/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-white transition"
-                aria-label="LinkedIn profile"
-                title="LinkedIn"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4V8.5zM8.5 8.5h3.8v2.1h.1c.5-.9 1.8-2.1 3.8-2.1 4.1 0 4.9 2.7 4.9 6.2V24h-4v-7.6c0-1.8 0-4.1-2.5-4.1s-2.9 1.9-2.9 4v7.7h-4V8.5z"/>
-                </svg>
-              </a>
-            </div>
-
-            <p class="text-gray-900 font-medium mt-5">
-              Operational improvement lead focused on execution mechanics and measurable performance lift.
-            </p>
-
-            <ul class="mt-4 space-y-2 text-gray-700">
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Simplify core processes and remove operating drag across delivery, service, and support functions
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Improve KPI reliability and management visibility so decisions are faster and less political
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Install cadence and accountability to sustain gains beyond the initial intervention
-              </li>
-            </ul>
-
-            <p class="mt-5 text-sm text-gray-500 max-w-3xl">
-              Brings structured problem solving and practical implementation.
-            </p>
-          </div>
-        </div>
-
-        <div class="border-t border-gray-200/70"></div>
-
-        <!-- Person 3 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-10 flex flex-col sm:flex-row gap-8 items-start hover:shadow-sm transition" data-aos="fade-up">
-
-          <div class="w-28 h-28 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 ring-4 ring-white sm:ml-2">
-            <img
-              src="./assets/iman.jpeg"
-              alt="Iman Ahmed"
-              class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-300"
-            />
-          </div>
-
-          <div class="flex-1">
-            <div class="flex items-start justify-between gap-6">
-              <div>
-                <div class="text-3xl font-semibold text-gray-900 leading-tight">Iman Ahmed</div>
-                <div class="text-sm text-gray-500 mt-2">Delivery Lead</div>
-              </div>
-
-              <a
-                href="https://www.linkedin.com/in/iman-ahmed-1b6617160/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-white transition"
-                aria-label="LinkedIn profile"
-                title="LinkedIn"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4V8.5zM8.5 8.5h3.8v2.1h.1c.5-.9 1.8-2.1 3.8-2.1 4.1 0 4.9 2.7 4.9 6.2V24h-4v-7.6c0-1.8 0-4.1-2.5-4.1s-2.9 1.9-2.9 4v7.7h-4V8.5z"/>
-                </svg>
-              </a>
-            </div>
-
-            <p class="text-gray-900 font-medium mt-5">
-              Programme delivery lead who creates momentum across stakeholders and reduces execution risk.
-            </p>
-
-            <ul class="mt-4 space-y-2 text-gray-700">
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Build delivery cadence: dependencies, RAID, and follow through that holds under pressure
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Translate priorities into clear workstreams management teams can run and measure
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Drive adoption and stakeholder alignment so changes stick, not just launch
-              </li>
-            </ul>
-
-            <p class="mt-5 text-sm text-gray-500 max-w-3xl">
-              Known for clarity, pace, and calm execution in complex programmes.
-            </p>
-          </div>
-        </div>
-
-        <div class="border-t border-gray-200/70"></div>
-
-        <!-- Person 4 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-10 flex flex-col sm:flex-row gap-8 items-start hover:shadow-sm transition" data-aos="fade-up">
-
-          <div class="w-28 h-28 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 ring-4 ring-white sm:ml-2">
-            <img
-              src="./assets/berniece.jpeg"
-              alt="Berniece Hieckmann"
-              class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-300"
-            />
-          </div>
-
-          <div class="flex-1">
-            <div class="flex items-start justify-between gap-6">
-              <div>
-                <div class="text-3xl font-semibold text-gray-900 leading-tight">Berniece Hieckmann</div>
-                <div class="text-sm text-gray-500 mt-2">Partner</div>
-              </div>
-
-              <a
-                href="https://www.linkedin.com/in/berniece-hieckmann-49627611/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-white transition"
-                aria-label="LinkedIn profile"
-                title="LinkedIn"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4V8.5zM8.5 8.5h3.8v2.1h.1c.5-.9 1.8-2.1 3.8-2.1 4.1 0 4.9 2.7 4.9 6.2V24h-4v-7.6c0-1.8 0-4.1-2.5-4.1s-2.9 1.9-2.9 4v7.7h-4V8.5z"/>
-                </svg>
-              </a>
-            </div>
-
-            <p class="text-gray-900 font-medium mt-5">
-              Strategy to execution partner who helps leadership teams prioritise, align, and deliver outcomes.
-            </p>
-
-            <ul class="mt-4 space-y-2 text-gray-700">
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Clarify direction and prioritisation using a now-next-north approach
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Translate complex change into an executable plan management teams can run
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Strengthen governance, decision making, and leadership alignment to reduce churn and rework
-              </li>
-            </ul>
-
-            <p class="mt-5 text-sm text-gray-500 max-w-3xl">
-              Brings structured thinking with a strong bias for practical execution.
-            </p>
-          </div>
-        </div>
-
-        <div class="border-t border-gray-200/70"></div>
-
-        <!-- Person 5 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-10 flex flex-col sm:flex-row gap-8 items-start hover:shadow-sm transition" data-aos="fade-up">
-
-          <div class="w-28 h-28 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 ring-4 ring-white sm:ml-2">
-            <img
-              src="./assets/marc.jpeg"
-              alt="Marc Landman"
-              class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-300"
-            />
-          </div>
-
-          <div class="flex-1">
-            <div class="flex items-start justify-between gap-6">
-              <div>
-                <div class="text-3xl font-semibold text-gray-900 leading-tight">Marc Landman</div>
-                <div class="text-sm text-gray-500 mt-2">Partner</div>
-              </div>
-
-              <a
-                href="https://www.linkedin.com/in/marc-landman-31109b64/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-white transition"
-                aria-label="LinkedIn profile"
-                title="LinkedIn"
-              >
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4V8.5zM8.5 8.5h3.8v2.1h.1c.5-.9 1.8-2.1 3.8-2.1 4.1 0 4.9 2.7 4.9 6.2V24h-4v-7.6c0-1.8 0-4.1-2.5-4.1s-2.9 1.9-2.9 4v7.7h-4V8.5z"/>
-                </svg>
-              </a>
-            </div>
-
-            <p class="text-gray-900 font-medium mt-5">
-              Senior operator across insurance, banking, and payments, bridging the gap between strategic intent and high-impact execution.
-            </p>
-
-            <ul class="mt-4 space-y-2 text-gray-700">
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Derisking strategy & unlocking value: Aligning purpose, capability, and environment to engineer data-driven solutions that drive sustainable, long-term value.
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Problem solving and simplifying complexity: Converting complex strategic goals into practical solutions.
-              </li>
-              <li class="flex gap-2">
-                <span class="mt-[7px] w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></span>
-                Customer-centric growth: Aligning operations and value propositions to deliver a competitive advantage.
-              </li>
-            </ul>
-
-            <p class="mt-5 text-sm text-gray-500 max-w-3xl">
-              Combines commercial and operating experience to deliver sustainable value.
-            </p>
-          </div>
-        </div>
-
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-</section>
-
-</main>
-
-
-<!-- CTA -->
-<section class="bg-black text-white">
-  <div class="max-w-4xl mx-auto px-6 py-28 text-center" data-aos="fade-up">
-    <h2 class="text-3xl sm:text-4xl font-semibold mb-6">
-      Work with us
-    </h2>
-    <p class="text-gray-300 text-lg mb-10 leading-relaxed">
-      We are selective about the work we take on. A short conversation is usually enough to see whether there is a good fit.
-    </p>
-    <button
-      class="open-contact-modal inline-flex items-center justify-center px-8 py-3 rounded-md text-base font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
-    >
-      Start a conversation
-    </button>
-  </div>
-</section>
-
-
-
-  
-
-  
-  <!-- Contact Modal -->
-  <div id="contactModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 flex transition-opacity duration-300">
-    <div class="bg-white p-6 rounded-lg max-w-md w-full relative transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-      <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl leading-none">&times;</button>
-      <h3 class="text-xl font-semibold mb-4 text-center">Start a conversation</h3>
-      <form action="https://formspree.io/f/xblypvkb" method="POST" class="space-y-4">
-        <div>
-          <label class="block text-sm mb-1 text-gray-700">Your email</label>
-          <input type="email" name="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
-        </div>
-        <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 w-full">Send</button>
-        <p class="text-xs text-gray-500 text-center mt-2">No spam. Just the occasional update on new insights, tools, and our thinking.</p>
-      </form>
-    </div>
-  </div>
-
-  <!-- Sign In Modal -->
-  <div id="signInModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white text-black rounded-lg p-8 max-w-md w-full relative">
-      <button id="closeModalBtn" class="absolute top-2 right-3 text-xl font-bold text-gray-600 hover:text-black">&times;</button>
-      <h2 class="text-xl font-semibold mb-4 text-center">Sign In</h2>
-      <form class="space-y-4">
-        <input type="email" placeholder="Your email" class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-black" />
-        <input type="password" placeholder="Your password" class="w-full border border-gray-300 px-3 py-2 rounded focus:outline-none focus:ring focus:border-black" />
-        <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">Sign In</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="border-t border-gray-200 bg-white">
-    <div class="max-w-6xl mx-auto px-6 py-10 space-y-6">
-
-      <!-- Top row -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-
-        <!-- Brand -->
-        <div>
-          <div class="text-sm font-semibold tracking-widest lowercase text-gray-900">
-            occam
-          </div>
-          <div class="text-sm text-gray-500 mt-1">
-            Ideas made simple
-          </div>
-        </div>
-
-        <!-- Nav -->
-        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
-          <a href="/what-we-do" class="hover:text-gray-800 transition">What we do</a>
-          <a href="/our-team" class="hover:text-gray-800 transition">Our team</a>
-          <a href="/insights" class="hover:text-gray-800 transition">Insights</a>
-          <a href="/privacy-policy" class="hover:text-gray-800 transition">Privacy policy</a>
-        </div>
-
+  <!-- CREDENTIALS -->
+  <section class="s-creds">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-label">Credentials</div>
+        <h2 class="values-title">What sets us apart</h2>
       </div>
-
-      <!-- Bottom row -->
-      <div class="text-xs text-gray-400 sm:text-right">
-        © <span id="year"></span> Occam. All rights reserved.
+      <div class="creds-grid">
+        <div class="cred-card reveal"><div class="cred-icon">&loz;</div><div class="cred-title">Operational depth</div><p class="cred-body">Our principals have operated at senior level in businesses that had to scale under real resource constraints. We have lived the problem.</p></div>
+        <div class="cred-card reveal reveal-delay-1"><div class="cred-icon">&sect;</div><div class="cred-title">AI-native from day one</div><p class="cred-body">Not retrofitted. Our tooling, methodology, and delivery model were built with AI as the core method, not as a feature add.</p></div>
+        <div class="cred-card reveal reveal-delay-2"><div class="cred-icon">&bull;</div><div class="cred-title">Implementation speed</div><p class="cred-body">We compress the gap between diagnosis and deployment. Most engagements produce measurable operational signal within the first 30 days.</p></div>
+        <div class="cred-card reveal reveal-delay-3"><div class="cred-icon">&Delta;</div><div class="cred-title">We build software</div><p class="cred-body">Where process demands it, we build. Bespoke tools and automation owned entirely by the client, embedded in their operating model.</p></div>
       </div>
-
     </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="s-cta">
+    <div class="cta-glow"></div>
+    <div class="section-inner reveal" style="position:relative;z-index:1;">
+      <div class="section-label" style="text-align:center;">Work with us</div>
+      <h2 class="cta-title">Ready to find <em>the constraint?</em></h2>
+      <p class="cta-sub">A short conversation is usually enough to see whether there is a good fit. We are selective about the work we take on.</p>
+      <a href="mailto:hello@occamco.com" class="btn-primary">Start a conversation</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">occam<div class="footer-sub">Ideas Made Simple</div></div>
+    <div class="footer-tagline">Business Engineering &middot; AI-Native &middot; Mid-Market</div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="insights.html">Insights</a></li>
+      <li><a href="privacy-policy.html">Privacy</a></li>
+      <li><a href="mailto:hello@occamco.com">Contact</a></li>
+    </ul>
   </footer>
 
-  <!-- Thank You Modal -->
-  <div id="thankYouModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 flex">
-    <div class="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800 w-full max-w-sm">
-      <h3 class="text-xl font-semibold mb-2">Thanks!</h3>
-      <p>Your message has been sent.</p>
-    </div>
-  </div>
-
-  <!-- Scripts -->
   <script>
-    // Mobile menu
-    function toggleMobileMenu() {
-      document.getElementById("mobileMenu").classList.toggle("hidden");
+    var dot=document.getElementById('dot'),ring=document.getElementById('ring'),mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
+    (function tick(){dot.style.left=mx+'px';dot.style.top=my+'px';rx+=(mx-rx)*0.15;ry+=(my-ry)*0.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
+    document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('navLinks').classList.toggle('open')});
+
+    // FLOW FIELD
+    var canvas = document.getElementById('stars');
+    var ctx = canvas.getContext('2d');
+    var W, H;
+    var mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999 };
+    document.addEventListener('mousemove', function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+    var F2 = 0.5 * (Math.sqrt(3) - 1), G2 = (3 - Math.sqrt(3)) / 6;
+    var _p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+    var perm = new Array(512), pm12 = new Array(512);
+    for (var i = 0; i < 512; i++) { perm[i] = _p[i & 255]; pm12[i] = perm[i] % 12; }
+    var grad3 = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
+    function simplex2(xin, yin) {
+      var s = (xin + yin) * F2;
+      var i = Math.floor(xin + s), j = Math.floor(yin + s);
+      var t = (i + j) * G2;
+      var x0 = xin - (i - t), y0 = yin - (j - t);
+      var i1 = x0 > y0 ? 1 : 0, j1 = x0 > y0 ? 0 : 1;
+      var x1 = x0 - i1 + G2, y1 = y0 - j1 + G2;
+      var x2 = x0 - 1 + 2 * G2, y2 = y0 - 1 + 2 * G2;
+      var ii = i & 255, jj = j & 255;
+      var n0 = 0, n1 = 0, n2 = 0;
+      var t0 = 0.5 - x0 * x0 - y0 * y0;
+      if (t0 > 0) { t0 *= t0; var gi = pm12[ii + perm[jj]]; n0 = t0 * t0 * (grad3[gi][0] * x0 + grad3[gi][1] * y0); }
+      var t1 = 0.5 - x1 * x1 - y1 * y1;
+      if (t1 > 0) { t1 *= t1; var gi = pm12[ii + i1 + perm[jj + j1]]; n1 = t1 * t1 * (grad3[gi][0] * x1 + grad3[gi][1] * y1); }
+      var t2 = 0.5 - x2 * x2 - y2 * y2;
+      if (t2 > 0) { t2 *= t2; var gi = pm12[ii + 1 + perm[jj + 1]]; n2 = t2 * t2 * (grad3[gi][0] * x2 + grad3[gi][1] * y2); }
+      return 70 * (n0 + n1 + n2);
     }
+    var COUNT=800,SCALE=18,NOISE_SCL=0.0035,SPEED=1.4,FADE=0.025,MOUSE_R=250,MAX_LIFE=350;
+    var cols,rows,field,particles=[];
+    var COLORS=[[200,169,110],[185,155,95],[215,190,140],[170,140,80],[230,210,165],[160,130,75]];
+    var time=0;
+    function resize(){W=innerWidth;H=innerHeight;canvas.width=W;canvas.height=H;cols=Math.ceil(W/SCALE)+1;rows=Math.ceil(H/SCALE)+1;field=new Float32Array(cols*rows);ctx.fillStyle='#0a0a0c';ctx.fillRect(0,0,W,H)}
+    resize();window.addEventListener('resize',resize);
+    function spawn(){var c=COLORS[Math.floor(Math.random()*COLORS.length)];return{x:Math.random()*W,y:Math.random()*H,px:0,py:0,speed:SPEED*(0.4+Math.random()*0.9),cr:c[0],cg:c[1],cb:c[2],alpha:0.06+Math.random()*0.12,life:Math.floor(Math.random()*MAX_LIFE),maxLife:MAX_LIFE*(0.6+Math.random()*0.4)}}
+    for(var i=0;i<COUNT;i++)particles.push(spawn());
+    function computeField(){for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){var nx=c*SCALE*NOISE_SCL,ny=r*SCALE*NOISE_SCL;var angle=simplex2(nx+time*0.4,ny+time*0.3)*Math.PI*2;angle+=simplex2(nx*2.5+50,ny*2.5+50+time*0.2)*Math.PI*0.6;field[r*cols+c]=angle}}
+    (function loop(){ctx.fillStyle='rgba(10,10,12,'+FADE+')';ctx.fillRect(0,0,W,H);time+=0.003;computeField();if(mouse.sx<-9000){mouse.sx=W/2;mouse.sy=H/2}mouse.sx+=(mouse.x-mouse.sx)*0.06;mouse.sy+=(mouse.y-mouse.sy)*0.06;for(var i=0;i<particles.length;i++){var p=particles[i];p.px=p.x;p.py=p.y;var col=Math.floor(p.x/SCALE),row=Math.floor(p.y/SCALE);if(col>=0&&col<cols&&row>=0&&row<rows){var angle=field[row*cols+col];var mdx=mouse.sx-p.x,mdy=mouse.sy-p.y,md=Math.sqrt(mdx*mdx+mdy*mdy);if(md<MOUSE_R&&md>1){var inf=1-md/MOUSE_R;inf=inf*inf;var va=Math.atan2(mdy,mdx)+Math.PI*0.55;angle=angle*(1-inf*0.7)+va*inf*0.7;p.speed=SPEED*(0.4+Math.random()*0.9)+inf*2.5}p.x+=Math.cos(angle)*p.speed;p.y+=Math.sin(angle)*p.speed}var lf=p.life/p.maxLife;var fa=lf<0.05?lf/0.05:lf>0.9?(1-lf)/0.1:1;var da=p.alpha*fa;if(p.life>0&&da>0.005){ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.strokeStyle='rgba('+p.cr+','+p.cg+','+p.cb+','+da+')';ctx.lineWidth=0.6+fa*0.3;ctx.stroke()}p.life++;if(p.x<-20||p.x>W+20||p.y<-20||p.y>H+20||p.life>p.maxLife){var c=COLORS[Math.floor(Math.random()*COLORS.length)];p.x=Math.random()*W;p.y=Math.random()*H;p.px=p.x;p.py=p.y;p.life=0;p.maxLife=MAX_LIFE*(0.6+Math.random()*0.4);p.cr=c[0];p.cg=c[1];p.cb=c[2];p.alpha=0.06+Math.random()*0.12;p.speed=SPEED*(0.4+Math.random()*0.9)}}requestAnimationFrame(loop)})();
 
-    // Contact Modal
-    function closeModal() {
-      const modal = document.getElementById('contactModal');
-      const content = document.getElementById('modalContent');
-      content.classList.remove('scale-100', 'opacity-100');
-      content.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => modal.classList.add('hidden'), 300);
-    }
-
-    document.getElementById('contactModal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
-
-    const modal = document.getElementById('contactModal');
-    const content = document.getElementById('modalContent');
-
-    function openModal() {
-      modal.classList.remove('hidden');
-      requestAnimationFrame(() => {
-        content.classList.remove('scale-95', 'opacity-0');
-        content.classList.add('scale-100', 'opacity-100');
-      });
-    }
-
-    document.querySelectorAll('.open-contact-modal').forEach(btn => {
-      btn.addEventListener('click', openModal);
-    });
-
-    // Header hide on scroll (desktop + mobile)
-    let lastScroll = 0;
-    const header = document.getElementById('main-header');
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-      if (currentScroll <= 0) {
-        header.style.transform = 'translateY(0)';
-        return;
-      }
-      header.style.transform = currentScroll > lastScroll ? 'translateY(-100%)' : 'translateY(0)';
-      lastScroll = currentScroll;
-    });
-
-    // Thank You Modal Trigger
-    const contactForm = document.querySelector('#contactModal form');
-    contactForm.addEventListener('submit', function () {
-      setTimeout(() => {
-        closeModal();
-        document.getElementById('thankYouModal').classList.remove('hidden');
-        setTimeout(() => {
-          document.getElementById('thankYouModal').classList.add('hidden');
-        }, 3000);
-      }, 100);
-    });
-
-    // AOS
-    AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
-
-    // Logos scroll
-    function scrollLogos(amount) {
-      const container = document.getElementById('logoScroll');
-      container.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-
-    // Footer year
-    document.getElementById('year').textContent = new Date().getFullYear();
+    var nav=document.getElementById('nav');
+    window.addEventListener('scroll',function(){if(scrollY>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled')});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
   </script>
-
-  <script src="/assets/cookies.js"></script>
+  <script src="assets/shared.js"></script>
 </body>
 </html>

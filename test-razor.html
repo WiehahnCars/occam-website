@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>occam | Razor Concepts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@200;300;400;500&family=DM+Mono:wght@300&family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:     #0a0a0c;
+      --paper:   #f5f3ee;
+      --slate:   #1a1a22;
+      --amber:   #d4b97a;
+      --amber-lt:#d4bb8a;
+      --line:    rgba(245,243,238,0.1);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Jost', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--ink); color:var(--paper); font-family:var(--font-body); font-weight:300; overflow-x:hidden; }
+
+    /* SECTION LAYOUT */
+    .concept {
+      min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:6rem 2rem; position:relative; border-bottom:1px solid var(--line);
+    }
+    .concept-label {
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.3em;
+      text-transform:uppercase; color:var(--amber); margin-bottom:3rem;
+    }
+
+    /* ===== 1. SELF-EDITING TEXT ===== */
+    .typewriter-container {
+      max-width:800px; text-align:center;
+    }
+    .typewriter-text {
+      font-family:var(--font-display); font-size:clamp(1.8rem,4vw,3.2rem);
+      font-weight:400; line-height:1.4; color:var(--paper); min-height:4.5em;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .typewriter-text .cursor-blink {
+      display:inline-block; width:2px; height:1.1em; background:var(--amber);
+      margin-left:3px; vertical-align:text-bottom;
+      animation:blink 0.6s step-end infinite;
+    }
+    .typewriter-text em { font-style:italic; color:var(--amber); }
+    @keyframes blink { 50%{opacity:0} }
+
+    /* ===== 2. HOVER REDUCTION ===== */
+    .hover-container {
+      max-width:700px; text-align:center;
+    }
+    .hover-text {
+      font-family:var(--font-display); font-size:clamp(1.4rem,3vw,2.2rem);
+      font-weight:400; line-height:1.8; color:var(--paper);
+    }
+    .hover-text .filler {
+      color:rgba(245,243,238,0.35); transition:opacity 0.6s ease, color 0.6s ease;
+    }
+    .hover-text .core {
+      color:var(--paper); transition:color 0.6s ease;
+    }
+    .hover-container:hover .filler {
+      opacity:0.08; color:rgba(245,243,238,0.08);
+    }
+    .hover-container:hover .core {
+      color:var(--amber);
+    }
+    .hover-hint {
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.2em;
+      text-transform:uppercase; color:rgba(245,243,238,0.2); margin-top:2.5rem;
+      transition:opacity 0.4s;
+    }
+    .hover-container:hover .hover-hint { opacity:0; }
+
+    /* ===== 3. COMPLEXITY COUNTER ===== */
+    .counters {
+      display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+      gap:3rem; max-width:900px; width:100%;
+    }
+    .counter-block {
+      text-align:center; padding:2.5rem 1.5rem;
+      border:1px solid var(--line); position:relative;
+      overflow:hidden;
+    }
+    .counter-block::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:var(--amber); transform:scaleX(0); transform-origin:left;
+      transition:transform 0.8s ease;
+    }
+    .counter-block.counting::before { transform:scaleX(1); }
+    .counter-top {
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.2em;
+      text-transform:uppercase; color:rgba(245,243,238,0.3); margin-bottom:1.5rem;
+    }
+    .counter-values {
+      display:flex; align-items:center; justify-content:center; gap:1rem;
+    }
+    .counter-from {
+      font-family:var(--font-display); font-size:3rem; font-weight:400;
+      color:rgba(245,243,238,0.25); transition:color 0.3s;
+      min-width:2.5ch; text-align:right;
+    }
+    .counter-from.done { color:rgba(245,243,238,0.12); }
+    .counter-arrow {
+      font-family:var(--font-mono); font-size:1rem; color:var(--amber); opacity:0.5;
+    }
+    .counter-to {
+      font-family:var(--font-display); font-size:3rem; font-weight:400;
+      color:var(--amber); min-width:2.5ch; text-align:left;
+      opacity:0; transition:opacity 0.5s;
+    }
+    .counter-to.visible { opacity:1; }
+    .counter-label {
+      font-family:var(--font-body); font-size:0.8rem; font-weight:300;
+      color:rgba(245,243,238,0.35); margin-top:1.2rem; line-height:1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. SELF-EDITING TEXT -->
+  <section class="concept">
+    <div class="concept-label">Concept 1 — Self-editing text</div>
+    <div class="typewriter-container">
+      <div class="typewriter-text" id="typewriter"><span class="cursor-blink"></span></div>
+    </div>
+  </section>
+
+  <!-- 2. HOVER REDUCTION -->
+  <section class="concept">
+    <div class="concept-label">Concept 2 — Hover reduction</div>
+    <div class="hover-container">
+      <p class="hover-text">
+        <span class="filler">We provide comprehensive, end-to-end </span><span class="core">business engineering</span><span class="filler"> solutions that leverage cutting-edge methodologies and </span><span class="core">AI</span><span class="filler"> technologies to holistically transform and strategically optimise your organisation's </span><span class="core">operations</span><span class="filler"> across all functional verticals, enabling sustainable competitive advantage through </span><span class="core">simplicity.</span>
+      </p>
+      <div class="hover-hint">Hover to apply Occam's razor</div>
+    </div>
+  </section>
+
+  <!-- 3. COMPLEXITY COUNTERS -->
+  <section class="concept">
+    <div class="concept-label">Concept 3 — Complexity counters</div>
+    <div class="counters" id="counters">
+
+      <div class="counter-block" data-from="14" data-to="3" data-suffix="">
+        <div class="counter-top">Process steps</div>
+        <div class="counter-values">
+          <span class="counter-from">14</span>
+          <span class="counter-arrow">&rarr;</span>
+          <span class="counter-to">3</span>
+        </div>
+        <div class="counter-label">Onboarding workflow</div>
+      </div>
+
+      <div class="counter-block" data-from="87" data-to="1" data-suffix="">
+        <div class="counter-top">Data points</div>
+        <div class="counter-values">
+          <span class="counter-from">87</span>
+          <span class="counter-arrow">&rarr;</span>
+          <span class="counter-to">1</span>
+        </div>
+        <div class="counter-label">Decision</div>
+      </div>
+
+      <div class="counter-block" data-from="6" data-to="1" data-suffix="">
+        <div class="counter-top">Months</div>
+        <div class="counter-values">
+          <span class="counter-from">6</span>
+          <span class="counter-arrow">&rarr;</span>
+          <span class="counter-to">1</span>
+        </div>
+        <div class="counter-label">Time to production</div>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    // ===== 1. SELF-EDITING TEXT =====
+    (function() {
+      var el = document.getElementById('typewriter');
+      var verbose = 'We help businesses navigate complex operational transformation challenges through strategic implementation of synergistic, cross-functional solutions...';
+      var simple = 'We simplify operations.';
+      var state = 'typing-verbose'; // typing-verbose, pausing, deleting, typing-simple, done, clearing
+      var pos = 0;
+      var typed = '';
+      var TYPING_SPEED = 35;
+      var DELETE_SPEED = 18;
+      var PAUSE_AFTER_VERBOSE = 1200;
+      var PAUSE_AFTER_SIMPLE = 3500;
+      var PAUSE_BEFORE_RESTART = 800;
+
+      function render(text, showCursor) {
+        el.innerHTML = text + (showCursor ? '<span class="cursor-blink"></span>' : '');
+      }
+
+      function tick() {
+        switch (state) {
+          case 'typing-verbose':
+            if (pos < verbose.length) {
+              typed += verbose[pos];
+              pos++;
+              render(typed, true);
+              // Speed variation — faster on filler words
+              var delay = TYPING_SPEED + Math.random() * 25;
+              setTimeout(tick, delay);
+            } else {
+              state = 'pausing';
+              setTimeout(tick, PAUSE_AFTER_VERBOSE);
+            }
+            break;
+
+          case 'pausing':
+            state = 'deleting';
+            tick();
+            break;
+
+          case 'deleting':
+            if (typed.length > 0) {
+              typed = typed.slice(0, -1);
+              render(typed, true);
+              // Accelerate deletion
+              var speed = DELETE_SPEED - Math.min(10, Math.floor((verbose.length - typed.length) / 15));
+              setTimeout(tick, Math.max(8, speed));
+            } else {
+              state = 'typing-simple';
+              pos = 0;
+              setTimeout(tick, 300);
+            }
+            break;
+
+          case 'typing-simple':
+            if (pos < simple.length) {
+              typed += simple[pos];
+              pos++;
+              // Render with <em> on the whole simple text as it builds
+              var display = '<em>' + typed + '</em>';
+              render(display, true);
+              setTimeout(tick, TYPING_SPEED + 40 + Math.random() * 30);
+            } else {
+              state = 'done';
+              setTimeout(tick, PAUSE_AFTER_SIMPLE);
+            }
+            break;
+
+          case 'done':
+            state = 'clearing';
+            tick();
+            break;
+
+          case 'clearing':
+            if (typed.length > 0) {
+              typed = typed.slice(0, -1);
+              var display = typed.length > 0 ? '<em>' + typed + '</em>' : '';
+              render(display, true);
+              setTimeout(tick, DELETE_SPEED);
+            } else {
+              state = 'typing-verbose';
+              pos = 0;
+              setTimeout(tick, PAUSE_BEFORE_RESTART);
+            }
+            break;
+        }
+      }
+
+      // Start after a brief delay
+      setTimeout(tick, 800);
+    })();
+
+
+    // ===== 3. COMPLEXITY COUNTERS =====
+    (function() {
+      var observed = false;
+      var blocks = document.querySelectorAll('.counter-block');
+
+      function animateCounter(block) {
+        var fromEl = block.querySelector('.counter-from');
+        var toEl = block.querySelector('.counter-to');
+        var fromVal = parseInt(block.getAttribute('data-from'));
+        var toVal = parseInt(block.getAttribute('data-to'));
+        var current = fromVal;
+
+        block.classList.add('counting');
+
+        // Count down from → to
+        var totalSteps = fromVal - toVal;
+        var duration = 1800; // total ms
+        var stepTime = duration / totalSteps;
+
+        function step() {
+          if (current > toVal) {
+            current--;
+            fromEl.textContent = current;
+            // Accelerate as we get closer
+            var progress = (fromVal - current) / totalSteps;
+            var delay = stepTime * (1.5 - progress);
+            setTimeout(step, Math.max(30, delay));
+          } else {
+            fromEl.classList.add('done');
+            toEl.classList.add('visible');
+            toEl.textContent = toVal;
+          }
+        }
+
+        // Stagger start
+        var staggerIndex = Array.from(blocks).indexOf(block);
+        setTimeout(step, staggerIndex * 400);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting && !observed) {
+            observed = true;
+            blocks.forEach(animateCounter);
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+
+      io.observe(document.getElementById('counters'));
+    })();
+  </script>
+</body>
+</html>

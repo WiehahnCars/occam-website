@@ -4,14 +4,15 @@
     { "source": "/what-we-do", "destination": "/what-we-do.html" },
     { "source": "/our-team", "destination": "/our-team.html" },
     { "source": "/insights", "destination": "/insights.html" },
-    { "source": "/plant-run", "destination": "/plant-run.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/building-is-no-longer-the-constraint", "destination": "/building-is-no-longer-the-constraint.html" },
-    { "source": "/beyond-the-frontier", "destination": "/beyond-the-frontier.html" },
-    { "source": "/proposals/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4", "destination": "/proposals/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4.html" },
-    { "source": "/proposals/lee_botti_recruitment", "destination": "/proposals/lee_botti_recruitment.html" },
-    { "source": "/proposals/mmed_b34r87gwrfub34r897gwrfiubw479gsciubcr7g", "destination": "/proposals/mmed_b34r87gwrfub34r897gwrfiubw479gsciubcr7g.html" },
-    { "source": "/team_internal/what_we_do_draft", "destination": "/team_internal/what_we_do_draft.html" }
-
+    { "source": "/case-studies", "destination": "/case-studies.html" },
+    { "source": "/building-is-no-longer-the-constraint", "destination": "/insights/building-is-no-longer-the-constraint.html" },
+    { "source": "/beyond-the-frontier", "destination": "/insights/beyond-the-frontier.html" },
+    { "source": "/team_internal/what_we_do_draft", "destination": "/team_internal/what_we_do_draft.html" },
+    { "source": "/proposals/intechem/icl-app_okjnbsadcobweuirfbjrfoubkn2456r7twef8ifubwec87gw47f", "destination": "/proposals/intechem/icl-app_okjnbsadcobweuirfbjrfoubkn2456r7twef8ifubwec87gw47f.html" },
+    { "source": "/proposals/intechem/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4", "destination": "/proposals/intechem/itc_iuaef8623reiyvwec76avedc87yq37a3va3c4.html" },
+    { "source": "/proposals/tools/plant-run", "destination": "/proposals/tools/plant-run.html" },
+    { "source": "/proposals/lee_botti/lee_botti_recruitment", "destination": "/proposals/lee_botti/lee_botti_recruitment.html" },
+    { "source": "/proposals/melomed/mmed_b34r87gwrfub34r897gwrfiubw479gsciubcr7g", "destination": "/proposals/melomed/mmed_b34r87gwrfub34r897gwrfiubw479gsciubcr7g.html" },
+    { "source": "/proposals/plettcycleclub/pcc_79234972347234bjwce786g24rihvcw87gcwihbecdw987gw4", "destination": "/proposals/plettcycleclub/pcc_79234972347234bjwce786g24rihvcw87gcwihbecdw987gw4.html" }
   ]
 }

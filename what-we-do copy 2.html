@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Occam | What We Do</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #04040f;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(20px);
+      background: rgba(4,4,15,0.6);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: 0.08em;
+      color: #fff;
+      text-decoration: none;
+    }
+    .logo span {
+      color: rgba(160,120,255,0.9);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover {
+      color: rgba(255,255,255,0.9);
+    }
+    .nav-cta {
+      display: inline-block;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #fff !important;
+      background: rgba(91,33,255,0.4);
+      border: 1px solid rgba(91,33,255,0.5);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .nav-cta:hover {
+      background: rgba(91,33,255,0.6);
+      border-color: rgba(91,33,255,0.7);
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 101;
+    }
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: rgba(255,255,255,0.7);
+      transition: 0.3s;
+    }
+
+    /* ── Hero Section ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: #04040f;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+    }
+
+    .hero canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .hero .orbs {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.3;
+    }
+    .orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #5b21ff, transparent 65%);
+      top: -150px; left: -100px;
+      animation: drift1 18s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, #0d6fff, transparent 65%);
+      bottom: -100px; right: -60px;
+      animation: drift2 14s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #b832ff, transparent 65%);
+      top: 50%; left: 55%;
+      transform: translate(-50%, -50%);
+      animation: drift3 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift1 {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(40px,50px) scale(1.08); }
+    }
+    @keyframes drift2 {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(-30px,-40px) scale(1.06); }
+    }
+    @keyframes drift3 {
+      from { transform: translate(-50%,-50%) scale(1); }
+      to   { transform: translate(-55%,-45%) scale(1.12); }
+    }
+
+    .hero .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 56px 56px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .hero .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.65) 100%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-weight: 800;
+      font-size: clamp(2.5rem, 5vw, 4.2rem);
+      line-height: 1.1;
+      background: linear-gradient(140deg, #fff 30%, rgba(160,120,255,0.9) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+    .hero p {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #fff;
+      background: rgba(91,33,255,0.4);
+      border: 1px solid rgba(91,33,255,0.5);
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-primary:hover {
+      background: rgba(91,33,255,0.6);
+      border-color: rgba(91,33,255,0.7);
+    }
+
+    /* ── Section Wrappers ── */
+    .section-wrap {
+      width: 100%;
+      padding: 6rem 2rem;
+    }
+    .section-wrap .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Dark sections */
+    .section-dark {
+      background-color: #0a0a14;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: #fff;
+    }
+
+    /* Light sections */
+    .section-light {
+      background-color: #f8f8fb;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.05) 1px, transparent 1px);
+      background-size: 24px 24px;
+      color: #111;
+    }
+
+    /* ── Section typography: dark ── */
+    .section-dark .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(160,120,255,0.7);
+      margin-bottom: 1rem;
+    }
+    .section-dark .section-title {
+      font-weight: 700;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      line-height: 1.2;
+      background: linear-gradient(140deg, #fff 30%, rgba(160,120,255,0.9) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      max-width: 600px;
+    }
+    .section-dark .section-desc {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+    }
+
+    /* ── Section typography: light ── */
+    .section-light .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #5b21ff;
+      margin-bottom: 1rem;
+    }
+    .section-light .section-title {
+      font-weight: 700;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      line-height: 1.2;
+      color: #111;
+      -webkit-text-fill-color: #111;
+      margin-bottom: 1rem;
+      max-width: 600px;
+    }
+    .section-light .section-desc {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: #555;
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+    }
+
+    /* ── Cards: dark variant ── */
+    .section-dark .pillar-card,
+    .section-dark .outcome-item,
+    .section-dark .approach-step {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .section-dark .pillar-card:hover,
+    .section-dark .outcome-item:hover,
+    .section-dark .approach-step:hover {
+      border-color: rgba(91,33,255,0.3);
+      background: rgba(255,255,255,0.05);
+    }
+    .section-dark .pillar-card h3,
+    .section-dark .approach-step h3 { color: #fff; }
+    .section-dark .pillar-card p,
+    .section-dark .approach-step p {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.75;
+    }
+    .section-dark .pillar-sub {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(160,120,255,0.6);
+      margin-bottom: 1rem;
+    }
+    .section-dark .outcome-marker {
+      background: rgba(160,120,255,0.7);
+    }
+    .section-dark .outcome-item p {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+    }
+
+    /* ── Cards: light variant ── */
+    .section-light .pillar-card,
+    .section-light .outcome-item,
+    .section-light .approach-step {
+      background: #fff;
+      border: 1px solid #e8e8ee;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .section-light .pillar-card:hover,
+    .section-light .outcome-item:hover,
+    .section-light .approach-step:hover {
+      border-color: rgba(91,33,255,0.25);
+      box-shadow: 0 2px 8px rgba(91,33,255,0.06);
+    }
+    .section-light .pillar-card h3,
+    .section-light .approach-step h3 { color: #111; }
+    .section-light .pillar-card p,
+    .section-light .approach-step p {
+      font-size: 0.88rem;
+      font-weight: 300;
+      color: #666;
+      line-height: 1.75;
+    }
+    .section-light .pillar-sub {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(91,33,255,0.5);
+      margin-bottom: 1rem;
+    }
+    .section-light .outcome-marker {
+      background: #5b21ff;
+    }
+    .section-light .outcome-item p {
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    /* ── Shared card structure ── */
+    .pillar-card,
+    .outcome-item,
+    .approach-step {
+      border-radius: 12px;
+      transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+    }
+    .pillar-card {
+      padding: 2rem;
+    }
+    .pillar-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(91,33,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+      font-size: 1.1rem;
+    }
+    .section-light .pillar-icon {
+      background: rgba(91,33,255,0.1);
+      color: #5b21ff;
+    }
+    .section-dark .pillar-icon {
+      color: rgba(160,120,255,0.9);
+    }
+    .pillar-card h3 {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    /* Grids */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .four-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.5rem;
+    }
+    .outcomes-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .outcome-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.5rem 1.75rem;
+    }
+    .outcome-marker {
+      flex-shrink: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 0.45rem;
+    }
+
+    .approach-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      counter-reset: step;
+    }
+    .approach-step {
+      padding: 2rem;
+      counter-increment: step;
+    }
+    .approach-step h3 {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(91,33,255,0.15);
+      border: 1px solid rgba(91,33,255,0.3);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: rgba(160,120,255,0.9);
+      margin-bottom: 1.2rem;
+    }
+    .section-light .step-number {
+      background: rgba(91,33,255,0.08);
+      border-color: rgba(91,33,255,0.2);
+      color: #5b21ff;
+    }
+
+    /* ── CTA Section ── */
+    .cta-wrap {
+      width: 100%;
+      padding: 5rem 2rem 6rem;
+    }
+    .cta-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cta-wrap.section-light .section-title {
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 1.5rem;
+    }
+    .cta-wrap.section-light p {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Footer ── */
+    .footer-wrap {
+      width: 100%;
+      background-color: #0a0a14;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 3rem 3rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .footer-left {
+      max-width: 320px;
+    }
+    .footer-left .logo {
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .footer-left p {
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.3);
+      line-height: 1.7;
+    }
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: rgba(255,255,255,0.7);
+    }
+    .footer-copy {
+      width: 100%;
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ── Contact modal (dark themed) ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: rgba(15,15,30,0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 2.5rem;
+      max-width: 440px;
+      width: 90%;
+    }
+    .modal h2 {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .modal .modal-sub {
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .modal label {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.4rem;
+    }
+    .modal input, .modal textarea {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .modal input:focus, .modal textarea:focus {
+      border-color: rgba(91,33,255,0.5);
+    }
+    .modal textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .modal .btn-primary {
+      width: 100%;
+      text-align: center;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(4,4,15,0.97);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+      }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .pillars { grid-template-columns: 1fr; }
+      .four-grid { grid-template-columns: 1fr; }
+      .approach-steps { grid-template-columns: 1fr; }
+      .outcomes-list { grid-template-columns: 1fr; }
+      .section-wrap { padding: 4rem 1.5rem; }
+      .cta-wrap { padding: 3.5rem 1.5rem 4rem; }
+      footer { flex-direction: column; align-items: center; text-align: center; padding: 2.5rem 1.5rem 2rem; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .hero { min-height: 55vh; padding: 7rem 1.5rem 3rem; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 0.85rem 1rem; }
+      .hero { min-height: 50vh; padding: 6rem 1rem 2.5rem; }
+      h1 { font-size: clamp(1.8rem, 7vw, 2.5rem); }
+      .hero p { font-size: 0.9rem; }
+      .section-wrap { padding: 3rem 1rem; }
+      .cta-wrap { padding: 3rem 1rem; }
+      .section-dark .section-title,
+      .section-light .section-title {
+        font-size: clamp(1.4rem, 5vw, 1.8rem);
+      }
+      .pillar-card { padding: 1.5rem; }
+      .approach-step { padding: 1.5rem; }
+      .outcome-item { padding: 1.2rem 1.25rem; }
+      footer { padding: 2rem 1rem 1.5rem; }
+      .footer-links { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="logo">OCCAM<span>.</span></a>
+    <div class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="what-we-do.html">What we do</a></li>
+      <li><a href="our-team.html">Our team</a></li>
+      <li><a href="insights.html">Insights</a></li>
+      <li><a href="privacy-policy.html">Privacy policy</a></li>
+      <li><a href="#" class="nav-cta" onclick="openModal(event)">Start a conversation</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero (dark, with particles/orbs/grid/vignette) -->
+  <div class="hero">
+    <canvas id="c"></canvas>
+    <div class="orbs">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="grid-overlay"></div>
+    <div class="vignette"></div>
+    <div class="hero-content">
+      <div class="badge">AI-Native Advisory &amp; Implementation</div>
+      <h1>We find the constraint. We fix it. Faster than any conventional method.</h1>
+      <p>Occam is an AI-native advisory and implementation firm. We enter at the point of operational friction, translate messy business reality into structured logic, and use AI-assisted engineering to remove the bottleneck.</p>
+    </div>
+  </div>
+
+  <!-- The Problem: LIGHT -->
+  <div class="section-wrap section-light">
+    <div class="section-inner">
+      <div class="section-label">The Problem We Solve</div>
+      <h2 class="section-title">Growing businesses develop operational complexity they can't outrun</h2>
+      <p class="section-desc">Most organisations try to solve this with more software or more consulting. The deeper issue is that the operating system of the business has never been properly engineered.</p>
+
+      <div class="pillars">
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9899;</div>
+          <h3>Decision logic trapped in people</h3>
+          <div class="pillar-sub">The bottleneck</div>
+          <p>Key decisions depend on individuals who cannot scale. When those people aren't available, the business stalls. When they leave, the logic walks out with them.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9899;</div>
+          <h3>Processes held together by spreadsheets</h3>
+          <div class="pillar-sub">The workaround</div>
+          <p>Workflows that worked at smaller scale now require manual stitching. Data moves by email and copy-paste. Errors accumulate. Speed suffers.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9899;</div>
+          <h3>Systems that don't talk to each other</h3>
+          <div class="pillar-sub">The fragmentation</div>
+          <p>Systems were introduced at different stages to solve different problems. Nobody engineered them to connect. The integration gap becomes the operational bottleneck.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two Offerings: DARK -->
+  <div class="section-wrap section-dark">
+    <div class="section-inner">
+      <div class="section-label">How We Engage</div>
+      <h2 class="section-title">Two ways in. One coherent commercial logic.</h2>
+      <p class="section-desc">Pre-built packages create entry and diagnostic insight. Core advisory and implementation delivers the solution that removes the constraint.</p>
+
+      <div class="pillars">
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9656;</div>
+          <h3>Pre-Built Packages</h3>
+          <div class="pillar-sub">Entry &amp; Diagnosis</div>
+          <p>Structured, repeatable entry points that diagnose, frame, and accelerate engagement. AI Readiness Scores, operational opportunity diagnostics, and rapid maturity assessments that create commercial clarity and open the door to deeper work.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9670;</div>
+          <h3>Core Advisory &amp; Implementation</h3>
+          <div class="pillar-sub">The main engine</div>
+          <p>Bespoke, high-value work delivered through our four-phase model and accelerated through AI-assisted engineering. Business analysis, solution architecture, rapid system development, integration, automation, and ongoing optimisation — compressing timelines that traditionally took months into weeks.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Four-Phase Delivery: LIGHT -->
+  <div class="section-wrap section-light">
+    <div class="section-inner">
+      <div class="section-label">Delivery Model</div>
+      <h2 class="section-title">Four phases. One continuous thread.</h2>
+      <p class="section-desc">Every engagement runs through some or all of these phases. Nothing is implemented before it is understood — and nothing is understood without being acted on.</p>
+
+      <div class="four-grid">
+        <div class="pillar-card">
+          <div class="step-number">1</div>
+          <h3>Concept</h3>
+          <p>Diagnose the constraint. Map the business and operating context, identify pain points and root causes, and find the AI insertion points.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="step-number">2</div>
+          <h3>Design</h3>
+          <p>Translate into architecture. Solution design, technical specification, process redesign, prototyping to validate direction, and prioritised roadmap.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="step-number">3</div>
+          <h3>Implementation</h3>
+          <p>Build and deploy rapidly. AI-assisted development, system integration, workflow automation, platform construction, testing, and go-live.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="step-number">4</div>
+          <h3>Support</h3>
+          <p>Optimise and track value. Performance monitoring, refinement, value tracking against business case, and ongoing capability extension.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Six Pillars: DARK -->
+  <div class="section-wrap section-dark">
+    <div class="section-inner">
+      <div class="section-label">Diagnosis Framework</div>
+      <h2 class="section-title">Six dimensions we assess, design, and deliver across</h2>
+      <p class="section-desc">In packages, the six pillars diagnose. In consulting, they shape design and delivery. They determine where a business is blocked and what must change.</p>
+
+      <div class="pillars">
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9650;</div>
+          <h3>Strategy</h3>
+          <p>Is AI genuinely connected to how the business competes — or running as a disconnected experiment?</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9670;</div>
+          <h3>Governance</h3>
+          <p>Are compliance and risk engineered into operations, or bolted on as costly afterthoughts?</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9632;</div>
+          <h3>People</h3>
+          <p>Can the workforce absorb AI without capability gaps, low adoption, or unmanaged displacement?</p>
+        </div>
+        <div class="pillar-card" style="border-color: rgba(91,33,255,0.4); background: rgba(91,33,255,0.06);">
+          <div class="pillar-icon" style="background: rgba(91,33,255,0.25);">&#9673;</div>
+          <h3>Business Engineering</h3>
+          <div class="pillar-sub">Core Pillar</div>
+          <p>Is the operating model structured in a way that AI can actually run inside it at scale? This is the central pillar.</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9644;</div>
+          <h3>Data</h3>
+          <p>Is data sufficient, reliable, and accessible enough for real AI deployment — or still stuck in silos?</p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-icon">&#9654;</div>
+          <h3>Value Realisation</h3>
+          <p>Can the business define, measure, and financially attribute the value AI creates — with real discipline?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA: LIGHT -->
+  <div class="cta-wrap section-light">
+    <div class="cta-inner">
+      <h2 class="section-title">Ready to find the constraint?</h2>
+      <p>A short conversation is usually enough to see whether there is a good fit. We are selective about the work we take on, and direct about what we can deliver.</p>
+      <a href="#" class="btn-primary" onclick="openModal(event)">Start a conversation &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Footer: DARK -->
+  <div class="footer-wrap">
+    <footer>
+      <div class="footer-left">
+        <a href="index.html" class="logo">OCCAM<span>.</span></a>
+        <p>No spam. Just the occasional update on new insights, tools, and our thinking.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="what-we-do.html">What we do</a></li>
+        <li><a href="our-team.html">Our team</a></li>
+        <li><a href="insights.html">Insights</a></li>
+        <li><a href="privacy-policy.html">Privacy policy</a></li>
+      </ul>
+      <div class="footer-copy">&copy; Occam. All rights reserved.</div>
+    </footer>
+  </div>
+
+  <!-- Contact Modal -->
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal" style="position:relative;">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <h2>Start a conversation</h2>
+      <p class="modal-sub">We are selective about the work we take on. A short conversation is usually enough to see whether there is a good fit.</p>
+      <form onsubmit="event.preventDefault(); alert('Thank you. We will be in touch shortly.');">
+        <label>Name</label>
+        <input type="text" placeholder="Your name" required />
+        <label>Email</label>
+        <input type="email" placeholder="you@company.com" required />
+        <label>Message</label>
+        <textarea placeholder="Tell us briefly what you're working on"></textarea>
+        <button type="submit" class="btn-primary">Send &rarr;</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openModal(e) { e.preventDefault(); document.getElementById('contactModal').classList.add('active'); }
+    function closeModal() { document.getElementById('contactModal').classList.remove('active'); }
+    document.getElementById('contactModal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+    // Particle background — scoped to hero
+    const hero = document.querySelector('.hero');
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = hero.offsetWidth;
+    let H = canvas.height = hero.offsetHeight;
+    const PARTICLE_COUNT = 120;
+    const CONNECT_DIST = 140;
+    const CURSOR_RADIUS = 180;
+    const CURSOR_FORCE = 0.012;
+    const REPEL_DIST = 90;
+    const REPEL_FORCE = 2.5;
+    let mouse = { x: W / 2, y: H / 2 };
+
+    class Particle {
+      constructor() { this.reset(true); }
+      reset(init = false) {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.r = Math.random() * 1.8 + 0.8;
+        this.baseAlpha = Math.random() * 0.5 + 0.3;
+        this.alpha = this.baseAlpha;
+        const hues = [240, 260, 280, 220, 200];
+        this.hue = hues[Math.floor(Math.random() * hues.length)];
+        this.sat = Math.random() * 40 + 20;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < -10) this.x = W + 10;
+        if (this.x > W + 10) this.x = -10;
+        if (this.y < -10) this.y = H + 10;
+        if (this.y > H + 10) this.y = -10;
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < REPEL_DIST) {
+          const force = (REPEL_DIST - dist) / REPEL_DIST;
+          this.vx -= (dx / dist) * force * REPEL_FORCE * 0.08;
+          this.vy -= (dy / dist) * force * REPEL_FORCE * 0.08;
+        } else if (dist < CURSOR_RADIUS) {
+          this.vx += (dx / dist) * CURSOR_FORCE;
+          this.vy += (dy / dist) * CURSOR_FORCE;
+        }
+        this.vx *= 0.97;
+        this.vy *= 0.97;
+        if (dist < CURSOR_RADIUS) {
+          const t = 1 - dist / CURSOR_RADIUS;
+          this.alpha = Math.min(1, this.baseAlpha + t * 0.6);
+        } else {
+          this.alpha += (this.baseAlpha - this.alpha) * 0.05;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${this.hue}, ${this.sat}%, 90%, ${this.alpha})`;
+        ctx.fill();
+        const grd = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 5);
+        grd.addColorStop(0, `hsla(${this.hue}, 80%, 80%, ${this.alpha * 0.3})`);
+        grd.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r * 5, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+      }
+    }
+
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => new Particle());
+
+    function drawConnections() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const a = particles[i], b = particles[j];
+          const dx = a.x - b.x, dy = a.y - b.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist > CONNECT_DIST) continue;
+          const t = 1 - dist / CONNECT_DIST;
+          const dax = mouse.x - a.x, day = mouse.y - a.y;
+          const dbx = mouse.x - b.x, dby = mouse.y - b.y;
+          const nearCursor = Math.sqrt(dax*dax+day*day) < CURSOR_RADIUS || Math.sqrt(dbx*dbx+dby*dby) < CURSOR_RADIUS;
+          const alpha = t * (nearCursor ? 0.55 : 0.12);
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `hsla(${(a.hue+b.hue)/2}, 60%, 80%, ${alpha})`;
+          ctx.lineWidth = nearCursor ? t * 1.2 : t * 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    function drawCursor() {
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 6, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fill();
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      drawConnections();
+      particles.forEach(p => { p.update(); p.draw(); });
+      drawCursor();
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    // Mouse coordinates relative to hero
+    hero.addEventListener('mousemove', e => {
+      const rect = hero.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    });
+
+    window.addEventListener('resize', () => {
+      W = canvas.width = hero.offsetWidth;
+      H = canvas.height = hero.offsetHeight;
+    });
+  </script>
+</body>
+</html>

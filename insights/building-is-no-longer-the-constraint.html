@@ -1,382 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>occam | Building is no longer the constraint. Judgment is.</title>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-52W0F5S3TM"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-52W0F5S3TM');
-  </script>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <link rel="icon" type="image/x-icon" href="../favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Building is no longer the constraint. Judgment is. | Occam</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@200;300;400;500&family=DM+Mono:wght@300&family=Montserrat:wght@500&display=swap" rel="stylesheet">
   <style>
-    .prosto { font-family: 'Montserrat', sans-serif; }
-    html { scroll-behavior: smooth; }
+    :root {
+      --ink:     #0a0a0c;
+      --paper:   #f5f3ee;
+      --slate:   #1a1a22;
+      --amber:   #c8a96e;
+      --amber-lt:#d4bb8a;
+      --line:    rgba(245,243,238,0.1);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Jost', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+    }
 
-    .article {
-      font-size: 18px;
-      line-height: 1.8;
-      color: #111827;
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { background:var(--ink); color:var(--paper); font-family:var(--font-body); font-weight:300; overflow-x:hidden; cursor:none; }
+
+    .cursor-dot { position:fixed; top:0; left:0; width:8px; height:8px; background:var(--amber); border-radius:50%; pointer-events:none; z-index:99999; transform:translate(-50%,-50%); }
+    .cursor-ring { position:fixed; top:0; left:0; width:36px; height:36px; border:1px solid rgba(200,169,110,0.4); border-radius:50%; pointer-events:none; z-index:99998; transform:translate(-50%,-50%); }
+    canvas#stars { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:2rem 4rem; transition:background 0.4s, padding 0.4s; }
+    nav.scrolled { background:rgba(10,10,12,0.92); backdrop-filter:blur(20px); padding:1.2rem 4rem; border-bottom:1px solid var(--line); }
+    .nav-logo { font-family:'Montserrat', sans-serif; font-size:1.2rem; font-weight:500; letter-spacing:0.12em; color:var(--paper); text-decoration:none; text-transform:lowercase; }
+    .nav-links { display:flex; gap:3rem; list-style:none; align-items:center; }
+    .nav-links a { font-size:0.78rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,243,238,0.5); text-decoration:none; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--paper); }
+    .nav-cta { font-size:0.78rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:#050506; background:var(--amber); padding:0.65rem 1.5rem; text-decoration:none; transition:background 0.2s, transform 0.2s; }
+    .nav-cta:hover { background:var(--amber-lt); transform:translateY(-1px); }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; z-index:101; }
+    .hamburger span { width:24px; height:2px; background:rgba(245,243,238,0.7); transition:0.3s; }
+
+    section { position:relative; z-index:2; }
+    .section-inner { max-width:1200px; margin:0 auto; padding:0 4rem; }
+
+    /* ARTICLE HERO */
+    .article-hero {
+      position:relative; z-index:1; min-height:55vh;
+      display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+      text-align:center; padding:10rem 2rem 4rem; overflow:hidden;
     }
-    .article p {
-      margin-bottom: 18px;
-      color: #374151;
+    .article-hero::after { content:''; position:absolute; bottom:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,var(--amber),transparent); opacity:0.4; }
+
+    .back-link {
+      display:inline-flex; align-items:center; gap:0.5rem;
+      font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase;
+      color:rgba(245,243,238,0.4); text-decoration:none; transition:color 0.2s; margin-bottom:2.5rem;
+      opacity:0; animation:fadeUp 0.8s 0.2s ease forwards;
     }
-    .article h2 {
-      margin: 44px 0 14px;
-      font-size: 26px;
-      font-weight: 600;
-      color: #111827;
+    .back-link:hover { color:var(--amber); }
+
+    .article-meta {
+      display:flex; flex-wrap:wrap; align-items:center; gap:1rem; justify-content:center; margin-bottom:2rem;
+      opacity:0; animation:fadeUp 0.8s 0.3s ease forwards;
     }
-    .reading-width { max-width: 720px; }
+    .article-category {
+      font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.15em; text-transform:uppercase;
+      color:var(--amber); border:1px solid rgba(200,169,110,0.3); padding:0.25rem 0.7rem;
+    }
+    .article-date { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); }
+    .article-read-time { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); }
+
+    .article-hero h1 {
+      font-family:var(--font-display); font-size:clamp(2rem,4.5vw,3.2rem); font-weight:400; line-height:1.15;
+      color:var(--paper); max-width:740px; margin-bottom:1.5rem;
+      opacity:0; animation:fadeUp 0.9s 0.5s ease forwards;
+    }
+    .article-hero h1 em { font-style:italic; color:var(--amber); }
+    .article-author {
+      font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.1em; color:rgba(245,243,238,0.35);
+      opacity:0; animation:fadeUp 0.8s 0.7s ease forwards;
+    }
+    .article-author a { color:inherit; text-decoration:none; border-bottom:1px solid rgba(200,169,110,0.3); transition:border-color 0.2s; }
+    .article-author a:hover { border-color:var(--amber); }
+    .article-author strong { color:rgba(245,243,238,0.6); font-weight:400; }
+
+    /* ARTICLE BODY */
+    .s-article { background:var(--slate); padding:5rem 0 8rem; }
+    .article-body { max-width:740px; margin:0 auto; }
+    .article-body p {
+      font-size:1rem; font-weight:300; color:rgba(245,243,238,0.6); line-height:1.9; margin-bottom:2rem;
+    }
+    .article-body .lead {
+      font-size:1.08rem; color:rgba(245,243,238,0.7); line-height:1.9;
+    }
+    .article-body h2 {
+      font-family:var(--font-display); font-size:1.6rem; font-weight:400; color:var(--paper); margin-bottom:1rem; margin-top:1.5rem; line-height:1.25;
+    }
+    .article-body blockquote {
+      border-left:2px solid var(--amber); padding-left:1.5rem; margin:2.5rem 0;
+    }
+    .article-body blockquote p {
+      font-size:1.08rem; font-weight:300; color:rgba(245,243,238,0.7); font-style:italic;
+    }
+
+    /* CTA */
+    .s-cta { background:var(--ink); padding:10rem 0 8rem; text-align:center; position:relative; overflow:hidden; }
+    .cta-glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:600px; height:300px; background:radial-gradient(ellipse,rgba(200,169,110,0.08),transparent 70%); pointer-events:none; }
+    .section-label { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--amber); margin-bottom:1.5rem; }
+    .cta-title { font-family:var(--font-display); font-size:clamp(2rem,4vw,3.5rem); font-weight:400; color:var(--paper); line-height:1.15; margin-bottom:1.5rem; }
+    .cta-title em { font-style:italic; color:var(--amber); }
+    .cta-sub { font-size:0.95rem; color:rgba(245,243,238,0.45); max-width:420px; margin:0 auto 3rem; line-height:1.8; }
+    .btn-primary { display:inline-block; padding:1rem 2.5rem; background:var(--amber); color:var(--ink); font-family:var(--font-body); font-size:0.8rem; font-weight:500; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; transition:background 0.2s,transform 0.2s; }
+    .btn-primary:hover { background:var(--amber-lt); transform:translateY(-2px); }
+
+    /* FOOTER */
+    footer { background:var(--slate); padding:4rem; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); position:relative; z-index:2; }
+    .footer-logo { font-family:'Montserrat', sans-serif; font-size:1rem; font-weight:500; letter-spacing:0.12em; color:rgba(245,243,238,0.4); text-transform:lowercase; line-height:1; }
+    .footer-sub { font-family:var(--font-body); font-size:0.6rem; font-weight:300; letter-spacing:0.18em; text-transform:uppercase; color:rgba(245,243,238,0.2); margin-top:0.4rem; }
+    .footer-tagline { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.15em; color:rgba(245,243,238,0.2); }
+    .footer-links { display:flex; gap:2rem; list-style:none; }
+    .footer-links a { font-size:0.75rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); text-decoration:none; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--amber); }
+
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width:900px) {
+      nav { padding:1.5rem 2rem; }
+      nav.scrolled { padding:1rem 2rem; }
+      .nav-links { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,10,12,0.97); flex-direction:column; align-items:center; justify-content:center; gap:2.5rem; z-index:100; }
+      .nav-links.open { display:flex; }
+      .nav-links a { font-size:1rem; }
+      .nav-cta { font-size:0.85rem; padding:0.8rem 2rem; }
+      .hamburger { display:flex; }
+      .section-inner { padding:0 2rem; }
+      .article-body { padding:0 2rem; }
+      .article-hero { padding:8rem 1.5rem 3rem; }
+      footer { flex-direction:column; gap:2rem; text-align:center; padding:3rem 2rem; }
+    }
+    @media (max-width:480px) {
+      nav { padding:1rem 1.2rem; }
+      .article-hero { padding:7rem 1.2rem 2rem; }
+      .article-hero h1 { font-size:1.6rem; }
+      .section-inner { padding:0 1.2rem; }
+      .article-body { padding:0 1.2rem; }
+      .s-article { padding:3rem 0 5rem; }
+      .s-cta { padding:6rem 0 5rem; }
+      footer { padding:2.5rem 1.2rem; }
+    }
   </style>
 </head>
+<body>
 
-<body class="bg-white text-gray-800 font-sans min-h-screen flex flex-col">
+  <div class="cursor-dot" id="dot"></div>
+  <div class="cursor-ring" id="ring"></div>
+  <canvas id="stars"></canvas>
 
-    <!-- Navigation -->
-  <header id="main-header" class="fixed top-0 left-0 w-full bg-black text-gray-100 z-50 transition-transform duration-500">
+  <nav id="nav">
+    <a href="../index.html" class="nav-logo">occam</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../our-team.html">Our team</a></li>
+      <li><a href="../insights.html">Insights</a></li>
+      <li><a href="../case-studies.html">Case studies</a></li>
+      <li><a href="mailto:hello@occamco.com" class="nav-cta">Start a conversation</a></li>
+    </ul>
+  </nav>
 
-    <div class="max-w-6xl mx-auto py-4 px-6 flex items-center justify-between">
-      <a href="https://www.occamco.com" class="text-[40px] leading-none transform transition-transform duration-300 hover:scale-95 font-light">occam</a>
-
-        <div class="flex items-center gap-3">
-        <a
-            href="../insights.html"
-            class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition"
-        >
-            insights
-        </a>
-
-        <!-- our tools dropdown -->
-        <!-- Tools dropdown -->
-        <div class="relative">
-        <button
-            id="toolsBtn"
-            class="inline-flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition"
-        >
-            our tools
-            <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-        </button>
-
-        <div
-        id="toolsMenu"
-        class="absolute right-0 mt-2 w-44 rounded-lg bg-black border border-white/5 shadow-lg hidden"
-        onclick="event.stopPropagation()"
-        >
-        <a
-            href="../plant-run.html"
-            class="block px-4 py-3 text-sm text-gray-200 hover:bg-white/20 hover:text-white transition-all duration-200"
-        >
-            plantrun milling software
-        </a>
-        </div>
-
-        </div>
-
-
-
-
-
-
-
-        <button
-            class="open-contact-modal inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
-        >
-            Want to be a customer?
-        </button>
-        </div>
-
+  <section class="article-hero">
+    <a href="../insights.html" class="back-link">&larr; Back to Insights</a>
+    <div class="article-meta">
+      <span class="article-category">Systems</span>
+      <span class="article-date">26 January 2026</span>
+      <span class="article-read-time">4 min read</span>
     </div>
-  </header>
+    <h1>Building is no longer the constraint. <em>Judgment is.</em></h1>
+    <p class="article-author">By <a href="https://www.linkedin.com/in/wiehahncarstens/" target="_blank" rel="noopener"><strong>Wiehahn Carstens</strong></a></p>
+  </section>
 
+  <section class="s-article">
+    <div class="section-inner">
+      <div class="article-body">
+        <p class="lead reveal">Over the past few years, the economics of software creation have changed more dramatically than at any point before. Advances in artificial intelligence, low-code platforms, and automation tooling have collapsed the cost, time, and expertise historically required to build software.</p>
 
-<section class="pt-28 pb-10 px-6 border-b border-gray-100">
-  <div class="reading-width mx-auto">
-    <a href="../insights.html" class="text-sm text-gray-500">← Back to insights</a>
+        <p class="reveal">The result is a broad democratisation of development. More actors can translate intent into software. But this shift marks a transition point. When building is no longer scarce, execution capacity ceases to be the constraint. The limiting factor becomes judgment: the ability to define the problem worth solving.</p>
 
-    <p class="mt-6 text-xs font-mono tracking-widest uppercase text-gray-500">Systems</p>
+        <h2 class="reveal">The paradox of accessibility</h2>
+        <p class="reveal">As the cost of development has fallen, organisations increasingly move straight into building without first clarifying the problem they are trying to solve.</p>
+        <p class="reveal">What once required months of planning can now be assembled in days or hours. That speed feels like progress, but it often bypasses the work of understanding why a system should exist or what outcome it is meant to achieve.</p>
+        <p class="reveal">The inversion is subtle, but dangerous. Organisations end up with well-intentioned systems that are misaligned with broader strategic intent.</p>
 
-    <h1 class="prosto text-4xl sm:text-5xl font-semibold mt-3">
-      Building is no longer the constraint. Judgment is.
-    </h1>
+        <h2 class="reveal">Superficial fixes and symptom solving</h2>
+        <p class="reveal">One consequence of acceleration is that systems increasingly target symptoms rather than underlying causes.</p>
+        <p class="reveal">A familiar pattern emerges. Something feels off, a visible indicator is identified, and a technical solution is quickly produced (often using AI or low-code tools) because it is cheap to do so.</p>
+        <p class="reveal">The result is a landscape of systems that appears innovative while failing to meaningfully change decisions or outcomes.</p>
 
-    <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-500">
-    <span>26 Jan 2026</span>
-    <span>•</span>
-    <a
-        href="https://www.linkedin.com/in/wiehahncarstens/"
-        class="text-gray-700 hover:text-gray-900 underline underline-offset-4 transition"
-    >
-        Wiehahn Carstens
-    </a>
-    <span>•</span>
-    <span>4 min read</span>
+        <h2 class="reveal">When fast turns into constraint</h2>
+        <p class="reveal">A second consequence extends beyond poor problem selection. It is the accumulation of structural fragility.</p>
+        <p class="reveal">This fragility emerges when speed is prioritised over durable design, validation, and tested assumptions. Moving fast is often a strategic first step, but when acceleration is not clearly understood as provisional, early decisions become constraints.</p>
+        <p class="reveal">AI-assisted development intensifies this dynamic. Code can be produced faster than it can be fully understood, and prototypes are promoted into production often without a corresponding increase in rigour.</p>
+        <p class="reveal">As systems grow, unresolved assumptions accumulate and dependencies harden. Small, silent faults go undetected because nothing appears immediately broken. Over time, these errors compound until the system fails suddenly and expensively. What starts as acceleration ultimately becomes a constraint, not because progress stops, but because every change carries disproportionate risk and cost.</p>
+
+        <h2 class="reveal">The real gap: Skipping problem definition for tech execution</h2>
+        <p class="reveal">We see a consistent pattern across organisations we work with. The work of problem definition is bypassed in favour of immediate technical execution.</p>
+        <p class="reveal">As development becomes easier than deep analysis, teams allocate disproportionate effort to building and insufficient effort to understanding. Critical steps are compressed or omitted entirely. User needs are inferred rather than examined. Success criteria remain implicit. Non-technical alternatives are rarely explored. Problems remain unstructured.</p>
+        <p class="reveal">This pattern is reinforced by organisational pressure for faster and cheaper delivery. While development has accelerated dramatically, problem clarity has not. Defining the right problem remains a fundamentally human activity, requiring judgment, context, and dialogue. It does not compress in the same way code does.</p>
+        <p class="reveal">Without a disciplined approach to problem definition, technology optimises locally while outcomes degrade globally. The real leverage lies upstream, in making the problem explicit before attempting to solve it.</p>
+
+        <h2 class="reveal">Why this matters</h2>
+        <p class="reveal">The democratisation of building tools is irreversible. It lowers barriers to execution and accelerates experimentation.</p>
+        <p class="reveal">It also shifts risk upstream. As building gets easier, misalignment increases, technical debt accumulates faster, and innovation becomes noisy rather than directional. The constraint is no longer execution capacity. It is judgment.</p>
+        <p class="reveal">Sustained progress depends on choosing the right problems and defining them clearly before committing to technology. Innovation does not start with code. It starts with clarity.</p>
+
+        <blockquote class="reveal">
+          <p>In a world where everyone can build, advantage belongs to those who build with discipline, not speed alone.</p>
+        </blockquote>
+
+        <h2 class="reveal">Closing thought</h2>
+        <p class="reveal">Technology is undergoing a generational shift, but it will not resolve ambiguity on its own. When execution is abundant, advantage belongs to those with the strongest judgment.</p>
+      </div>
     </div>
+  </section>
 
-  </div>
-</section>
-
-<!-- Post content -->
-  <main class="flex-1 px-6 py-12 bg-white">
-    <article class="reading-width mx-auto article">
-
-      <p>
-      Over the past few years, the economics of software creation have changed more dramatically than at any point before. Advances in artificial intelligence, low-code platforms, and automation tooling have collapsed the cost, time, and expertise historically required to build software.
-      </p>
-
-      <p>
-      The result is a broad democratisation of development. More actors can translate intent into software. But this shift marks a transition point. When building is no longer scarce, execution capacity ceases to be the constraint. The limiting factor becomes judgment: the ability to define the problem worth solving.
-      </p>
-
-      <h2 class="prosto text-2xl font-semibold text-gray-900 mt-10">The paradox of accessibility</h2>
-
-      <p>
-      As the cost of development has fallen, organisations increasingly move straight into building without first clarifying the problem they are trying to solve.
-      </p>
-
-      <p>
-      What once required months of planning can now be assembled in days or hours. That speed feels like progress, but it often bypasses the work of understanding why a system should exist or what outcome it is meant to achieve.
-      </p>
-
-      <p>
-      The inversion is subtle, but dangerous. Organisations end up with well-intentioned systems that are misaligned with broader strategic intent.
-      </p>
-
-      <h2 class="prosto text-2xl font-semibold text-gray-900 mt-10">Superficial fixes and symptom solving</h2>
-
-      <p>
-      One consequence of acceleration is that systems increasingly target symptoms rather than underlying causes.
-      </p>
-
-      <p>
-      A familiar pattern emerges. Something feels off, a visible indicator is identified, and a technical solution is quickly produced (often using AI or low-code tools) because it is cheap to do so.
-      </p>
-
-      <p>
-      The result is a landscape of systems that appears innovative while failing to meaningfully change decisions or outcomes.
-      </p>
-
-      <h2 class="prosto text-2xl font-semibold text-gray-900 mt-10">When fast turns into constraint</h2>
-
-      <p>
-      A second consequence extends beyond poor problem selection. It is the accumulation of structural fragility.
-      </p>
-
-      <p>
-      This fragility emerges when speed is prioritised over durable design, validation, and tested assumptions. Moving fast is often a strategic first step, but when acceleration is not clearly understood as provisional, early decisions become constraints.
-      </p>
-
-      <p>
-      AI-assisted development intensifies this dynamic. Code can be produced faster than it can be fully understood, and prototypes are promoted into production often without a corresponding increase in rigour.
-      </p>
-
-      <p>
-      As systems grow, unresolved assumptions accumulate and dependencies harden. Small, silent faults go undetected because nothing appears immediately broken. Over time, these errors compound until the system fails suddenly and expensively. What starts as acceleration ultimately becomes a constraint, not because progress stops, but because every change carries disproportionate risk and cost.
-      </p>
-
-      <h2 class="prosto text-2xl font-semibold text-gray-900 mt-10">The real gap: Skipping problem definition for tech execution</h2>
-
-      <p>
-      We see a consistent pattern across organisations we work with. The work of problem definition is bypassed in favour of immediate technical execution.
-      </p>
-
-      <p>
-      As development becomes easier than deep analysis, teams allocate disproportionate effort to building and insufficient effort to understanding. Critical steps are compressed or omitted entirely. User needs are inferred rather than examined. Success criteria remain implicit. Non-technical alternatives are rarely explored. Problems remain unstructured.
-      </p>
-
-      <p>
-      This pattern is reinforced by organisational pressure for faster and cheaper delivery. While development has accelerated dramatically, problem clarity has not. Defining the right problem remains a fundamentally human activity, requiring judgment, context, and dialogue. It does not compress in the same way code does.
-      </p>
-
-      <p>
-      Without a disciplined approach to problem definition, technology optimises locally while outcomes degrade globally. The real leverage lies upstream, in making the problem explicit before attempting to solve it.
-      </p>
-
-      <h2 class="prosto text-2xl font-semibold text-gray-900 mt-10">Why this matters</h2>
-
-      <p>
-      The democratisation of building tools is irreversible. It lowers barriers to execution and accelerates experimentation.
-      </p>
-
-      <p>
-      It also shifts risk upstream. As building gets easier, misalignment increases, technical debt accumulates faster, and innovation becomes noisy rather than directional. The constraint is no longer execution capacity. It is judgment.
-      </p>
-
-      <p>
-      Sustained progress depends on choosing the right problems and defining them clearly before committing to technology. Innovation does not start with code. It starts with clarity.
-      </p>
-
-      <p>
-      In a world where everyone can build, advantage belongs to those who build with discipline, not speed alone.
-      </p>
-
-      <h2 class="prosto text-2xl font-semibold text-gray-900 mt-10">Closing thought</h2>
-
-      <p>
-      Technology is undergoing a generational shift, but it will not resolve ambiguity on its own. When execution is abundant, advantage belongs to those with the strongest judgment.
-      </p>
-
-
-
-
-
-
-
-
-
-
-
-
-      <!-- CTA -->
-      <div class="mt-12 p-6 rounded-2xl border border-gray-200 bg-gray-50">
-        <h3 class="prosto text-lg font-semibold text-gray-900">Want to discuss this in your organisation?</h3>
-        <p class="mt-2 text-gray-700">
-          If you’re seeing tool sprawl, misaligned systems, or a lot of “busy building”, we can help you impose clarity and ship the right intervention.
-        </p>
-        <button
-        class="open-contact-modal mt-4 inline-flex items-center justify-center px-5 py-2.5 rounded-md text-sm font-medium bg-black text-white hover:bg-gray-900 transition"
-        >
-        Get in touch
-        </button>
+  <section class="s-cta">
+    <div class="cta-glow"></div>
+    <div class="section-inner" style="position:relative;z-index:1;">
+      <div class="reveal">
+        <div class="section-label" style="text-align:center;">Begin here</div>
+        <h2 class="cta-title">Find the constraint.<br/><em>Fix it fast.</em></h2>
+        <p class="cta-sub">A focused conversation about where your business is losing performance, and what it would take to change it.</p>
+        <a href="mailto:hello@occamco.com" class="btn-primary">Start a conversation</a>
       </div>
-
-    </article>
-  </main>
-
- <!-- Footer -->
-  <footer class="border-t border-gray-200 bg-white">
-    <div class="max-w-6xl mx-auto px-6 py-10 space-y-6">
-
-      <!-- Top row -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-
-        <!-- Brand -->
-        <div>
-          <div class="text-sm font-semibold tracking-widest lowercase text-gray-900">
-            occam
-          </div>
-          <div class="text-sm text-gray-500 mt-1">
-            Ideas made simple
-          </div>
-        </div>
-
-        <!-- Nav -->
-        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
-          <a href="/what-we-do" class="hover:text-gray-800 transition">What we do</a>
-          <a href="/our-team" class="hover:text-gray-800 transition">Our team</a>
-          <a href="/insights" class="hover:text-gray-800 transition">Insights</a>
-          <a href="/privacy-policy" class="hover:text-gray-800 transition">Privacy policy</a>
-        </div>
-
-      </div>
-
-      <!-- Bottom row -->
-      <div class="text-xs text-gray-400 sm:text-right">
-        © <span id="year"></span> Occam. All rights reserved.
-      </div>
-
     </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">occam<div class="footer-sub">Ideas Made Simple</div></div>
+    <div class="footer-tagline">Business Engineering &middot; AI-Native &middot; Mid-Market</div>
+    <ul class="footer-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../our-team.html">Team</a></li>
+      <li><a href="../insights.html">Insights</a></li>
+      <li><a href="../privacy-policy.html">Privacy</a></li>
+      <li><a href="mailto:hello@occamco.com">Contact</a></li>
+    </ul>
   </footer>
 
+  <script>
+    var dot=document.getElementById('dot'),ring=document.getElementById('ring'),mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
+    (function tick(){dot.style.left=mx+'px';dot.style.top=my+'px';rx+=(mx-rx)*0.15;ry+=(my-ry)*0.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
+    document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('navLinks').classList.toggle('open')});
 
-<!-- Contact Modal -->
-<div id="contactModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 flex transition-opacity duration-300">
-  <div id="modalContent" class="bg-white p-6 rounded-lg max-w-md w-full relative transform transition-all duration-300 scale-95 opacity-0">
-    <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl leading-none">&times;</button>
-    <h3 class="text-xl font-semibold mb-4 text-center">Get in touch</h3>
-    <form action="https://formspree.io/f/xblypvkb" method="POST" class="space-y-4">
-      <div>
-        <label class="block text-sm mb-1 text-gray-700">Your email</label>
-        <input type="email" name="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
-      </div>
-      <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 w-full">Send</button>
-      <p class="text-xs text-gray-500 text-center mt-2">No spam. Just the occasional update on new insights, tools, and our thinking.</p>
-    </form>
-  </div>
-</div>
-
-
-<!-- THANK YOU -->
-<div id="thankYouModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 flex">
-  <div class="bg-white p-6 rounded-lg text-center">
-    <h3 class="text-xl font-semibold">Thanks!</h3>
-    <p>Your message has been sent.</p>
-  </div>
-</div>
-
-<!-- SCRIPT -->
-<script>
-  AOS.init({ once: true });
-  document.getElementById('year').textContent = new Date().getFullYear();
-
-  const modal = document.getElementById('contactModal');
-  const content = document.getElementById('modalContent');
-
-  function openModal() {
-    modal.classList.remove('hidden');
-    requestAnimationFrame(() => {
-      content.classList.remove('scale-95', 'opacity-0');
-      content.classList.add('scale-100', 'opacity-100');
-    });
-  }
-
-  function closeModal() {
-    content.classList.remove('scale-100', 'opacity-100');
-    content.classList.add('scale-95', 'opacity-0');
-    setTimeout(() => modal.classList.add('hidden'), 300);
-  }
-  window.closeModal = closeModal;
-
-  document.querySelectorAll('.open-contact-modal').forEach(btn => {
-    btn.addEventListener('click', openModal);
-  });
-
-  modal.addEventListener('click', e => {
-    if (e.target === modal) closeModal();
-  });
-
-  document.querySelector('#contactModal form').addEventListener('submit', () => {
-    setTimeout(() => {
-      modal.classList.add('hidden');
-      document.getElementById('thankYouModal').classList.remove('hidden');
-      setTimeout(() => document.getElementById('thankYouModal').classList.add('hidden'), 3000);
-    }, 100);
-  });
-
-
-
-
-    const toolsBtn = document.getElementById('toolsBtn');
-    const toolsMenu = document.getElementById('toolsMenu');
-
-    if (toolsBtn && toolsMenu) {
-    toolsBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toolsMenu.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', () => {
-        toolsMenu.classList.add('hidden');
-    });
+    // FLOW FIELD
+    var canvas = document.getElementById('stars');
+    var ctx = canvas.getContext('2d');
+    var W, H;
+    var mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999 };
+    document.addEventListener('mousemove', function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+    var F2 = 0.5 * (Math.sqrt(3) - 1), G2 = (3 - Math.sqrt(3)) / 6;
+    var _p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+    var perm = new Array(512), pm12 = new Array(512);
+    for (var i = 0; i < 512; i++) { perm[i] = _p[i & 255]; pm12[i] = perm[i] % 12; }
+    var grad3 = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
+    function simplex2(xin, yin) {
+      var s = (xin + yin) * F2;
+      var i = Math.floor(xin + s), j = Math.floor(yin + s);
+      var t = (i + j) * G2;
+      var x0 = xin - (i - t), y0 = yin - (j - t);
+      var i1 = x0 > y0 ? 1 : 0, j1 = x0 > y0 ? 0 : 1;
+      var x1 = x0 - i1 + G2, y1 = y0 - j1 + G2;
+      var x2 = x0 - 1 + 2 * G2, y2 = y0 - 1 + 2 * G2;
+      var ii = i & 255, jj = j & 255;
+      var n0 = 0, n1 = 0, n2 = 0;
+      var t0 = 0.5 - x0 * x0 - y0 * y0;
+      if (t0 > 0) { t0 *= t0; var gi = pm12[ii + perm[jj]]; n0 = t0 * t0 * (grad3[gi][0] * x0 + grad3[gi][1] * y0); }
+      var t1 = 0.5 - x1 * x1 - y1 * y1;
+      if (t1 > 0) { t1 *= t1; var gi = pm12[ii + i1 + perm[jj + j1]]; n1 = t1 * t1 * (grad3[gi][0] * x1 + grad3[gi][1] * y1); }
+      var t2 = 0.5 - x2 * x2 - y2 * y2;
+      if (t2 > 0) { t2 *= t2; var gi = pm12[ii + 1 + perm[jj + 1]]; n2 = t2 * t2 * (grad3[gi][0] * x2 + grad3[gi][1] * y2); }
+      return 70 * (n0 + n1 + n2);
     }
+    var COUNT=800,SCALE=18,NOISE_SCL=0.0035,SPEED=1.4,FADE=0.025,MOUSE_R=250,MAX_LIFE=350;
+    var cols,rows,field,particles=[];
+    var COLORS=[[200,169,110],[185,155,95],[215,190,140],[170,140,80],[230,210,165],[160,130,75]];
+    var time=0;
+    function resize(){W=innerWidth;H=innerHeight;canvas.width=W;canvas.height=H;cols=Math.ceil(W/SCALE)+1;rows=Math.ceil(H/SCALE)+1;field=new Float32Array(cols*rows);ctx.fillStyle='#0a0a0c';ctx.fillRect(0,0,W,H)}
+    resize();window.addEventListener('resize',resize);
+    function spawn(){var c=COLORS[Math.floor(Math.random()*COLORS.length)];return{x:Math.random()*W,y:Math.random()*H,px:0,py:0,speed:SPEED*(0.4+Math.random()*0.9),cr:c[0],cg:c[1],cb:c[2],alpha:0.06+Math.random()*0.12,life:Math.floor(Math.random()*MAX_LIFE),maxLife:MAX_LIFE*(0.6+Math.random()*0.4)}}
+    for(var i=0;i<COUNT;i++)particles.push(spawn());
+    function computeField(){for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){var nx=c*SCALE*NOISE_SCL,ny=r*SCALE*NOISE_SCL;var angle=simplex2(nx+time*0.4,ny+time*0.3)*Math.PI*2;angle+=simplex2(nx*2.5+50,ny*2.5+50+time*0.2)*Math.PI*0.6;field[r*cols+c]=angle}}
+    (function loop(){ctx.fillStyle='rgba(10,10,12,'+FADE+')';ctx.fillRect(0,0,W,H);time+=0.003;computeField();if(mouse.sx<-9000){mouse.sx=W/2;mouse.sy=H/2}mouse.sx+=(mouse.x-mouse.sx)*0.06;mouse.sy+=(mouse.y-mouse.sy)*0.06;for(var i=0;i<particles.length;i++){var p=particles[i];p.px=p.x;p.py=p.y;var col=Math.floor(p.x/SCALE),row=Math.floor(p.y/SCALE);if(col>=0&&col<cols&&row>=0&&row<rows){var angle=field[row*cols+col];var mdx=mouse.sx-p.x,mdy=mouse.sy-p.y,md=Math.sqrt(mdx*mdx+mdy*mdy);if(md<MOUSE_R&&md>1){var inf=1-md/MOUSE_R;inf=inf*inf;var va=Math.atan2(mdy,mdx)+Math.PI*0.55;angle=angle*(1-inf*0.7)+va*inf*0.7;p.speed=SPEED*(0.4+Math.random()*0.9)+inf*2.5}p.x+=Math.cos(angle)*p.speed;p.y+=Math.sin(angle)*p.speed}var lf=p.life/p.maxLife;var fa=lf<0.05?lf/0.05:lf>0.9?(1-lf)/0.1:1;var da=p.alpha*fa;if(p.life>0&&da>0.005){ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.strokeStyle='rgba('+p.cr+','+p.cg+','+p.cb+','+da+')';ctx.lineWidth=0.6+fa*0.3;ctx.stroke()}p.life++;if(p.x<-20||p.x>W+20||p.y<-20||p.y>H+20||p.life>p.maxLife){var c=COLORS[Math.floor(Math.random()*COLORS.length)];p.x=Math.random()*W;p.y=Math.random()*H;p.px=p.x;p.py=p.y;p.life=0;p.maxLife=MAX_LIFE*(0.6+Math.random()*0.4);p.cr=c[0];p.cg=c[1];p.cb=c[2];p.alpha=0.06+Math.random()*0.12;p.speed=SPEED*(0.4+Math.random()*0.9)}}requestAnimationFrame(loop)})();
 
-
-</script>
-
+    var nav=document.getElementById('nav');
+    window.addEventListener('scroll',function(){if(scrollY>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled')});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+  </script>
+  <script src="../assets/shared.js"></script>
 </body>
 </html>

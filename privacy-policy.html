@@ -1,325 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>occam | Privacy policy</title>
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-52W0F5S3TM"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-52W0F5S3TM');
-  </script>
-
-
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <title>occam | Privacy Policy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@200;300;400;500&family=DM+Mono:wght@300&family=Montserrat:wght@500&display=swap" rel="stylesheet">
   <style>
-    .prosto {
-      font-family: 'Montserrat', sans-serif;
+    :root {
+      --ink:     #0a0a0c;
+      --paper:   #f5f3ee;
+      --slate:   #1a1a22;
+      --amber:   #c8a96e;
+      --amber-lt:#d4bb8a;
+      --line:    rgba(245,243,238,0.1);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Jost', sans-serif;
+      --font-mono:    'DM Mono', monospace;
     }
-    html {
-      scroll-behavior: smooth;
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { background:var(--ink); color:var(--paper); font-family:var(--font-body); font-weight:300; overflow-x:hidden; cursor:none; }
+
+    .cursor-dot { position:fixed; top:0; left:0; width:8px; height:8px; background:var(--amber); border-radius:50%; pointer-events:none; z-index:99999; transform:translate(-50%,-50%); }
+    .cursor-ring { position:fixed; top:0; left:0; width:36px; height:36px; border:1px solid rgba(200,169,110,0.4); border-radius:50%; pointer-events:none; z-index:99998; transform:translate(-50%,-50%); }
+    canvas#stars { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:2rem 4rem; transition:background 0.4s, padding 0.4s; }
+    nav.scrolled { background:rgba(10,10,12,0.92); backdrop-filter:blur(20px); padding:1.2rem 4rem; border-bottom:1px solid var(--line); }
+    .nav-logo { font-family:'Montserrat', sans-serif; font-size:1.2rem; font-weight:500; letter-spacing:0.12em; color:var(--paper); text-decoration:none; text-transform:lowercase; }
+    .nav-links { display:flex; gap:3rem; list-style:none; align-items:center; }
+    .nav-links a { font-size:0.78rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,243,238,0.5); text-decoration:none; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--paper); }
+    .nav-cta { font-size:0.78rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:#050506; background:var(--amber); padding:0.65rem 1.5rem; text-decoration:none; transition:background 0.2s, transform 0.2s; }
+    .nav-cta:hover { background:var(--amber-lt); transform:translateY(-1px); }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; z-index:101; }
+    .hamburger span { width:24px; height:2px; background:rgba(245,243,238,0.7); transition:0.3s; }
+
+    section { position:relative; z-index:2; }
+    .section-inner { max-width:1200px; margin:0 auto; padding:0 4rem; }
+
+    .hero {
+      position:relative; z-index:1; min-height:50vh;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:8rem 2rem 4rem; overflow:hidden;
     }
-    @keyframes fade-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .hero::after { content:''; position:absolute; bottom:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,var(--amber),transparent); opacity:0.4; }
+    .hero-eyebrow { font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--amber); margin-bottom:2rem; opacity:0; animation:fadeUp 0.8s 0.3s ease forwards; }
+    .hero-title { font-family:var(--font-display); font-size:clamp(2.8rem,6vw,5rem); font-weight:400; line-height:1.05; color:var(--paper); max-width:700px; opacity:0; animation:fadeUp 0.9s 0.5s ease forwards; }
+    .hero-sub { margin-top:1.5rem; font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.15em; color:rgba(245,243,238,0.35); opacity:0; animation:fadeUp 0.9s 0.7s ease forwards; }
+
+    /* POLICY */
+    .s-policy { background:var(--slate); padding:6rem 0 10rem; }
+    .policy-content { max-width:780px; }
+    .policy-section { margin-bottom:3.5rem; }
+    .policy-section h2 {
+      font-family:var(--font-display); font-size:1.4rem; font-weight:400;
+      color:var(--paper); margin-bottom:1.2rem; padding-bottom:0.8rem;
+      border-bottom:1px solid var(--line);
     }
-    .animate-fade-in {
-      animation: fade-in 1s ease-out forwards;
+    .policy-section p {
+      font-size:0.92rem; line-height:1.9; color:rgba(245,243,238,0.55); margin-bottom:1rem;
+    }
+    .policy-section p strong { color:rgba(245,243,238,0.8); font-weight:400; }
+    .policy-section ul { list-style:none; margin-bottom:1rem; }
+    .policy-section ul li {
+      font-size:0.92rem; line-height:1.9; color:rgba(245,243,238,0.55);
+      padding-left:1.5rem; position:relative; margin-bottom:0.4rem;
+    }
+    .policy-section ul li strong { color:rgba(245,243,238,0.8); font-weight:400; }
+    .policy-section ul li::before {
+      content:''; position:absolute; left:0; top:0.75rem;
+      width:5px; height:5px; border-radius:50%; background:var(--amber); opacity:0.6;
+    }
+    .policy-section a { color:var(--amber); text-decoration:none; transition:color 0.2s; }
+    .policy-section a:hover { color:var(--amber-lt); }
+
+    footer { background:var(--slate); padding:4rem; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); position:relative; z-index:2; }
+    .footer-logo { font-family:'Montserrat', sans-serif; font-size:1rem; font-weight:500; letter-spacing:0.12em; color:rgba(245,243,238,0.4); text-transform:lowercase; line-height:1; }
+    .footer-sub { font-family:var(--font-body); font-size:0.6rem; font-weight:300; letter-spacing:0.18em; text-transform:uppercase; color:rgba(245,243,238,0.2); margin-top:0.4rem; }
+    .footer-tagline { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.15em; color:rgba(245,243,238,0.2); }
+    .footer-links { display:flex; gap:2rem; list-style:none; }
+    .footer-links a { font-size:0.75rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); text-decoration:none; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--amber); }
+
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width:900px) {
+      nav { padding:1.5rem 2rem; }
+      nav.scrolled { padding:1rem 2rem; }
+      .nav-links { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,10,12,0.97); flex-direction:column; align-items:center; justify-content:center; gap:2.5rem; z-index:100; }
+      .nav-links.open { display:flex; }
+      .nav-links a { font-size:1rem; }
+      .nav-cta { font-size:0.85rem; padding:0.8rem 2rem; }
+      .hamburger { display:flex; }
+      .section-inner { padding:0 2rem; }
+      footer { flex-direction:column; gap:2rem; text-align:center; padding:3rem 2rem; }
+    }
+    @media (max-width:480px) {
+      nav { padding:1rem 1.2rem; }
+      .hero { padding:7rem 1.2rem 3rem; }
+      .section-inner { padding:0 1.2rem; }
+      .s-policy { padding:4rem 0 6rem; }
+      footer { padding:2.5rem 1.2rem; }
     }
   </style>
 </head>
-<body class="bg-white text-gray-800 font-sans min-h-screen flex flex-col">
+<body>
 
-  <!-- Header -->
-  <header id="main-header" class="fixed top-0 left-0 w-full bg-black text-gray-100 z-50 transition-transform duration-500">
-    <div class="max-w-6xl mx-auto py-4 px-6 flex items-center justify-between">
+  <div class="cursor-dot" id="dot"></div>
+  <div class="cursor-ring" id="ring"></div>
+  <canvas id="stars"></canvas>
 
-      <a href="https://www.occamco.com" class="text-[36px] sm:text-[40px] leading-none transform transition-transform duration-300 hover:scale-95 font-light">
-        occam
-      </a>
-
-      <!-- Desktop nav -->
-      <div class="hidden md:flex items-center gap-3">
-        <a href="/what-we-do" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
-          What we do
-        </a>
-        <a href="/our-team" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
-          Our team
-        </a>
-        <a href="/insights" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
-          Insights
-        </a>
-        <button class="open-contact-modal inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition">
-          Start a conversation
-        </button>
-      </div>
-
-      <!-- Mobile actions -->
-      <div class="md:hidden flex items-center gap-2">
-        <button
-          class="open-contact-modal inline-flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
-        >
-          Contact
-        </button>
-
-        <button
-          class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 hover:bg-white/20 transition"
-          aria-label="Open menu"
-          onclick="toggleMobileMenu()"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- Mobile menu -->
-  <div id="mobileMenu" class="fixed inset-0 z-40 hidden bg-black text-white">
-    <div class="max-w-6xl mx-auto px-6 pt-24 pb-10">
-      <div class="flex items-center justify-between">
-        <div class="text-xl font-light">Menu</div>
-        <button
-          class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 hover:bg-white/20 transition"
-          aria-label="Close menu"
-          onclick="toggleMobileMenu()"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
-      </div>
-
-      <div class="mt-8 space-y-5 text-lg">
-        <a href="/what-we-do" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">What we do</a>
-        <a href="/our-team" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">Our team</a>
-        <a href="/insights" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">Insights</a>
-        <a href="/privacy-policy" class="block text-gray-300 hover:text-gray-200 transition" onclick="toggleMobileMenu()">Privacy policy</a>
-
-        <div class="pt-6 border-t border-white/15">
-          <button class="open-contact-modal w-full py-3 rounded-md bg-white text-gray-900 font-medium hover:bg-gray-100 transition" onclick="toggleMobileMenu()">
-            Start a conversation
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  
-  <!-- Page content -->
-  <main class="mt-32 px-6 max-w-3xl mx-auto animate-fade-in leading-relaxed">
-
-    <h1 class="prosto text-3xl sm:text-4xl font-semibold mb-6">
-      Privacy Policy
-    </h1>
-
-    <p><strong>Occam Holdings (Pty) Ltd</strong><br>
-    <strong>Effective Date:</strong> 1 July 2025</p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">1. Introduction</h2>
-    <p>Occam Holdings (Pty) Ltd (“Occam”, “we”, “our”, or “us”) respects your privacy and is committed to protecting your personal information in accordance with the Protection of Personal Information Act, 2013 (“POPIA”) and other applicable data protection laws.</p>
-    <p>This Privacy Policy explains how we collect, use, store, and protect personal information obtained through our interactions with clients, partners, and visitors to our website and digital platforms.</p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">2. Information We Collect</h2>
-    <p>We may collect and process the following types of personal information:</p>
-    <ul class="list-disc list-inside">
-      <li><strong>Directly from you:</strong>
-        <ul class="ml-4 list-disc list-inside">
-          <li>Full name, contact details (email, phone number, address)</li>
-          <li>Job title and company name</li>
-          <li>Payment and billing information</li>
-          <li>Communication records</li>
-        </ul>
-      </li>
-      <li><strong>Automatically via digital platforms:</strong>
-        <ul class="ml-4 list-disc list-inside">
-          <li>IP address and device information</li>
-          <li>Browser type and usage patterns</li>
-          <li>Cookies and analytics data (if applicable)</li>
-        </ul>
-      </li>
-      <li><strong>From third parties:</strong>
-        <ul class="ml-4 list-disc list-inside">
-          <li>Referrals, partners, public sources, and vendors</li>
-        </ul>
-      </li>
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">occam</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="our-team.html">Our team</a></li>
+      <li><a href="insights.html">Insights</a></li>
+      <li><a href="case-studies.html">Case studies</a></li>
+      <li><a href="mailto:hello@occamco.com" class="nav-cta">Start a conversation</a></li>
     </ul>
+  </nav>
 
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">3. Purpose of Processing</h2>
-    <ul class="list-disc list-inside">
-      <li>To deliver consulting, software, and related services</li>
-      <li>To respond to enquiries and communicate with clients</li>
-      <li>For billing and contract management</li>
-      <li>To improve our services and client experience</li>
-      <li>To comply with legal or regulatory obligations</li>
-    </ul>
+  <section class="hero">
+    <div class="hero-eyebrow">Legal</div>
+    <h1 class="hero-title">Privacy Policy</h1>
+    <p class="hero-sub">Occam Holdings (Pty) Ltd. Effective 1 July 2025</p>
+  </section>
 
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">4. Legal Basis for Processing</h2>
-    <ul class="list-disc list-inside">
-      <li>With your consent</li>
-      <li>To fulfil a contract or take steps related to a contract</li>
-      <li>To comply with legal obligations</li>
-      <li>For our legitimate interests, including service improvement and marketing (subject to your rights)</li>
-    </ul>
+  <section class="s-policy">
+    <div class="section-inner">
+      <div class="policy-content">
 
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">5. Sharing of Information</h2>
-    <p>We may share your personal information with:</p>
-    <ul class="list-disc list-inside">
-      <li>Our employees and authorised contractors</li>
-      <li>Third-party service providers (e.g. payment processors, CRM providers, cloud platforms)</li>
-      <li>Legal or regulatory authorities, when required</li>
-    </ul>
-    <p>We ensure all third parties uphold appropriate data protection standards.</p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">6. Data Storage and Security</h2>
-    <p>Your personal information is stored securely using industry-standard technical and organisational measures. We take reasonable steps to protect against loss, misuse, unauthorised access, disclosure, alteration, or destruction.</p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">7. International Data Transfers</h2>
-    <p>If personal information is transferred outside of South Africa (e.g. to cloud service providers), we ensure appropriate safeguards are in place, such as contractual clauses or adequate data protection standards in the destination country.</p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">8. Your Rights</h2>
-    <p>Under POPIA, you have the right to:</p>
-    <ul class="list-disc list-inside">
-      <li>Access and correct your personal information</li>
-      <li>Object to processing for direct marketing</li>
-      <li>Request deletion or restriction of processing</li>
-      <li>Lodge a complaint with the Information Regulator (South Africa)</li>
-    </ul>
-    <p>To exercise these rights, contact us at: <strong>info@occamco.com</strong></p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">9. Data Retention</h2>
-    <p>We retain personal information only as long as necessary for the purposes described in this policy, unless longer retention is required by law.</p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">10. Cookies and Website Usage</h2>
-    <p>Our website may use cookies to improve user experience and track usage patterns. You can control cookies through your browser settings.</p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">11. Changes to this Policy</h2>
-    <p>We may update this Privacy Policy from time to time. The latest version will be available on our website with the effective date noted.</p>
-
-    <h2 class="text-xl font-semibold text-gray-900 mt-10 mb-3">12. Contact Us</h2>
-    <p>If you have questions about this Privacy Policy or how we handle personal information, please contact:</p>
-    <p><strong>Occam Holdings (Pty) Ltd</strong><br>
-    Email: <strong>info@occamco.com</strong></p>
-  </main>
-
-  <!-- Footer -->
-  <footer class="border-t border-gray-200 bg-white">
-    <div class="max-w-6xl mx-auto px-6 py-10 space-y-6">
-
-      <!-- Top row -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-
-        <!-- Brand -->
-        <div>
-          <div class="text-sm font-semibold tracking-widest lowercase text-gray-900">
-            occam
-          </div>
-          <div class="text-sm text-gray-500 mt-1">
-            Ideas made simple
-          </div>
+        <div class="policy-section reveal">
+          <h2>1. Introduction</h2>
+          <p>Occam Holdings (Pty) Ltd (&ldquo;Occam&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;) is committed to safeguarding the personal information of our clients, partners, and website visitors. This Privacy Policy explains how we collect, use, store, and protect your personal data in compliance with the Protection of Personal Information Act, 2013 (POPIA) and other applicable data protection laws.</p>
         </div>
 
-        <!-- Nav -->
-        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
-          <a href="/what-we-do" class="hover:text-gray-800 transition">What we do</a>
-          <a href="/our-team" class="hover:text-gray-800 transition">Our team</a>
-          <a href="/insights" class="hover:text-gray-800 transition">Insights</a>
-          <a href="/privacy-policy" class="hover:text-gray-800 transition">Privacy policy</a>
+        <div class="policy-section reveal">
+          <h2>2. Information We Collect</h2>
+          <p>We may collect the following personal information:</p>
+          <ul>
+            <li><strong>Directly from you:</strong> Name, email address, phone number, job title, company name, and any information you provide through our contact forms or during engagements.</li>
+            <li><strong>Automatically:</strong> IP address, browser type, device information, cookies, and usage data collected through our website and digital platforms.</li>
+            <li><strong>From third parties:</strong> Referral information from partners or publicly available professional information.</li>
+          </ul>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>3. How We Use Your Information</h2>
+          <p>We use your personal information to:</p>
+          <ul>
+            <li>Deliver consulting, software, and related professional services</li>
+            <li>Respond to enquiries and manage client relationships</li>
+            <li>Process billing and contractual obligations</li>
+            <li>Improve our services, website, and communications</li>
+            <li>Comply with legal and regulatory requirements</li>
+            <li>Send occasional updates about our insights and tools (with your consent)</li>
+          </ul>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>4. Legal Basis for Processing</h2>
+          <p>We process personal information based on:</p>
+          <ul>
+            <li>Your consent</li>
+            <li>The fulfilment of a contract</li>
+            <li>Compliance with legal obligations</li>
+            <li>Our legitimate business interests, including direct marketing (where applicable)</li>
+          </ul>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>5. Sharing Your Information</h2>
+          <p>We may share your information with:</p>
+          <ul>
+            <li>Our employees and contractors who require access to deliver services</li>
+            <li>Third-party service providers (e.g., payment processors, CRM platforms, cloud hosting)</li>
+            <li>Regulatory authorities when required by law</li>
+          </ul>
+          <p>We do not sell your personal information to third parties.</p>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>6. Data Security</h2>
+          <p>We implement industry-standard technical and organisational measures to protect your personal information from unauthorised access, alteration, disclosure, or destruction.</p>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>7. International Data Transfers</h2>
+          <p>Where your information is transferred across borders, we ensure appropriate safeguards are in place, including contractual protections and verification that the destination country maintains adequate data protection standards.</p>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>8. Your Rights</h2>
+          <p>Under POPIA, you have the right to:</p>
+          <ul>
+            <li>Request access to the personal information we hold about you</li>
+            <li>Request correction of inaccurate information</li>
+            <li>Object to the processing of your information for direct marketing</li>
+            <li>Request deletion of your personal information</li>
+            <li>Lodge a complaint with the Information Regulator of South Africa</li>
+          </ul>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>9. Data Retention</h2>
+          <p>We retain personal information only for as long as necessary to fulfil the purposes for which it was collected, unless a longer retention period is required by law.</p>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>10. Cookies</h2>
+          <p>Our website uses cookies to enhance your browsing experience. You can manage your cookie preferences through your browser settings.</p>
+        </div>
+
+        <div class="policy-section reveal">
+          <h2>11. Contact Us</h2>
+          <p>For questions about this Privacy Policy or to exercise your rights, contact us at:<br/><a href="mailto:info@occamco.com">info@occamco.com</a></p>
         </div>
 
       </div>
-
-      <!-- Bottom row -->
-      <div class="text-xs text-gray-400 sm:text-right">
-        © <span id="year"></span> Occam. All rights reserved.
-      </div>
-
     </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">occam<div class="footer-sub">Ideas Made Simple</div></div>
+    <div class="footer-tagline">Business Engineering &middot; AI-Native &middot; Mid-Market</div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="our-team.html">Team</a></li>
+      <li><a href="insights.html">Insights</a></li>
+      <li><a href="mailto:hello@occamco.com">Contact</a></li>
+    </ul>
   </footer>
 
-<script>
-    // Mobile menu
-    function toggleMobileMenu() {
-      document.getElementById("mobileMenu").classList.toggle("hidden");
+  <script>
+    var dot=document.getElementById('dot'),ring=document.getElementById('ring'),mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
+    (function tick(){dot.style.left=mx+'px';dot.style.top=my+'px';rx+=(mx-rx)*0.15;ry+=(my-ry)*0.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
+    document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('navLinks').classList.toggle('open')});
+
+    // FLOW FIELD
+    var canvas = document.getElementById('stars');
+    var ctx = canvas.getContext('2d');
+    var W, H;
+    var mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999 };
+    document.addEventListener('mousemove', function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+    var F2 = 0.5 * (Math.sqrt(3) - 1), G2 = (3 - Math.sqrt(3)) / 6;
+    var _p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+    var perm = new Array(512), pm12 = new Array(512);
+    for (var i = 0; i < 512; i++) { perm[i] = _p[i & 255]; pm12[i] = perm[i] % 12; }
+    var grad3 = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
+    function simplex2(xin, yin) {
+      var s = (xin + yin) * F2;
+      var i = Math.floor(xin + s), j = Math.floor(yin + s);
+      var t = (i + j) * G2;
+      var x0 = xin - (i - t), y0 = yin - (j - t);
+      var i1 = x0 > y0 ? 1 : 0, j1 = x0 > y0 ? 0 : 1;
+      var x1 = x0 - i1 + G2, y1 = y0 - j1 + G2;
+      var x2 = x0 - 1 + 2 * G2, y2 = y0 - 1 + 2 * G2;
+      var ii = i & 255, jj = j & 255;
+      var n0 = 0, n1 = 0, n2 = 0;
+      var t0 = 0.5 - x0 * x0 - y0 * y0;
+      if (t0 > 0) { t0 *= t0; var gi = pm12[ii + perm[jj]]; n0 = t0 * t0 * (grad3[gi][0] * x0 + grad3[gi][1] * y0); }
+      var t1 = 0.5 - x1 * x1 - y1 * y1;
+      if (t1 > 0) { t1 *= t1; var gi = pm12[ii + i1 + perm[jj + j1]]; n1 = t1 * t1 * (grad3[gi][0] * x1 + grad3[gi][1] * y1); }
+      var t2 = 0.5 - x2 * x2 - y2 * y2;
+      if (t2 > 0) { t2 *= t2; var gi = pm12[ii + 1 + perm[jj + 1]]; n2 = t2 * t2 * (grad3[gi][0] * x2 + grad3[gi][1] * y2); }
+      return 70 * (n0 + n1 + n2);
     }
+    var COUNT=800,SCALE=18,NOISE_SCL=0.0035,SPEED=1.4,FADE=0.025,MOUSE_R=250,MAX_LIFE=350;
+    var cols,rows,field,particles=[];
+    var COLORS=[[200,169,110],[185,155,95],[215,190,140],[170,140,80],[230,210,165],[160,130,75]];
+    var time=0;
+    function resize(){W=innerWidth;H=innerHeight;canvas.width=W;canvas.height=H;cols=Math.ceil(W/SCALE)+1;rows=Math.ceil(H/SCALE)+1;field=new Float32Array(cols*rows);ctx.fillStyle='#0a0a0c';ctx.fillRect(0,0,W,H)}
+    resize();window.addEventListener('resize',resize);
+    function spawn(){var c=COLORS[Math.floor(Math.random()*COLORS.length)];return{x:Math.random()*W,y:Math.random()*H,px:0,py:0,speed:SPEED*(0.4+Math.random()*0.9),cr:c[0],cg:c[1],cb:c[2],alpha:0.06+Math.random()*0.12,life:Math.floor(Math.random()*MAX_LIFE),maxLife:MAX_LIFE*(0.6+Math.random()*0.4)}}
+    for(var i=0;i<COUNT;i++)particles.push(spawn());
+    function computeField(){for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){var nx=c*SCALE*NOISE_SCL,ny=r*SCALE*NOISE_SCL;var angle=simplex2(nx+time*0.4,ny+time*0.3)*Math.PI*2;angle+=simplex2(nx*2.5+50,ny*2.5+50+time*0.2)*Math.PI*0.6;field[r*cols+c]=angle}}
+    (function loop(){ctx.fillStyle='rgba(10,10,12,'+FADE+')';ctx.fillRect(0,0,W,H);time+=0.003;computeField();if(mouse.sx<-9000){mouse.sx=W/2;mouse.sy=H/2}mouse.sx+=(mouse.x-mouse.sx)*0.06;mouse.sy+=(mouse.y-mouse.sy)*0.06;for(var i=0;i<particles.length;i++){var p=particles[i];p.px=p.x;p.py=p.y;var col=Math.floor(p.x/SCALE),row=Math.floor(p.y/SCALE);if(col>=0&&col<cols&&row>=0&&row<rows){var angle=field[row*cols+col];var mdx=mouse.sx-p.x,mdy=mouse.sy-p.y,md=Math.sqrt(mdx*mdx+mdy*mdy);if(md<MOUSE_R&&md>1){var inf=1-md/MOUSE_R;inf=inf*inf;var va=Math.atan2(mdy,mdx)+Math.PI*0.55;angle=angle*(1-inf*0.7)+va*inf*0.7;p.speed=SPEED*(0.4+Math.random()*0.9)+inf*2.5}p.x+=Math.cos(angle)*p.speed;p.y+=Math.sin(angle)*p.speed}var lf=p.life/p.maxLife;var fa=lf<0.05?lf/0.05:lf>0.9?(1-lf)/0.1:1;var da=p.alpha*fa;if(p.life>0&&da>0.005){ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.strokeStyle='rgba('+p.cr+','+p.cg+','+p.cb+','+da+')';ctx.lineWidth=0.6+fa*0.3;ctx.stroke()}p.life++;if(p.x<-20||p.x>W+20||p.y<-20||p.y>H+20||p.life>p.maxLife){var c=COLORS[Math.floor(Math.random()*COLORS.length)];p.x=Math.random()*W;p.y=Math.random()*H;p.px=p.x;p.py=p.y;p.life=0;p.maxLife=MAX_LIFE*(0.6+Math.random()*0.4);p.cr=c[0];p.cg=c[1];p.cb=c[2];p.alpha=0.06+Math.random()*0.12;p.speed=SPEED*(0.4+Math.random()*0.9)}}requestAnimationFrame(loop)})();
 
-    // Contact Modal
-    function closeModal() {
-      const modal = document.getElementById('contactModal');
-      const content = document.getElementById('modalContent');
-      content.classList.remove('scale-100', 'opacity-100');
-      content.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => modal.classList.add('hidden'), 300);
-    }
-
-    document.getElementById('contactModal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
-
-    const modal = document.getElementById('contactModal');
-    const content = document.getElementById('modalContent');
-
-    function openModal() {
-      modal.classList.remove('hidden');
-      requestAnimationFrame(() => {
-        content.classList.remove('scale-95', 'opacity-0');
-        content.classList.add('scale-100', 'opacity-100');
-      });
-    }
-
-    document.querySelectorAll('.open-contact-modal').forEach(btn => {
-      btn.addEventListener('click', openModal);
-    });
-
-    // Header hide on scroll (desktop + mobile)
-    let lastScroll = 0;
-    const header = document.getElementById('main-header');
-    window.addEventListener('scroll', () => {
-      const currentScroll = window.pageYOffset;
-      if (currentScroll <= 0) {
-        header.style.transform = 'translateY(0)';
-        return;
-      }
-      header.style.transform = currentScroll > lastScroll ? 'translateY(-100%)' : 'translateY(0)';
-      lastScroll = currentScroll;
-    });
-
-    // Thank You Modal Trigger
-    const contactForm = document.querySelector('#contactModal form');
-    contactForm.addEventListener('submit', function () {
-      setTimeout(() => {
-        closeModal();
-        document.getElementById('thankYouModal').classList.remove('hidden');
-        setTimeout(() => {
-          document.getElementById('thankYouModal').classList.add('hidden');
-        }, 3000);
-      }, 100);
-    });
-
-    // AOS
-    AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
-
-    // Logos scroll
-    function scrollLogos(amount) {
-      const container = document.getElementById('logoScroll');
-      container.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-
-    // Footer year
-    document.getElementById('year').textContent = new Date().getFullYear();
+    var nav=document.getElementById('nav');
+    window.addEventListener('scroll',function(){if(scrollY>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled')});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
   </script>
-
-  <script src="/assets/cookies.js"></script>
+  <script src="assets/shared.js"></script>
 </body>
 </html>

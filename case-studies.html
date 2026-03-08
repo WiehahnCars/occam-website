@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Occam | Case Studies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@200;300;400;500&family=DM+Mono:wght@300&family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:     #0a0a0c;
+      --paper:   #f5f3ee;
+      --slate:   #1a1a22;
+      --amber:   #c8a96e;
+      --amber-lt:#d4bb8a;
+      --line:    rgba(245,243,238,0.1);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Jost', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { background:var(--ink); color:var(--paper); font-family:var(--font-body); font-weight:300; overflow-x:hidden; cursor:none; }
+
+    .cursor-dot { position:fixed; top:0; left:0; width:8px; height:8px; background:var(--amber); border-radius:50%; pointer-events:none; z-index:99999; transform:translate(-50%,-50%); }
+    .cursor-ring { position:fixed; top:0; left:0; width:36px; height:36px; border:1px solid rgba(200,169,110,0.4); border-radius:50%; pointer-events:none; z-index:99998; transform:translate(-50%,-50%); }
+    canvas#stars { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:2rem 4rem; transition:background 0.4s, padding 0.4s; }
+    nav.scrolled { background:rgba(10,10,12,0.92); backdrop-filter:blur(20px); padding:1.2rem 4rem; border-bottom:1px solid var(--line); }
+    .nav-logo { font-family:'Montserrat', sans-serif; font-size:1.2rem; font-weight:500; letter-spacing:0.12em; color:var(--paper); text-decoration:none; text-transform:lowercase; }
+    .nav-links { display:flex; gap:3rem; list-style:none; align-items:center; }
+    .nav-links a { font-size:0.78rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,243,238,0.5); text-decoration:none; transition:color 0.2s; }
+    .nav-links a:hover { color:var(--paper); }
+    .nav-cta { font-size:0.78rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; color:#050506; background:var(--amber); padding:0.65rem 1.5rem; text-decoration:none; transition:background 0.2s, transform 0.2s; }
+    .nav-cta:hover { background:var(--amber-lt); transform:translateY(-1px); }
+    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; z-index:101; }
+    .hamburger span { width:24px; height:2px; background:rgba(245,243,238,0.7); transition:0.3s; }
+
+    section { position:relative; z-index:2; }
+    .section-inner { max-width:1200px; margin:0 auto; padding:0 4rem; }
+    .section-label { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--amber); margin-bottom:1.5rem; }
+
+    .hero {
+      position:relative; z-index:1; min-height:55vh;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; padding:8rem 2rem 4rem; overflow:hidden;
+    }
+    .hero::after { content:''; position:absolute; bottom:0; left:10%; right:10%; height:1px; background:linear-gradient(90deg,transparent,var(--amber),transparent); opacity:0.4; }
+    .hero-eyebrow { font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--amber); margin-bottom:2rem; opacity:0; animation:fadeUp 0.8s 0.3s ease forwards; }
+    .hero-title { font-family:var(--font-display); font-size:clamp(2.8rem,6vw,5.5rem); font-weight:400; line-height:1.05; color:var(--paper); max-width:800px; opacity:0; animation:fadeUp 0.9s 0.5s ease forwards; }
+    .hero-title em { font-style:italic; color:var(--amber); }
+    .hero-sub { margin-top:1.5rem; font-size:0.95rem; font-weight:300; color:rgba(245,243,238,0.45); max-width:500px; line-height:1.8; opacity:0; animation:fadeUp 0.9s 0.7s ease forwards; }
+
+    /* CASE STUDIES */
+    .s-cases { background:var(--slate); padding:6rem 0 10rem; }
+
+    .case-card {
+      display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line);
+      margin-bottom:2px; transition:border-color 0.3s; position:relative; overflow:hidden;
+    }
+    .case-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--amber),transparent); transform:scaleX(0); transform-origin:left; transition:transform 0.4s ease; }
+    .case-card:hover { border-color:rgba(200,169,110,0.2); }
+    .case-card:hover::before { transform:scaleX(1); }
+
+    .case-overview { padding:4rem; background:var(--slate); }
+    .case-results { padding:4rem; background:rgba(245,243,238,0.02); border-left:1px solid var(--line); }
+
+    .case-industry {
+      font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.15em; text-transform:uppercase;
+      color:var(--amber); border:1px solid rgba(200,169,110,0.3); padding:0.25rem 0.7rem;
+      display:inline-block; margin-bottom:1.5rem;
+    }
+    .case-title { font-family:var(--font-display); font-size:1.8rem; font-weight:400; color:var(--paper); line-height:1.2; margin-bottom:1rem; }
+    .case-title em { font-style:italic; color:var(--amber); }
+    .case-client { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); margin-bottom:1.5rem; }
+    .case-desc { font-size:0.92rem; line-height:1.85; color:rgba(245,243,238,0.5); margin-bottom:2rem; }
+    .case-tags { display:flex; gap:0.6rem; flex-wrap:wrap; }
+    .case-tag { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); padding:0.3rem 0.6rem; border:1px solid rgba(245,243,238,0.08); }
+
+    .results-label { font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--amber); margin-bottom:2rem; }
+    .result-item { padding:1.5rem 0; border-bottom:1px solid rgba(245,243,238,0.06); }
+    .result-item:first-of-type { border-top:1px solid rgba(245,243,238,0.06); }
+    .result-number { font-family:var(--font-display); font-size:2.2rem; font-weight:400; color:var(--amber); line-height:1; margin-bottom:0.4rem; }
+    .result-desc { font-size:0.85rem; color:rgba(245,243,238,0.45); line-height:1.6; }
+
+    /* FILTERS */
+    .filter-bar { display:flex; gap:0.8rem; flex-wrap:wrap; margin-bottom:3rem; }
+    .filter-btn {
+      font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase;
+      color:rgba(245,243,238,0.35); background:transparent; border:1px solid rgba(245,243,238,0.1);
+      padding:0.5rem 1.2rem; cursor:pointer; transition:color 0.2s,border-color 0.2s,background 0.2s;
+    }
+    .filter-btn:hover { color:rgba(245,243,238,0.6); border-color:rgba(245,243,238,0.2); }
+    .filter-btn.active { color:var(--amber); border-color:var(--amber); background:rgba(200,169,110,0.06); }
+
+    /* CTA */
+    .s-cta { background:var(--ink); padding:10rem 0 8rem; text-align:center; position:relative; overflow:hidden; }
+    .cta-glow { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:600px; height:300px; background:radial-gradient(ellipse,rgba(200,169,110,0.08),transparent 70%); pointer-events:none; }
+    .cta-title { font-family:var(--font-display); font-size:clamp(2rem,4vw,3.5rem); font-weight:400; color:var(--paper); line-height:1.15; margin-bottom:1.5rem; }
+    .cta-title em { font-style:italic; color:var(--amber); }
+    .cta-sub { font-size:0.95rem; color:rgba(245,243,238,0.45); max-width:420px; margin:0 auto 3rem; line-height:1.8; }
+    .btn-primary {
+      display:inline-block; padding:1rem 2.5rem; background:var(--amber); color:var(--ink);
+      font-family:var(--font-body); font-size:0.8rem; font-weight:500; letter-spacing:0.15em;
+      text-transform:uppercase; text-decoration:none; transition:background 0.2s,transform 0.2s;
+    }
+    .btn-primary:hover { background:var(--amber-lt); transform:translateY(-2px); }
+
+    /* FOOTER */
+    footer { background:var(--slate); padding:4rem; display:flex; align-items:center; justify-content:space-between; border-top:1px solid var(--line); position:relative; z-index:2; }
+    .footer-logo { font-family:'Montserrat', sans-serif; font-size:1rem; font-weight:500; letter-spacing:0.12em; color:rgba(245,243,238,0.4); text-transform:lowercase; line-height:1; }
+    .footer-sub { font-family:var(--font-body); font-size:0.6rem; font-weight:300; letter-spacing:0.18em; text-transform:uppercase; color:rgba(245,243,238,0.2); margin-top:0.4rem; }
+    .footer-tagline { font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.15em; color:rgba(245,243,238,0.2); }
+    .footer-links { display:flex; gap:2rem; list-style:none; }
+    .footer-links a { font-size:0.75rem; letter-spacing:0.1em; color:rgba(245,243,238,0.3); text-decoration:none; transition:color 0.2s; }
+    .footer-links a:hover { color:var(--amber); }
+
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; }
+    .reveal-delay-2 { transition-delay:0.2s; }
+    .reveal-delay-3 { transition-delay:0.3s; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    @media (max-width:900px) {
+      nav { padding:1.5rem 2rem; }
+      nav.scrolled { padding:1rem 2rem; }
+      .nav-links { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(10,10,12,0.97); flex-direction:column; align-items:center; justify-content:center; gap:2.5rem; z-index:100; }
+      .nav-links.open { display:flex; }
+      .nav-links a { font-size:1rem; }
+      .nav-cta { font-size:0.85rem; padding:0.8rem 2rem; }
+      .hamburger { display:flex; }
+      .section-inner { padding:0 2rem; }
+      .case-card { grid-template-columns:1fr; }
+      .case-results { border-left:none; border-top:1px solid var(--line); }
+      footer { flex-direction:column; gap:2rem; text-align:center; padding:3rem 2rem; }
+    }
+    @media (max-width:480px) {
+      nav { padding:1rem 1.2rem; }
+      .hero { padding:7rem 1.2rem 3rem; }
+      .section-inner { padding:0 1.2rem; }
+      .s-cases { padding:4rem 0 6rem; }
+      .case-overview, .case-results { padding:2.5rem 1.5rem; }
+      footer { padding:2.5rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor-dot" id="dot"></div>
+  <div class="cursor-ring" id="ring"></div>
+  <canvas id="stars"></canvas>
+
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">occam</a>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="our-team.html">Our team</a></li>
+      <li><a href="insights.html">Insights</a></li>
+      <li><a href="case-studies.html">Case studies</a></li>
+      <li><a href="mailto:hello@occamco.com" class="nav-cta">Start a conversation</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow">Case Studies</div>
+    <h1 class="hero-title">Where clarity became <em>performance</em></h1>
+    <p class="hero-sub">How we have helped mid-market businesses turn operational complexity into structured, measurable outcomes.</p>
+  </section>
+
+  <section class="s-cases">
+    <div class="section-inner">
+
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="operations">Operations</button>
+        <button class="filter-btn" data-filter="ai">AI</button>
+        <button class="filter-btn" data-filter="insurance">Insurance</button>
+        <button class="filter-btn" data-filter="education">Education</button>
+        <button class="filter-btn" data-filter="manufacturing">Manufacturing</button>
+        <button class="filter-btn" data-filter="mining">Mining</button>
+        <button class="filter-btn" data-filter="property">Property</button>
+      </div>
+
+      <!-- 1. Platform Build — Leasing (tangible end-to-end product, strongest opener) -->
+      <div class="case-card reveal" data-category="operations">
+        <div class="case-overview">
+          <div class="case-industry">Operations &middot; Platform Build</div>
+          <h2 class="case-title">End-to-end platform build for a <em>vehicle leasing</em> company</h2>
+          <div class="case-client">Fast-growing vehicle leasing company &middot; South Africa</div>
+          <p class="case-desc">Following a successful transformation roadmap engagement, the same client needed a purpose-built platform to operationalise their new model. We designed and developed a full vehicle leasing lifecycle platform covering lead onboarding with KYC, contract management with e-signature, a WhatsApp support bot, GPS and credit bureau integrations, customer servicing workflows, and vehicle asset management.</p>
+          <div class="case-tags">
+            <span class="case-tag">Platform Development</span>
+            <span class="case-tag">Process Automation</span>
+            <span class="case-tag">API Integration</span>
+            <span class="case-tag">Customer Servicing</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">End-to-end</div>
+            <div class="result-desc">Full leasing lifecycle automated from lead capture to asset management</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Faster</div>
+            <div class="result-desc">Customer onboarding and self-service dramatically accelerated</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Scalable</div>
+            <div class="result-desc">Platform built to grow with the business, not against it</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. AI Call Analytics (innovative AI, daily impact, multi-department) -->
+      <div class="case-card reveal" data-category="ai">
+        <div class="case-overview">
+          <div class="case-industry">AI &middot; Customer Intelligence</div>
+          <h2 class="case-title">Using AI to analyse customer calls and build <em>dynamic client insights</em></h2>
+          <div class="case-client">Growing services business &middot; Multiple departments</div>
+          <p class="case-desc">A growing services business needed to go beyond standard reporting to truly understand their customers. We deployed a proprietary AI tool to analyse thousands of customer calls across departments, extracting sentiment, behavioural patterns, recurring themes, and resistance signals, building continuously updating persona-level intelligence and near real-time feedback loops for coaching, scripting, and product messaging.</p>
+          <div class="case-tags">
+            <span class="case-tag">AI Tooling</span>
+            <span class="case-tag">Call Analytics</span>
+            <span class="case-tag">Customer Personas</span>
+            <span class="case-tag">Script Optimisation</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">Daily</div>
+            <div class="result-desc">AI-driven insight generation, replacing periodic manual reviews entirely</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Multi-dept</div>
+            <div class="result-desc">Scripts improved simultaneously across sales, onboarding, and support</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Real-time</div>
+            <div class="result-desc">Feedback loops informing agent performance and coaching from day one</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Insurance PAS Implementation (1M+ users, scale credibility) -->
+      <div class="case-card reveal" data-category="insurance">
+        <div class="case-overview">
+          <div class="case-industry">Insurance &middot; Implementation</div>
+          <h2 class="case-title">Policy administration system implementation for a <em>leading South African retailer</em></h2>
+          <div class="case-client">Large-scale embedded insurance product &middot; South Africa</div>
+          <p class="case-desc">We acted as embedded product owner and delivery partner for the full implementation of a new policy administration system. This covered system integration and API design advisory, technical specifications, business analysis, end-to-end testing strategy across SIT, UIT and UAT, and full operational readiness including user training and BI support.</p>
+          <div class="case-tags">
+            <span class="case-tag">Product Ownership</span>
+            <span class="case-tag">System Integration</span>
+            <span class="case-tag">Operational Readiness</span>
+            <span class="case-tag">UAT</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">1M+</div>
+            <div class="result-desc">Users supported following successful product launch in late 2024</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">100%</div>
+            <div class="result-desc">Strong system adoption across business and technical teams</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Day one</div>
+            <div class="result-desc">Fully trained internal team running and supporting the system independently</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Donor Reporting Automation (200+ hrs saved, clear ROI) -->
+      <div class="case-card reveal" data-category="education">
+        <div class="case-overview">
+          <div class="case-industry">Education &middot; Nonprofit</div>
+          <h2 class="case-title">Automated donor reporting for a <em>leading bursary</em> organisation</h2>
+          <div class="case-client">Leading bursary organisation &middot; South Africa</div>
+          <p class="case-desc">A leading bursary organisation was spending over 200 hours per quarter on manual donor reporting, a process that was slow, error-prone, and pulling the team away from higher-impact work. We implemented Occam's Launch platform, configured to their donor templates and DevMan data, enabling secure self-service report generation with real-time data sync, user access management, and automated branded PowerPoint outputs.</p>
+          <div class="case-tags">
+            <span class="case-tag">Reporting Automation</span>
+            <span class="case-tag">Platform Implementation</span>
+            <span class="case-tag">Donor Management</span>
+            <span class="case-tag">Launch Platform</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">200+ hrs</div>
+            <div class="result-desc">Saved every quarter through full reporting automation</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Zero errors</div>
+            <div class="result-desc">Manual errors eliminated and donor compliance assured</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">On-demand</div>
+            <div class="result-desc">Real-time report generation improving donor confidence and team capacity</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Milling Production Platform (real-time data, manufacturing) -->
+      <div class="case-card reveal" data-category="manufacturing">
+        <div class="case-overview">
+          <div class="case-industry">Manufacturing &middot; Data</div>
+          <h2 class="case-title">Production platform for <em>real-time reporting</em> and shift management</h2>
+          <div class="case-client">Leading milling company &middot; South Africa</div>
+          <p class="case-desc">A leading milling company was losing hundreds of hours per month to manual reporting spread across teams and mills. Data lived in silos, decisions were delayed, and there was no single source of truth. We built a production platform that consolidated all operational data, delivered real-time dashboards for extraction and performance, automated shift reporting with foreman input, and gave leadership the live insight they needed to run the business on facts rather than lag indicators.</p>
+          <div class="case-tags">
+            <span class="case-tag">Platform Development</span>
+            <span class="case-tag">Real-Time Data</span>
+            <span class="case-tag">Shift Management</span>
+            <span class="case-tag">Operational Reporting</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">100s of hrs</div>
+            <div class="result-desc">Manual reporting hours cut across teams every month</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Single source</div>
+            <div class="result-desc">One platform replacing fragmented data and siloed reporting</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Real-time</div>
+            <div class="result-desc">Leadership now runs operations on live insights, not lagging reports</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Education Risk Model (sophisticated analytics) -->
+      <div class="case-card reveal" data-category="education">
+        <div class="case-overview">
+          <div class="case-industry">Education &middot; Fintech</div>
+          <h2 class="case-title">Risk and eligibility model for an <em>education financing</em> provider</h2>
+          <div class="case-client">Education financing provider &middot; South Africa</div>
+          <p class="case-desc">An education financing provider needed a fair, data-driven model to assess applicant risk and determine product eligibility while maintaining portfolio sustainability. We built a weighted eligibility score, a predictive IRR model incorporating probability of default, field of study, and job trajectories, a contract-terms calculator, and a portfolio-level dashboard, with clear Accept / Waitlist / Decline decision rules throughout.</p>
+          <div class="case-tags">
+            <span class="case-tag">Risk Modelling</span>
+            <span class="case-tag">Eligibility Scoring</span>
+            <span class="case-tag">Portfolio Management</span>
+            <span class="case-tag">Decision Frameworks</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">Transparent</div>
+            <div class="result-desc">Explainable risk and eligibility model with consistent decision rules</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Per applicant</div>
+            <div class="result-desc">Recommended contract terms with projected IRR for every application</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Portfolio view</div>
+            <div class="result-desc">Dashboard summarising expected IRR, loss exposure, and portfolio mix</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Transformation Roadmap — Leasing (strategy credibility, pairs with #1) -->
+      <div class="case-card reveal" data-category="operations">
+        <div class="case-overview">
+          <div class="case-industry">Operations &middot; Transformation</div>
+          <h2 class="case-title">Transformation roadmap for a leading <em>vehicle leasing</em> company</h2>
+          <div class="case-client">Fast-growing vehicle leasing company &middot; South Africa</div>
+          <p class="case-desc">A fast-growing vehicle leasing company needed clarity on their current systems, processes, and organisational structure ahead of major transformation. We conducted in-depth process workshops with all department heads, mapped current-state systems, and developed a comprehensive transformation roadmap covering target operating model designs, technical architecture, key process redesigns, and platform recommendations.</p>
+          <div class="case-tags">
+            <span class="case-tag">Process Mapping</span>
+            <span class="case-tag">Operating Model</span>
+            <span class="case-tag">Transformation Roadmap</span>
+            <span class="case-tag">System Architecture</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">1 roadmap</div>
+            <div class="result-desc">Clear, actionable path for digital transformation grounded in operational realities</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">All depts</div>
+            <div class="result-desc">Strategic alignment achieved across all leadership teams and departments</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Foundation</div>
+            <div class="result-desc">Platform and operating model design ready for immediate implementation</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. Mining Plant Simulation (engineering depth) -->
+      <div class="case-card reveal" data-category="mining">
+        <div class="case-overview">
+          <div class="case-industry">Mining &middot; Engineering</div>
+          <h2 class="case-title">Plant simulation model to assess <em>long-term performance</em> and ROI</h2>
+          <div class="case-client">Mining company designing a GTL plant &middot; South Africa</div>
+          <p class="case-desc">A mining company designing a gas-to-liquid plant needed to assess expected output across a 30-year lifecycle. We developed a bespoke simulation model based on plant design, component data, and operational assumptions, enabling the client to test alternative configurations, simulate throughput and production efficiency, and quantify the ROI impact of design decisions. Model assumptions were validated with engineering leads.</p>
+          <div class="case-tags">
+            <span class="case-tag">Simulation Modelling</span>
+            <span class="case-tag">ROI Analysis</span>
+            <span class="case-tag">Engineering Decision Support</span>
+            <span class="case-tag">Data Modelling</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">30 years</div>
+            <div class="result-desc">Full lifecycle throughput and efficiency modelled and validated</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Flexible</div>
+            <div class="result-desc">Model reusable across multiple plant design configurations</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Commercial</div>
+            <div class="result-desc">Clear ROI basis established for both technical and financial decision-making</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. Insurance Process Mapping (operational baseline) -->
+      <div class="case-card reveal" data-category="insurance">
+        <div class="case-overview">
+          <div class="case-industry">Insurance &middot; Operations</div>
+          <h2 class="case-title">Operational process mapping for an <em>embedded insurance</em> product</h2>
+          <div class="case-client">Embedded insurance provider &middot; South Africa</div>
+          <p class="case-desc">An embedded insurance provider needed a clear end-to-end view of their operations and supporting systems ahead of integration. We designed and facilitated in-person process and system mapping workshops, mapped high-level insurance processes highlighting manual interventions, led structured discussions to surface dependencies and gaps, and validated outputs with key stakeholders.</p>
+          <div class="case-tags">
+            <span class="case-tag">Process Mapping</span>
+            <span class="case-tag">System Mapping</span>
+            <span class="case-tag">Operational Baseline</span>
+            <span class="case-tag">Integration Readiness</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">Consolidated</div>
+            <div class="result-desc">Single view of core insurance processes and systems established</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Aligned</div>
+            <div class="result-desc">Improved alignment across business and technical teams achieved</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Documented</div>
+            <div class="result-desc">Clear operational gaps and integration risks identified and recorded</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. Apartment Leasing RFP (requirements/vendor selection) -->
+      <div class="case-card reveal" data-category="property">
+        <div class="case-overview">
+          <div class="case-industry">Property &middot; Operations</div>
+          <h2 class="case-title">RFP development for a new <em>apartment leasing</em> platform</h2>
+          <div class="case-client">Established apartment leasing company &middot; South Africa</div>
+          <p class="case-desc">An established apartment leasing company needed to modernise their systems and improve operational efficiency. We conducted interviews and workshops with internal teams, mapped and updated key business processes, defined a target operating model and system architecture, captured functional and non-functional requirements across leasing, customer management, and finance, and packaged everything into a comprehensive vendor RFP.</p>
+          <div class="case-tags">
+            <span class="case-tag">Operating Model Design</span>
+            <span class="case-tag">Requirements Definition</span>
+            <span class="case-tag">Vendor Selection</span>
+            <span class="case-tag">RFP Development</span>
+          </div>
+        </div>
+        <div class="case-results">
+          <div class="results-label">Results</div>
+          <div class="result-item">
+            <div class="result-number">1 RFP</div>
+            <div class="result-desc">Structured, comprehensive document sent to qualified leasing system vendors</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Future-ready</div>
+            <div class="result-desc">Target operating model and process baseline defined for implementation</div>
+          </div>
+          <div class="result-item">
+            <div class="result-number">Clarity</div>
+            <div class="result-desc">Full requirements captured across leasing, customer management, and finance</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="s-cta">
+    <div class="cta-glow"></div>
+    <div class="section-inner" style="position:relative;z-index:1;">
+      <div class="reveal">
+        <div class="section-label" style="text-align:center;">Your turn</div>
+        <h2 class="cta-title">Every case starts with <em>one conversation.</em></h2>
+        <p class="cta-sub">Tell us where your business is losing performance. We will tell you whether we can help.</p>
+        <a href="mailto:hello@occamco.com" class="btn-primary">Start a conversation</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">occam<div class="footer-sub">Ideas Made Simple</div></div>
+    <div class="footer-tagline">Business Engineering &middot; AI-Native &middot; Mid-Market</div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="our-team.html">Team</a></li>
+      <li><a href="insights.html">Insights</a></li>
+      <li><a href="privacy-policy.html">Privacy</a></li>
+      <li><a href="mailto:hello@occamco.com">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    var dot=document.getElementById('dot'),ring=document.getElementById('ring'),mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+    document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY});
+    (function tick(){dot.style.left=mx+'px';dot.style.top=my+'px';rx+=(mx-rx)*0.15;ry+=(my-ry)*0.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick)})();
+    document.getElementById('hamburger').addEventListener('click',function(){document.getElementById('navLinks').classList.toggle('open')});
+
+    // FLOW FIELD
+    var canvas = document.getElementById('stars');
+    var ctx = canvas.getContext('2d');
+    var W, H;
+    var mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999 };
+    document.addEventListener('mousemove', function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+    var F2 = 0.5 * (Math.sqrt(3) - 1), G2 = (3 - Math.sqrt(3)) / 6;
+    var _p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
+    var perm = new Array(512), pm12 = new Array(512);
+    for (var i = 0; i < 512; i++) { perm[i] = _p[i & 255]; pm12[i] = perm[i] % 12; }
+    var grad3 = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
+    function simplex2(xin, yin) {
+      var s = (xin + yin) * F2;
+      var i = Math.floor(xin + s), j = Math.floor(yin + s);
+      var t = (i + j) * G2;
+      var x0 = xin - (i - t), y0 = yin - (j - t);
+      var i1 = x0 > y0 ? 1 : 0, j1 = x0 > y0 ? 0 : 1;
+      var x1 = x0 - i1 + G2, y1 = y0 - j1 + G2;
+      var x2 = x0 - 1 + 2 * G2, y2 = y0 - 1 + 2 * G2;
+      var ii = i & 255, jj = j & 255;
+      var n0 = 0, n1 = 0, n2 = 0;
+      var t0 = 0.5 - x0 * x0 - y0 * y0;
+      if (t0 > 0) { t0 *= t0; var gi = pm12[ii + perm[jj]]; n0 = t0 * t0 * (grad3[gi][0] * x0 + grad3[gi][1] * y0); }
+      var t1 = 0.5 - x1 * x1 - y1 * y1;
+      if (t1 > 0) { t1 *= t1; var gi = pm12[ii + i1 + perm[jj + j1]]; n1 = t1 * t1 * (grad3[gi][0] * x1 + grad3[gi][1] * y1); }
+      var t2 = 0.5 - x2 * x2 - y2 * y2;
+      if (t2 > 0) { t2 *= t2; var gi = pm12[ii + 1 + perm[jj + 1]]; n2 = t2 * t2 * (grad3[gi][0] * x2 + grad3[gi][1] * y2); }
+      return 70 * (n0 + n1 + n2);
+    }
+    var COUNT=800,SCALE=18,NOISE_SCL=0.0035,SPEED=1.4,FADE=0.025,MOUSE_R=250,MAX_LIFE=350;
+    var cols,rows,field,particles=[];
+    var COLORS=[[200,169,110],[185,155,95],[215,190,140],[170,140,80],[230,210,165],[160,130,75]];
+    var time=0;
+    function resize(){W=innerWidth;H=innerHeight;canvas.width=W;canvas.height=H;cols=Math.ceil(W/SCALE)+1;rows=Math.ceil(H/SCALE)+1;field=new Float32Array(cols*rows);ctx.fillStyle='#0a0a0c';ctx.fillRect(0,0,W,H)}
+    resize();window.addEventListener('resize',resize);
+    function spawn(){var c=COLORS[Math.floor(Math.random()*COLORS.length)];return{x:Math.random()*W,y:Math.random()*H,px:0,py:0,speed:SPEED*(0.4+Math.random()*0.9),cr:c[0],cg:c[1],cb:c[2],alpha:0.06+Math.random()*0.12,life:Math.floor(Math.random()*MAX_LIFE),maxLife:MAX_LIFE*(0.6+Math.random()*0.4)}}
+    for(var i=0;i<COUNT;i++)particles.push(spawn());
+    function computeField(){for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){var nx=c*SCALE*NOISE_SCL,ny=r*SCALE*NOISE_SCL;var angle=simplex2(nx+time*0.4,ny+time*0.3)*Math.PI*2;angle+=simplex2(nx*2.5+50,ny*2.5+50+time*0.2)*Math.PI*0.6;field[r*cols+c]=angle}}
+    (function loop(){ctx.fillStyle='rgba(10,10,12,'+FADE+')';ctx.fillRect(0,0,W,H);time+=0.003;computeField();if(mouse.sx<-9000){mouse.sx=W/2;mouse.sy=H/2}mouse.sx+=(mouse.x-mouse.sx)*0.06;mouse.sy+=(mouse.y-mouse.sy)*0.06;for(var i=0;i<particles.length;i++){var p=particles[i];p.px=p.x;p.py=p.y;var col=Math.floor(p.x/SCALE),row=Math.floor(p.y/SCALE);if(col>=0&&col<cols&&row>=0&&row<rows){var angle=field[row*cols+col];var mdx=mouse.sx-p.x,mdy=mouse.sy-p.y,md=Math.sqrt(mdx*mdx+mdy*mdy);if(md<MOUSE_R&&md>1){var inf=1-md/MOUSE_R;inf=inf*inf;var va=Math.atan2(mdy,mdx)+Math.PI*0.55;angle=angle*(1-inf*0.7)+va*inf*0.7;p.speed=SPEED*(0.4+Math.random()*0.9)+inf*2.5}p.x+=Math.cos(angle)*p.speed;p.y+=Math.sin(angle)*p.speed}var lf=p.life/p.maxLife;var fa=lf<0.05?lf/0.05:lf>0.9?(1-lf)/0.1:1;var da=p.alpha*fa;if(p.life>0&&da>0.005){ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.strokeStyle='rgba('+p.cr+','+p.cg+','+p.cb+','+da+')';ctx.lineWidth=0.6+fa*0.3;ctx.stroke()}p.life++;if(p.x<-20||p.x>W+20||p.y<-20||p.y>H+20||p.life>p.maxLife){var c=COLORS[Math.floor(Math.random()*COLORS.length)];p.x=Math.random()*W;p.y=Math.random()*H;p.px=p.x;p.py=p.y;p.life=0;p.maxLife=MAX_LIFE*(0.6+Math.random()*0.4);p.cr=c[0];p.cg=c[1];p.cb=c[2];p.alpha=0.06+Math.random()*0.12;p.speed=SPEED*(0.4+Math.random()*0.9)}}requestAnimationFrame(loop)})();
+
+    var nav=document.getElementById('nav');
+    window.addEventListener('scroll',function(){if(scrollY>60)nav.classList.add('scrolled');else nav.classList.remove('scrolled')});
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}})},{threshold:0.12});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+
+    // FILTERS
+    var filterBtns=document.querySelectorAll('.filter-btn');
+    var cards=document.querySelectorAll('.case-card');
+    filterBtns.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        filterBtns.forEach(function(b){b.classList.remove('active')});
+        btn.classList.add('active');
+        var f=btn.getAttribute('data-filter');
+        cards.forEach(function(card){
+          if(f==='all'||card.getAttribute('data-category')===f){
+            card.style.display='';
+          } else {
+            card.style.display='none';
+          }
+        });
+      });
+    });
+  </script>
+  <script src="assets/shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>occam | Ideas Made Simple</title>
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-52W0F5S3TM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-52W0F5S3TM');
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+
+  <style>
+    .prosto { font-family: 'Montserrat', sans-serif; }
+    html { scroll-behavior: smooth; }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fade-in 1s ease-out forwards; }
+
+    /* Hide scrollbars cleanly */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Logos */
+    .logo-box {
+      width: 240px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+    }
+    .client-logo {
+      max-width: 100%;
+      max-height: 110%;
+      object-fit: contain;
+      filter: grayscale(100%);
+      opacity: 0.9;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .client-logo:hover {
+      transform: translateY(-4px);
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="bg-white text-gray-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header id="main-header" class="fixed top-0 left-0 w-full bg-black text-gray-100 z-50 transition-transform duration-500">
+    <div class="max-w-6xl mx-auto py-4 px-6 flex items-center justify-between">
+
+      <a href="https://www.occamco.com" class="text-[36px] sm:text-[40px] leading-none transform transition-transform duration-300 hover:scale-95 font-light">
+        occam
+      </a>
+
+      <!-- Desktop nav -->
+      <div class="hidden md:flex items-center gap-3">
+        <a href="/what-we-do" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
+          What we do
+        </a>
+        <a href="/our-team" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
+          Our team
+        </a>
+        <a href="/insights" class="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white/10 hover:bg-white/20 transition">
+          Insights
+        </a>
+        <button class="open-contact-modal inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition">
+          Start a conversation
+        </button>
+      </div>
+
+      <!-- Mobile actions -->
+      <div class="md:hidden flex items-center gap-2">
+        <button
+          class="open-contact-modal inline-flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium bg-white text-gray-900 hover:bg-gray-100 transition"
+        >
+          Contact
+        </button>
+
+        <button
+          class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 hover:bg-white/20 transition"
+          aria-label="Open menu"
+          onclick="toggleMobileMenu()"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="fixed inset-0 z-40 hidden bg-black text-white">
+    <div class="max-w-6xl mx-auto px-6 pt-24 pb-10">
+      <div class="flex items-center justify-between">
+        <div class="text-xl font-light">Menu</div>
+        <button
+          class="inline-flex items-center justify-center w-10 h-10 rounded-md bg-white/10 hover:bg-white/20 transition"
+          aria-label="Close menu"
+          onclick="toggleMobileMenu()"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-8 space-y-5 text-lg">
+        <a href="/what-we-do" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">What we do</a>
+        <a href="/our-team" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">Our team</a>
+        <a href="/insights" class="block hover:text-gray-200 transition" onclick="toggleMobileMenu()">Insights</a>
+        <a href="/privacy-policy" class="block text-gray-300 hover:text-gray-200 transition" onclick="toggleMobileMenu()">Privacy policy</a>
+
+        <div class="pt-6 border-t border-white/15">
+          <button class="open-contact-modal w-full py-3 rounded-md bg-white text-gray-900 font-medium hover:bg-gray-100 transition" onclick="toggleMobileMenu()">
+            Start a conversation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="relative min-h-screen text-white">
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('top_image.jpg');"></div>
+    <div class="absolute inset-0 bg-black/55"></div>
+
+    <div class="absolute inset-0 z-10 flex items-center justify-center px-6 text-center" data-aos="fade-up">
+      <div class="max-w-3xl w-full pt-24">
+
+        <h1 class="prosto text-5xl sm:text-7xl lg:text-8xl mb-6 leading-tight">
+          occam
+        </h1>
+
+        <p class="text-base sm:text-xl lg:text-2xl mb-6 leading-relaxed text-gray-100">
+          We help leadership teams find the constraint, fix it fast, and embed systems that keep compounding.
+        </p>
+
+        <div class="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            class="open-contact-modal inline-flex items-center justify-center bg-white text-gray-900 px-6 py-3 rounded-md text-base font-medium hover:bg-gray-100 transition"
+          >
+            Start a conversation
+          </button>
+
+          <a
+            href="/what-we-do"
+            class="inline-flex items-center justify-center bg-white/10 text-white px-6 py-3 rounded-md text-base font-medium hover:bg-white/20 transition"
+          >
+            See what we do
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- What we do -->
+  <section id="what-we-do" class="bg-gray-50 py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="max-w-3xl mx-auto text-center" data-aos="fade-up">
+        <p class="text-sm font-mono tracking-widest text-gray-500 uppercase mb-4">
+          Ideas made simple
+        </p>
+
+        <h2 class="prosto text-4xl sm:text-5xl font-semibold text-gray-900 mb-6">
+          What we do
+        </h2>
+
+        <p class="text-gray-700 text-lg leading-relaxed">
+          We improve company performance by removing execution bottlenecks, simplifying operating systems, and embedding decision support and automation where it matters.
+        </p>
+
+        <p class="text-gray-700 text-lg leading-relaxed mt-4">
+          Our focus is structural improvement through less friction, faster decisions, and repeatable operational discipline that carries across businesses.
+        </p>
+
+        <div class="mt-10">
+          <a
+            href="/what-we-do"
+            class="inline-flex items-center justify-center px-8 py-3 rounded-md text-base font-medium bg-black text-white hover:bg-gray-900 transition"
+          >
+            Find out more
+          </a>
+        </div>
+      </div>
+
+      <!-- Three value pillars -->
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8" data-aos="fade-up">
+        <div class="bg-white border border-gray-200 rounded-2xl p-8">
+          <div class="text-sm font-mono tracking-widest text-gray-500 uppercase mb-3">Growth</div>
+          <div class="text-xl font-semibold text-gray-900 mb-3">Customer growth and retention</div>
+          <p class="text-gray-700 leading-relaxed">
+            Remove friction across acquisition, onboarding, service and retention so growth becomes measurable and predictable, not accidental.
+          </p>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-2xl p-8">
+          <div class="text-sm font-mono tracking-widest text-gray-500 uppercase mb-3">Efficiency</div>
+          <div class="text-xl font-semibold text-gray-900 mb-3">Operational execution</div>
+          <p class="text-gray-700 leading-relaxed">
+            Reduce operating drag by simplifying workflows, improving visibility, and tightening cadence so delivery becomes reliable.
+          </p>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-2xl p-8">
+          <div class="text-sm font-mono tracking-widest text-gray-500 uppercase mb-3">Control</div>
+          <div class="text-xl font-semibold text-gray-900 mb-3">Governance and performance</div>
+          <p class="text-gray-700 leading-relaxed">
+            Strengthen decision rights, accountability, and performance signals so leadership intent turns into consistent outcomes.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Client logos -->
+  <section class="bg-black text-white text-center py-24 px-0 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-6 mb-10" data-aos="fade-up">
+      <h2 class="text-2xl sm:text-3xl font-semibold">
+        Some of the teams we've worked alongside
+      </h2>
+      <p class="text-gray-300 mt-3">
+        Select references across operating roles, delivery, and product builds.
+      </p>
+    </div>
+
+    <div class="relative w-full" data-aos="fade-up">
+      <button
+        onclick="scrollLogos(-350)"
+        class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 items-center justify-center backdrop-blur transition"
+        aria-label="Scroll left"
+      >
+        <span class="text-2xl leading-none">&lsaquo;</span>
+      </button>
+
+      <button
+        onclick="scrollLogos(350)"
+        class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 text-white rounded-full w-10 h-10 items-center justify-center backdrop-blur transition"
+        aria-label="Scroll right"
+      >
+        <span class="text-2xl leading-none">&rsaquo;</span>
+      </button>
+
+      <div
+        id="logoScroll"
+        class="hide-scrollbar flex overflow-x-auto space-x-14 items-center snap-x snap-mandatory px-10 py-4 scroll-smooth w-full"
+      >
+        <div class="logo-box flex-shrink-0 snap-start">
+          <img src="./cleaned_logos/planet42_logo.png" alt="Planet42" class="client-logo" />
+        </div>
+        <div class="logo-box flex-shrink-0 snap-start">
+          <img src="./cleaned_logos/abacus_logo.png" alt="Abacus" class="client-logo" />
+        </div>
+        <div class="logo-box flex-shrink-0 snap-start">
+          <img src="./cleaned_logos/studytrust-logo.png" alt="StudyTrust" class="client-logo" />
+        </div>
+        <div class="logo-box flex-shrink-0 snap-start">
+          <img src="./cleaned_logos/wcm_logo.png" alt="WCM" class="client-logo" />
+        </div>
+        <div class="logo-box flex-shrink-0 snap-start">
+          <img src="./cleaned_logos/ithemba_logo.png" alt="Ithemba" class="client-logo" />
+        </div>
+        <div class="logo-box flex-shrink-0 snap-start">
+          <img src="./cleaned_logos/root_logo.png" alt="Root" class="client-logo" />
+        </div>
+        <div class="logo-box flex-shrink-0 snap-start">
+          <img src="./cleaned_logos/wafunda_logo.png" alt="Wafunda" class="client-logo" />
+        </div>
+        <div class="logo-box flex-shrink-0 snap-start">
+          <img src="./cleaned_logos/ag1_logo.png" alt="Ag1" class="client-logo" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Modal -->
+  <div id="contactModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 flex transition-opacity duration-300">
+    <div class="bg-white p-6 rounded-lg max-w-md w-full relative transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl leading-none">&times;</button>
+      <h3 class="text-xl font-semibold mb-4 text-center">Start a conversation</h3>
+      <form action="https://formspree.io/f/xblypvkb" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-sm mb-1 text-gray-700">Your email</label>
+          <input type="email" name="email" class="w-full border border-gray-300 px-4 py-2 rounded-md" required />
+        </div>
+        <button type="submit" class="bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 w-full">Send</button>
+        <p class="text-xs text-gray-500 text-center mt-2">No spam. Just the occasional update on new insights, tools, and our thinking.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Thank You Modal -->
+  <div id="thankYouModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 flex">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center text-gray-800 w-full max-w-sm">
+      <h3 class="text-xl font-semibold mb-2">Thanks!</h3>
+      <p>Your message has been sent.</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-200 bg-white">
+    <div class="max-w-6xl mx-auto px-6 py-10 space-y-6">
+
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+          <div class="text-sm font-semibold tracking-widest lowercase text-gray-900">occam</div>
+          <div class="text-sm text-gray-500 mt-1">Ideas made simple</div>
+        </div>
+
+        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-500">
+          <a href="/what-we-do" class="hover:text-gray-800 transition">What we do</a>
+          <a href="/our-team" class="hover:text-gray-800 transition">Our team</a>
+          <a href="/insights" class="hover:text-gray-800 transition">Insights</a>
+          <a href="/privacy-policy" class="hover:text-gray-800 transition">Privacy policy</a>
+        </div>
+      </div>
+
+      <div class="text-xs text-gray-400 sm:text-right">
+        © <span id="year"></span> Occam. All rights reserved.
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Mobile menu
+    function toggleMobileMenu() {
+      document.getElementById("mobileMenu").classList.toggle("hidden");
+    }
+
+    // Contact Modal
+    function closeModal() {
+      const modal = document.getElementById('contactModal');
+      const content = document.getElementById('modalContent');
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    document.getElementById('contactModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    const modal = document.getElementById('contactModal');
+    const content = document.getElementById('modalContent');
+
+    function openModal() {
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+      });
+    }
+
+    document.querySelectorAll('.open-contact-modal').forEach(btn => {
+      btn.addEventListener('click', openModal);
+    });
+
+    // Header hide on scroll (desktop + mobile)
+    let lastScroll = 0;
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      if (currentScroll <= 0) {
+        header.style.transform = 'translateY(0)';
+        return;
+      }
+      header.style.transform = currentScroll > lastScroll ? 'translateY(-100%)' : 'translateY(0)';
+      lastScroll = currentScroll;
+    });
+
+    // Thank You Modal Trigger
+    const contactForm = document.querySelector('#contactModal form');
+    contactForm.addEventListener('submit', function () {
+      setTimeout(() => {
+        closeModal();
+        document.getElementById('thankYouModal').classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('thankYouModal').classList.add('hidden');
+        }, 3000);
+      }, 100);
+    });
+
+    // AOS
+    AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+
+    // Logos scroll
+    function scrollLogos(amount) {
+      const container = document.getElementById('logoScroll');
+      container.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+  <script src="/assets/cookies.js"></script>
+</body>
+</html>
