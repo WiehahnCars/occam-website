@@ -139,13 +139,398 @@
       font-family:var(--font-body); font-size:0.8rem; font-weight:300;
       color:rgba(245,243,238,0.35); margin-top:1.2rem; line-height:1.6;
     }
+
+    /* ===== 5. NOISE TO SIGNAL ===== */
+    .signal-container {
+      width:100%; max-width:800px; position:relative; height:200px;
+      display:flex; align-items:center; justify-content:center; overflow:hidden;
+    }
+    .signal-noise {
+      position:absolute; inset:0; font-family:var(--font-mono); font-size:0.7rem;
+      line-height:1.6; color:rgba(245,243,238,0.12); word-break:break-all;
+      overflow:hidden; transition:opacity 1.5s ease;
+    }
+    .signal-noise.faded { opacity:0.03; }
+    .signal-message {
+      position:relative; z-index:1; font-family:var(--font-display);
+      font-size:clamp(1.6rem,3.5vw,2.8rem); font-weight:400; text-align:center;
+      color:var(--amber); opacity:0; transition:opacity 1.2s ease 0.3s;
+    }
+    .signal-message.visible { opacity:1; }
+
+    /* ===== 6. LAYER COLLAPSE ===== */
+    .layers-container {
+      width:100%; max-width:600px; position:relative; height:340px;
+      perspective:800px;
+    }
+    .layer-card {
+      position:absolute; left:50%; width:85%; max-width:420px;
+      transform:translateX(-50%); border:1px solid var(--line);
+      padding:1.8rem 2rem; font-family:var(--font-mono); font-size:0.65rem;
+      letter-spacing:0.08em; color:rgba(245,243,238,0.25); background:var(--ink);
+      transition:all 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .layer-card .layer-title {
+      font-family:var(--font-body); font-size:0.7rem; font-weight:400;
+      letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,243,238,0.35);
+      margin-bottom:0.6rem;
+    }
+    .layers-container.collapsed .layer-card {
+      top:50% !important; transform:translateX(-50%) translateY(-50%) rotateX(0deg) !important;
+      opacity:0; border-color:transparent;
+    }
+    .layers-container.collapsed .layer-card.final {
+      opacity:1; border-color:var(--amber);
+      color:var(--amber);
+    }
+    .layers-container.collapsed .layer-card.final .layer-title {
+      color:var(--amber);
+    }
+
+    /* ===== 7. DECISION TREE PRUNING ===== */
+    .tree-container {
+      width:100%; max-width:900px; position:relative;
+    }
+    canvas#treeCanvas {
+      width:100%; height:auto; display:block;
+    }
+    .tree-label {
+      position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.25em;
+      text-transform:uppercase; color:rgba(245,243,238,0.25);
+      transition:color 0.6s; white-space:nowrap;
+    }
+    .tree-label.active { color:var(--amber); }
+
+    /* ===== 8. FOCUS LENS ===== */
+    .lens-container {
+      width:100%; max-width:700px; position:relative; height:300px;
+      overflow:hidden; cursor:none;
+    }
+    canvas#lensCanvas {
+      width:100%; height:100%; display:block;
+    }
+    .lens-hint {
+      position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.2em;
+      text-transform:uppercase; color:rgba(245,243,238,0.2);
+      transition:opacity 0.6s; pointer-events:none;
+    }
+
+    /* ===== 9. ENTROPY REVERSAL ===== */
+    .entropy-container {
+      width:100%; max-width:700px; position:relative; height:180px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .entropy-letter {
+      display:inline-block; font-family:var(--font-display);
+      font-size:clamp(2rem,5vw,4rem); font-weight:400;
+      color:var(--paper); position:absolute;
+      transition:all 2s cubic-bezier(0.25,0.1,0.25,1);
+    }
+    .entropy-letter.ordered { color:var(--amber); }
+
+    /* ===== 10. REDACTION ===== */
+    .redact-container {
+      max-width:700px; text-align:left; padding:0 2rem;
+    }
+    .redact-text {
+      font-family:var(--font-body); font-size:clamp(1rem,2vw,1.3rem);
+      font-weight:300; line-height:2; color:rgba(245,243,238,0.5);
+    }
+    .redact-text .redactable {
+      position:relative; display:inline; transition:color 0.4s ease;
+    }
+    .redact-text .redactable::after {
+      content:''; position:absolute; left:-2px; right:-2px; top:0; bottom:0;
+      background:var(--ink); transform:scaleX(0); transform-origin:left;
+      transition:transform 0.5s ease;
+    }
+    .redact-text .redactable.struck::after { transform:scaleX(1); }
+    .redact-text .redactable.struck { color:rgba(245,243,238,0.06); }
+    .redact-text .essential {
+      transition:color 0.6s ease 0.3s;
+    }
+    .redact-text .essential.highlight { color:var(--amber); }
+
+    /* ===== 11. MAZE DISSOLVE ===== */
+    .maze-container {
+      width:100%; max-width:600px; position:relative;
+    }
+    canvas#mazeCanvas {
+      width:100%; height:auto; display:block;
+    }
+    .maze-label {
+      position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.25em;
+      text-transform:uppercase; color:rgba(245,243,238,0.25);
+      transition:color 0.6s; white-space:nowrap;
+    }
+    .maze-label.active { color:var(--amber); }
+
+    /* ===== 12. GRAVITY WELL ===== */
+    .gravity-container {
+      width:100%; max-width:600px; position:relative;
+    }
+    canvas#gravityCanvas {
+      width:100%; height:auto; display:block;
+    }
+
+    /* ===== 13. CODE REFACTOR ===== */
+    .refactor-container {
+      max-width:700px; width:100%; position:relative;
+      font-family:var(--font-mono); font-size:0.7rem;
+      line-height:1.8; overflow:hidden;
+    }
+    .refactor-line {
+      color:rgba(245,243,238,0.3); white-space:nowrap; overflow:hidden;
+      transition:all 1s ease; max-height:1.8em; padding:0 1.5rem;
+      transform-origin:left center;
+    }
+    .refactor-line .kw { color:rgba(212,185,122,0.4); }
+    .refactor-line .str { color:rgba(150,200,150,0.35); }
+    .refactor-line .cm { color:rgba(245,243,238,0.15); font-style:italic; }
+    .refactor-line.collapsed {
+      max-height:0; opacity:0; padding-top:0; padding-bottom:0;
+      transform:scaleY(0);
+    }
+    .refactor-result {
+      padding:1rem 1.5rem; opacity:0; max-height:0; overflow:hidden;
+      transition:all 0.8s ease 0.5s;
+      color:var(--amber); font-size:0.85rem; letter-spacing:0.05em;
+    }
+    .refactor-result.visible { opacity:1; max-height:3em; }
+
+    /* ===== 14. KNOT UNTANGLE ===== */
+    .knot-container {
+      width:100%; max-width:600px; position:relative;
+    }
+    canvas#knotCanvas {
+      width:100%; height:auto; display:block;
+    }
+    .knot-label {
+      position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.25em;
+      text-transform:uppercase; color:rgba(245,243,238,0.25);
+      transition:color 0.6s; white-space:nowrap;
+    }
+    .knot-label.active { color:var(--amber); }
+
+    /* ===== 15. FILTER FREQUENCIES ===== */
+    .freq-container {
+      width:100%; max-width:800px; position:relative;
+    }
+    canvas#freqCanvas {
+      width:100%; height:auto; display:block;
+    }
+    .freq-label {
+      position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.25em;
+      text-transform:uppercase; color:rgba(245,243,238,0.25);
+      transition:color 0.6s; white-space:nowrap;
+    }
+    .freq-label.active { color:var(--amber); }
+
+    /* ===== 16. EROSION ===== */
+    .erosion-container {
+      width:100%; max-width:700px; position:relative;
+    }
+    canvas#erosionCanvas {
+      width:100%; height:auto; display:block;
+    }
+    .erosion-label {
+      position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%);
+      font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.25em;
+      text-transform:uppercase; color:rgba(245,243,238,0.25);
+      transition:color 0.6s; white-space:nowrap;
+    }
+    .erosion-label.active { color:var(--amber); }
+
+    /* ===== 1. RAZOR CUT ===== */
+    .razor-container {
+      width:100%; max-width:900px; position:relative;
+      height:560px; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+    }
+    .razor-container .label-top {
+      font-family:var(--font-mono); font-size:10px; letter-spacing:0.2em;
+      color:rgba(200,169,110,0.45); text-transform:uppercase;
+      position:absolute; top:32px; left:50%; transform:translateX(-50%);
+      white-space:nowrap;
+    }
+    .razor-container .canvas-wrap {
+      width:820px; height:340px; position:relative;
+    }
+    .razor-container svg.main { width:100%; height:100%; overflow:visible; }
+    .razor-container .bottom-text {
+      position:absolute; bottom:28px; left:50%; transform:translateX(-50%); text-align:center;
+    }
+    .razor-container .bottom-text h2 {
+      font-family:var(--font-display); font-size:22px; font-weight:400;
+      color:var(--paper); letter-spacing:0.02em; white-space:nowrap;
+    }
+    .razor-container .bottom-text h2 em { font-style:italic; color:var(--amber); }
+    .razor-container .bottom-text p {
+      font-family:var(--font-body); font-size:12px; font-weight:300;
+      color:rgba(245,243,238,0.35); letter-spacing:0.12em; margin-top:6px; text-transform:uppercase;
+    }
+    .razor-container .side-label {
+      position:absolute; font-family:var(--font-mono); font-size:9px;
+      letter-spacing:0.18em; text-transform:uppercase; opacity:0.35; color:var(--paper);
+    }
+    .razor-container .side-label.left { left:18px; top:50%; transform:translateY(-50%) rotate(-90deg); }
+    .razor-container .side-label.right { right:18px; top:50%; transform:translateY(-50%) rotate(90deg); }
+    .razor-container .corner {
+      position:absolute; width:20px; height:20px;
+      border-color:rgba(200,169,110,0.2); border-style:solid;
+    }
+    .razor-container .corner.tl { top:14px; left:14px; border-width:1px 0 0 1px; }
+    .razor-container .corner.tr { top:14px; right:14px; border-width:1px 1px 0 0; }
+    .razor-container .corner.bl { bottom:14px; left:14px; border-width:0 0 1px 1px; }
+    .razor-container .corner.br { bottom:14px; right:14px; border-width:0 1px 1px 0; }
   </style>
 </head>
 <body>
 
-  <!-- 1. SELF-EDITING TEXT -->
+  <!-- 1. RAZOR CUT -->
   <section class="concept">
-    <div class="concept-label">Concept 1 — Self-editing text</div>
+    <div class="concept-label">Concept 1 — Razor cut</div>
+    <div class="razor-container">
+      <div class="corner tl"></div>
+      <div class="corner tr"></div>
+      <div class="corner bl"></div>
+      <div class="corner br"></div>
+      <div class="label-top">occam · the principle of parsimony</div>
+      <span class="side-label left">complexity</span>
+      <span class="side-label right">clarity</span>
+      <div class="canvas-wrap">
+        <svg class="main" viewBox="0 0 820 340" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow-amber" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="glow-strong" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="8" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <linearGradient id="complex-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="rgba(245,243,238,0.55)"/>
+              <stop offset="85%" stop-color="rgba(245,243,238,0.45)"/>
+              <stop offset="100%" stop-color="rgba(245,243,238,0)"/>
+            </linearGradient>
+            <linearGradient id="simple-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="rgba(200,169,110,0)"/>
+              <stop offset="10%" stop-color="#c8a96e"/>
+              <stop offset="100%" stop-color="#d4bb8a"/>
+            </linearGradient>
+            <linearGradient id="blade-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#f5f3ee" stop-opacity="0.9"/>
+              <stop offset="40%" stop-color="#c8a96e" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#8a6e3e" stop-opacity="0.6"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Origin node -->
+          <circle cx="80" cy="170" r="18" fill="none" stroke="rgba(200,169,110,0.15)" stroke-width="1">
+            <animate attributeName="r" values="14;28;14" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.4;0;0.4" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="80" cy="170" r="10" fill="rgba(200,169,110,0.1)" stroke="rgba(200,169,110,0.4)" stroke-width="1"/>
+          <circle cx="80" cy="170" r="4" fill="#c8a96e" filter="url(#glow-amber)"/>
+
+          <!-- Complex paths -->
+          <path d="M80,170 C120,170 130,60 180,80 S260,40 300,90 S360,30 400,70 S420,110 430,170"
+                fill="none" stroke="url(#complex-fade)" stroke-width="1.2" stroke-dasharray="4,3" opacity="0.5">
+            <animate attributeName="stroke-dashoffset" values="0;-100" dur="4s" repeatCount="indefinite"/>
+          </path>
+          <path d="M80,170 C110,170 120,260 175,250 S255,290 305,245 S375,270 415,230 S428,200 430,170"
+                fill="none" stroke="url(#complex-fade)" stroke-width="1.2" stroke-dasharray="4,3" opacity="0.45">
+            <animate attributeName="stroke-dashoffset" values="0;-100" dur="5s" repeatCount="indefinite"/>
+          </path>
+          <path d="M80,170 C115,170 125,120 165,130 S210,100 240,140 S280,90 320,115 S370,145 410,160 S425,168 430,170"
+                fill="none" stroke="url(#complex-fade)" stroke-width="1.2" stroke-dasharray="4,3" opacity="0.4">
+            <animate attributeName="stroke-dashoffset" values="0;100" dur="3.5s" repeatCount="indefinite"/>
+          </path>
+          <path d="M80,170 C100,170 140,80 190,95 S230,55 270,75 S310,100 330,80 S380,50 410,100 S425,145 430,170"
+                fill="none" stroke="url(#complex-fade)" stroke-width="0.8" stroke-dasharray="3,4" opacity="0.3">
+            <animate attributeName="stroke-dashoffset" values="0;-80" dur="6s" repeatCount="indefinite"/>
+          </path>
+          <path d="M80,170 C100,170 115,220 155,215 S200,240 235,225 S285,255 325,235 S385,215 415,195 S428,180 430,170"
+                fill="none" stroke="url(#complex-fade)" stroke-width="0.8" stroke-dasharray="3,4" opacity="0.3">
+            <animate attributeName="stroke-dashoffset" values="0;80" dur="4.5s" repeatCount="indefinite"/>
+          </path>
+
+          <!-- Scatter nodes -->
+          <g opacity="0.35">
+            <circle cx="180" cy="80" r="2.5" fill="rgba(245,243,238,0.6)"/>
+            <circle cx="300" cy="90" r="2" fill="rgba(245,243,238,0.5)"/>
+            <circle cx="240" cy="140" r="2.5" fill="rgba(245,243,238,0.6)"/>
+            <circle cx="175" cy="250" r="2" fill="rgba(245,243,238,0.5)"/>
+            <circle cx="305" cy="245" r="2.5" fill="rgba(245,243,238,0.6)"/>
+            <circle cx="270" cy="75" r="2" fill="rgba(245,243,238,0.5)"/>
+            <circle cx="330" cy="80" r="2" fill="rgba(245,243,238,0.45)"/>
+            <circle cx="155" cy="215" r="2" fill="rgba(245,243,238,0.45)"/>
+            <circle cx="325" cy="235" r="2" fill="rgba(245,243,238,0.45)"/>
+          </g>
+
+          <!-- Razor blade -->
+          <g id="razor">
+            <line x1="430" y1="20" x2="430" y2="320" stroke="rgba(200,169,110,0.25)" stroke-width="12" filter="url(#glow-strong)"/>
+            <line x1="430" y1="20" x2="430" y2="320" stroke="url(#blade-grad)" stroke-width="1.5"/>
+            <line x1="431.5" y1="20" x2="431.5" y2="320" stroke="rgba(245,243,238,0.15)" stroke-width="0.5"/>
+            <rect x="422" y="10" width="16" height="22" rx="2" fill="var(--slate)" stroke="rgba(200,169,110,0.5)" stroke-width="0.8"/>
+            <line x1="426" y1="14" x2="426" y2="28" stroke="rgba(200,169,110,0.4)" stroke-width="0.6"/>
+            <line x1="430" y1="14" x2="430" y2="28" stroke="rgba(200,169,110,0.4)" stroke-width="0.6"/>
+            <line x1="434" y1="14" x2="434" y2="28" stroke="rgba(200,169,110,0.4)" stroke-width="0.6"/>
+            <rect x="422" y="308" width="16" height="22" rx="2" fill="var(--slate)" stroke="rgba(200,169,110,0.5)" stroke-width="0.8"/>
+            <line x1="426" y1="312" x2="426" y2="326" stroke="rgba(200,169,110,0.4)" stroke-width="0.6"/>
+            <line x1="430" y1="312" x2="430" y2="326" stroke="rgba(200,169,110,0.4)" stroke-width="0.6"/>
+            <line x1="434" y1="312" x2="434" y2="326" stroke="rgba(200,169,110,0.4)" stroke-width="0.6"/>
+            <text x="448" y="174" font-family="DM Mono, monospace" font-size="8" fill="rgba(200,169,110,0.5)" letter-spacing="0.15em">RAZOR</text>
+          </g>
+
+          <!-- Blade shimmer -->
+          <line x1="430" y1="20" x2="430" y2="320" stroke="rgba(255,255,255,0.6)" stroke-width="0.5" opacity="0">
+            <animate attributeName="opacity" values="0;0.8;0" dur="2.5s" repeatCount="indefinite" begin="1s"/>
+          </line>
+
+          <!-- Simple path -->
+          <line x1="430" y1="170" x2="740" y2="170" stroke="url(#simple-grad)" stroke-width="2.5" filter="url(#glow-amber)"/>
+
+          <!-- Moving particle -->
+          <circle r="3.5" fill="#d4bb8a" filter="url(#glow-amber)" opacity="0.9">
+            <animateMotion dur="2.5s" repeatCount="indefinite" begin="1s">
+              <mpath href="#simple-path-ref"/>
+            </animateMotion>
+          </circle>
+          <path id="simple-path-ref" d="M430,170 L740,170" fill="none"/>
+
+          <!-- Destination node -->
+          <circle cx="740" cy="170" r="20" fill="rgba(200,169,110,0.07)" stroke="rgba(200,169,110,0.2)" stroke-width="1">
+            <animate attributeName="r" values="16;22;16" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="740" cy="170" r="8" fill="rgba(200,169,110,0.15)" stroke="#c8a96e" stroke-width="1.2"/>
+          <circle cx="740" cy="170" r="3.5" fill="#c8a96e" filter="url(#glow-amber)"/>
+
+          <!-- Labels -->
+          <text x="80" y="198" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="rgba(245,243,238,0.4)" letter-spacing="0.12em">PROBLEM</text>
+          <text x="740" y="198" text-anchor="middle" font-family="DM Mono, monospace" font-size="9" fill="rgba(200,169,110,0.6)" letter-spacing="0.12em">SOLUTION</text>
+          <text x="230" y="42" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="rgba(245,243,238,0.2)" letter-spacing="0.1em">unnecessary assumptions</text>
+          <text x="585" y="155" text-anchor="middle" font-family="DM Mono, monospace" font-size="8" fill="rgba(200,169,110,0.45)" letter-spacing="0.1em">the simplest explanation</text>
+        </svg>
+      </div>
+      <div class="bottom-text">
+        <h2>Cut to what <em>matters.</em></h2>
+        <p>occam &nbsp;·&nbsp; business engineering</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. SELF-EDITING TEXT -->
+  <section class="concept">
+    <div class="concept-label">Concept 2 — Self-editing text</div>
     <div class="typewriter-container">
       <div class="typewriter-text" id="typewriter"><span class="cursor-blink"></span></div>
     </div>
@@ -153,7 +538,7 @@
 
   <!-- 2. HOVER REDUCTION -->
   <section class="concept">
-    <div class="concept-label">Concept 2 — Hover reduction</div>
+    <div class="concept-label">Concept 3 — Hover reduction</div>
     <div class="hover-container">
       <p class="hover-text">
         <span class="filler">We provide comprehensive, end-to-end </span><span class="core">business engineering</span><span class="filler"> solutions that leverage cutting-edge methodologies and </span><span class="core">AI</span><span class="filler"> technologies to holistically transform and strategically optimise your organisation's </span><span class="core">operations</span><span class="filler"> across all functional verticals, enabling sustainable competitive advantage through </span><span class="core">simplicity.</span>
@@ -164,7 +549,7 @@
 
   <!-- 4. PROCESS FLOW -->
   <section class="concept">
-    <div class="concept-label">Concept 4 — Critical path</div>
+    <div class="concept-label">Concept 5 — Critical path</div>
     <div class="flow-container" id="flowSection">
       <canvas id="flowCanvas" width="1000" height="500"></canvas>
       <div class="flow-phase" id="flowPhase">Operational complexity</div>
@@ -173,7 +558,7 @@
 
   <!-- 3. COMPLEXITY COUNTERS -->
   <section class="concept">
-    <div class="concept-label">Concept 3 — Complexity counters</div>
+    <div class="concept-label">Concept 4 — Complexity counters</div>
     <div class="counters" id="counters">
 
       <div class="counter-block" data-from="14" data-to="3" data-suffix="">
@@ -206,6 +591,141 @@
         <div class="counter-label">Time to production</div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- 5. NOISE TO SIGNAL -->
+  <section class="concept">
+    <div class="concept-label">Concept 6 — Noise to signal</div>
+    <div class="signal-container" id="signalSection">
+      <div class="signal-noise" id="signalNoise"></div>
+      <div class="signal-message" id="signalMessage">Clarity is the product.</div>
+    </div>
+  </section>
+
+  <!-- 6. LAYER COLLAPSE -->
+  <section class="concept">
+    <div class="concept-label">Concept 7 — Layer collapse</div>
+    <div class="layers-container" id="layersSection">
+      <div class="layer-card" style="top:8%; transform:translateX(-50%) rotateX(2deg);">
+        <div class="layer-title">Governance layer</div>
+        Approval workflows, sign-off matrices, escalation protocols, audit trails...
+      </div>
+      <div class="layer-card" style="top:22%; transform:translateX(-50%) rotateX(1deg);">
+        <div class="layer-title">Integration layer</div>
+        API gateways, middleware, data transformations, sync jobs, webhooks...
+      </div>
+      <div class="layer-card" style="top:36%; transform:translateX(-50%) rotateX(0deg);">
+        <div class="layer-title">Process layer</div>
+        Swimlane diagrams, handoff points, SLAs, exception handling, routing...
+      </div>
+      <div class="layer-card" style="top:50%; transform:translateX(-50%) rotateX(-1deg);">
+        <div class="layer-title">Reporting layer</div>
+        Dashboards, KPIs, drill-downs, aggregation, scheduling, distribution...
+      </div>
+      <div class="layer-card final" style="top:64%; transform:translateX(-50%) rotateX(-2deg);">
+        <div class="layer-title">What actually matters</div>
+        One workflow. One source of truth. One outcome.
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. DECISION TREE PRUNING -->
+  <section class="concept">
+    <div class="concept-label">Concept 8 — Decision tree pruning</div>
+    <div class="tree-container" id="treeSection">
+      <canvas id="treeCanvas" width="900" height="450"></canvas>
+      <div class="tree-label" id="treeLabel">Every branch is a cost</div>
+    </div>
+  </section>
+
+  <!-- 8. FOCUS LENS -->
+  <section class="concept">
+    <div class="concept-label">Concept 9 — Focus lens</div>
+    <div class="lens-container" id="lensSection">
+      <canvas id="lensCanvas"></canvas>
+      <div class="lens-hint">Move cursor to focus</div>
+    </div>
+  </section>
+
+  <!-- 9. ENTROPY REVERSAL -->
+  <section class="concept">
+    <div class="concept-label">Concept 10 — Entropy reversal</div>
+    <div class="entropy-container" id="entropySection"></div>
+  </section>
+
+  <!-- 10. REDACTION -->
+  <section class="concept">
+    <div class="concept-label">Concept 11 — Redaction</div>
+    <div class="redact-container" id="redactSection">
+      <p class="redact-text">
+        <span class="redactable">In order to effectively </span><span class="essential">reduce</span><span class="redactable"> the overall magnitude of </span><span class="essential">operational</span><span class="redactable"> inefficiencies that have been identified through extensive analysis and cross-departmental review processes, it is recommended that the organisation </span><span class="essential">simplify</span><span class="redactable"> its existing multi-layered procedural </span><span class="essential">workflows</span><span class="redactable"> to eliminate redundant steps and consolidate overlapping responsibilities.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- 11. MAZE DISSOLVE -->
+  <section class="concept">
+    <div class="concept-label">Concept 12 — Maze dissolve</div>
+    <div class="maze-container" id="mazeSection">
+      <canvas id="mazeCanvas" width="600" height="400"></canvas>
+      <div class="maze-label" id="mazeLabel">The walls are assumptions</div>
+    </div>
+  </section>
+
+  <!-- 12. GRAVITY WELL -->
+  <section class="concept">
+    <div class="concept-label">Concept 13 — Gravity well</div>
+    <div class="gravity-container" id="gravitySection">
+      <canvas id="gravityCanvas" width="600" height="400"></canvas>
+    </div>
+  </section>
+
+  <!-- 13. CODE REFACTOR -->
+  <section class="concept">
+    <div class="concept-label">Concept 14 — Code refactor</div>
+    <div class="refactor-container" id="refactorSection">
+      <div class="refactor-line"><span class="kw">function</span> validateAndProcessUserInputData(data) {</div>
+      <div class="refactor-line">  <span class="kw">const</span> sanitized = sanitizeInput(data);</div>
+      <div class="refactor-line">  <span class="kw">const</span> validated = runValidationChecks(sanitized);</div>
+      <div class="refactor-line">  <span class="kw">if</span> (!validated.success) <span class="kw">return</span> handleError(validated);</div>
+      <div class="refactor-line">  <span class="kw">const</span> transformed = transformToSchema(validated.data);</div>
+      <div class="refactor-line">  <span class="kw">const</span> enriched = enrichWithMetadata(transformed);</div>
+      <div class="refactor-line">  <span class="kw">const</span> normalised = normaliseFields(enriched);</div>
+      <div class="refactor-line">  <span class="kw">const</span> deduplicated = removeDuplicates(normalised);</div>
+      <div class="refactor-line">  <span class="kw">const</span> indexed = buildSearchIndex(deduplicated);</div>
+      <div class="refactor-line">  <span class="kw">const</span> cached = updateCache(indexed);</div>
+      <div class="refactor-line">  <span class="kw">const</span> logged = auditLog(cached);</div>
+      <div class="refactor-line">  <span class="kw">return</span> persist(logged);</div>
+      <div class="refactor-line">}</div>
+      <div class="refactor-result">process(data)</div>
+    </div>
+  </section>
+
+  <!-- 14. KNOT UNTANGLE -->
+  <section class="concept">
+    <div class="concept-label">Concept 15 — Knot untangle</div>
+    <div class="knot-container" id="knotSection">
+      <canvas id="knotCanvas" width="600" height="400"></canvas>
+      <div class="knot-label" id="knotLabel">Tangled dependencies</div>
+    </div>
+  </section>
+
+  <!-- 15. FILTER FREQUENCIES -->
+  <section class="concept">
+    <div class="concept-label">Concept 16 — Filter frequencies</div>
+    <div class="freq-container" id="freqSection">
+      <canvas id="freqCanvas" width="800" height="300"></canvas>
+      <div class="freq-label" id="freqLabel">Noise floor</div>
+    </div>
+  </section>
+
+  <!-- 16. EROSION -->
+  <section class="concept">
+    <div class="concept-label">Concept 17 — Erosion</div>
+    <div class="erosion-container" id="erosionSection">
+      <canvas id="erosionCanvas" width="700" height="350"></canvas>
+      <div class="erosion-label" id="erosionLabel">Unnecessary structure</div>
     </div>
   </section>
 
@@ -718,6 +1238,1120 @@
       }, { threshold: 0.3 });
 
       io.observe(document.getElementById('counters'));
+    })();
+
+
+    // ===== 5. NOISE TO SIGNAL =====
+    (function() {
+      var noiseEl = document.getElementById('signalNoise');
+      var msgEl = document.getElementById('signalMessage');
+      var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz@#$%&*!?;:+=/<>~^[]{}()|-_.';
+      var running = false;
+      var rafId;
+
+      // Fill noise
+      function fillNoise() {
+        var s = '';
+        for (var i = 0; i < 2000; i++) {
+          s += chars[Math.floor(Math.random() * chars.length)];
+          if (Math.random() > 0.85) s += ' ';
+        }
+        noiseEl.textContent = s;
+      }
+
+      function animateNoise() {
+        fillNoise();
+        if (running) rafId = setTimeout(animateNoise, 80);
+      }
+
+      function trigger() {
+        running = true;
+        animateNoise();
+        // After 2.5s, fade noise and reveal signal
+        setTimeout(function() {
+          noiseEl.classList.add('faded');
+          msgEl.classList.add('visible');
+        }, 2500);
+        // After 8s, reset
+        setTimeout(function() {
+          running = false;
+          noiseEl.classList.remove('faded');
+          msgEl.classList.remove('visible');
+          // Re-trigger after pause
+          setTimeout(trigger, 1500);
+        }, 8000);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting && !running) {
+            trigger();
+          }
+        });
+      }, { threshold: 0.3 });
+      io.observe(document.getElementById('signalSection'));
+      fillNoise();
+    })();
+
+
+    // ===== 6. LAYER COLLAPSE =====
+    (function() {
+      var container = document.getElementById('layersSection');
+      var triggered = false;
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting && !triggered) {
+            triggered = true;
+            setTimeout(function() {
+              container.classList.add('collapsed');
+            }, 1200);
+            // Reset after 6s
+            setTimeout(function() {
+              container.classList.remove('collapsed');
+              triggered = false;
+            }, 7500);
+          }
+        });
+      }, { threshold: 0.3 });
+      io.observe(container);
+    })();
+
+
+    // ===== 7. DECISION TREE PRUNING =====
+    (function() {
+      var canvas = document.getElementById('treeCanvas');
+      var ctx = canvas.getContext('2d');
+      var labelEl = document.getElementById('treeLabel');
+      var W = 900, H = 450;
+      var started = false;
+      var t = 0;
+      var phase = 'full'; // full, pruning, pruned
+      var phaseTime = 0;
+      var pruneProgress = 0;
+
+      // Build a binary-ish tree
+      var nodes = [];
+      var edges = [];
+
+      function buildTree(x, y, depth, angle, parentIdx) {
+        if (depth > 5) return;
+        var idx = nodes.length;
+        nodes.push({ x: x, y: y, depth: depth, pruned: false, optimal: false });
+        if (parentIdx >= 0) {
+          edges.push({ from: parentIdx, to: idx, pruned: false, optimal: false });
+        }
+        var spread = 0.5 - depth * 0.05;
+        var len = 70 - depth * 8;
+        // Left branch
+        var lAngle = angle - spread + (Math.random() - 0.5) * 0.15;
+        buildTree(x + Math.cos(lAngle) * len, y + Math.sin(lAngle) * len, depth + 1, lAngle, idx);
+        // Right branch
+        var rAngle = angle + spread + (Math.random() - 0.5) * 0.15;
+        buildTree(x + Math.cos(rAngle) * len, y + Math.sin(rAngle) * len, depth + 1, rAngle, idx);
+        // Sometimes a third branch for extra complexity
+        if (depth < 3 && Math.random() > 0.5) {
+          var mAngle = angle + (Math.random() - 0.5) * 0.3;
+          buildTree(x + Math.cos(mAngle) * len * 0.8, y + Math.sin(mAngle) * len * 0.8, depth + 1, mAngle, idx);
+        }
+      }
+
+      buildTree(80, H / 2, 0, 0, -1);
+
+      // Mark one optimal path (follow roughly first child always)
+      var optPath = [0];
+      var cur = 0;
+      while (true) {
+        var children = [];
+        for (var i = 0; i < edges.length; i++) {
+          if (edges[i].from === cur) children.push(i);
+        }
+        if (children.length === 0) break;
+        // Pick the child closest to center-right
+        var bestEdge = children[0];
+        var bestDist = 99999;
+        for (var i = 0; i < children.length; i++) {
+          var child = nodes[edges[children[i]].to];
+          var dist = Math.abs(child.y - H / 2);
+          if (dist < bestDist) { bestDist = dist; bestEdge = children[i]; }
+        }
+        edges[bestEdge].optimal = true;
+        cur = edges[bestEdge].to;
+        nodes[cur].optimal = true;
+        optPath.push(cur);
+      }
+      nodes[0].optimal = true;
+
+      // Mark non-optimal as pruned
+      for (var i = 0; i < edges.length; i++) {
+        if (!edges[i].optimal) edges[i].pruned = true;
+      }
+      for (var i = 0; i < nodes.length; i++) {
+        if (!nodes[i].optimal) nodes[i].pruned = true;
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        var pruneAlpha = phase === 'pruning' ? Math.max(0, 1 - pruneProgress) : (phase === 'pruned' ? 0 : 1);
+        var optAlpha = (phase === 'pruning' || phase === 'pruned') ? Math.min(1, pruneProgress * 1.5) : 0.08;
+
+        // Draw edges
+        for (var i = 0; i < edges.length; i++) {
+          var e = edges[i];
+          var a = nodes[e.from], b = nodes[e.to];
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+
+          if (e.optimal) {
+            ctx.strokeStyle = 'rgba(212,185,122,' + (0.15 + optAlpha * 0.7) + ')';
+            ctx.lineWidth = 1 + optAlpha * 1.5;
+            if (phase === 'pruned') {
+              ctx.shadowColor = 'rgba(212,185,122,0.3)';
+              ctx.shadowBlur = 8;
+            }
+          } else {
+            ctx.strokeStyle = 'rgba(245,243,238,' + (0.12 * pruneAlpha) + ')';
+            ctx.lineWidth = 0.6;
+          }
+          ctx.stroke();
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+        }
+
+        // Draw nodes
+        for (var i = 0; i < nodes.length; i++) {
+          var n = nodes[i];
+          ctx.beginPath();
+          var r = n.depth === 0 ? 6 : (n.depth > 4 ? 2 : 4 - n.depth * 0.3);
+
+          if (n.optimal) {
+            ctx.arc(n.x, n.y, r + optAlpha * 2, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(212,185,122,' + (0.1 + optAlpha * 0.5) + ')';
+            ctx.strokeStyle = 'rgba(212,185,122,' + (0.2 + optAlpha * 0.8) + ')';
+            ctx.lineWidth = 1;
+            ctx.fill();
+            ctx.stroke();
+          } else {
+            ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(245,243,238,' + (0.04 * pruneAlpha) + ')';
+            ctx.strokeStyle = 'rgba(245,243,238,' + (0.12 * pruneAlpha) + ')';
+            ctx.lineWidth = 0.5;
+            ctx.fill();
+            ctx.stroke();
+          }
+        }
+
+        // Animated particle on optimal path during pruned phase
+        if (phase === 'pruned' && optPath.length > 1) {
+          var progress = (t % 2.5) / 2.5;
+          var totalSegs = optPath.length - 1;
+          var seg = progress * totalSegs;
+          var si = Math.floor(seg);
+          var sf = seg - si;
+          if (si < totalSegs) {
+            var a = nodes[optPath[si]], b = nodes[optPath[si + 1]];
+            var px = a.x + (b.x - a.x) * sf;
+            var py = a.y + (b.y - a.y) * sf;
+            ctx.beginPath();
+            ctx.arc(px, py, 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(245,243,238,0.9)';
+            ctx.shadowColor = 'rgba(212,185,122,0.7)';
+            ctx.shadowBlur = 15;
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
+
+      function animate() {
+        t += 0.016;
+        phaseTime += 0.016;
+
+        switch (phase) {
+          case 'full':
+            if (phaseTime > 3) {
+              phase = 'pruning';
+              phaseTime = 0;
+              labelEl.textContent = 'One path is enough';
+              labelEl.classList.add('active');
+            }
+            break;
+          case 'pruning':
+            pruneProgress = Math.min(1, phaseTime / 2);
+            if (phaseTime > 2.5) {
+              phase = 'pruned';
+              phaseTime = 0;
+            }
+            break;
+          case 'pruned':
+            if (phaseTime > 6) {
+              phase = 'full';
+              phaseTime = 0;
+              pruneProgress = 0;
+              labelEl.textContent = 'Every branch is a cost';
+              labelEl.classList.remove('active');
+            }
+            break;
+        }
+
+        draw();
+        if (started) requestAnimationFrame(animate);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting && !started) {
+            started = true;
+            animate();
+          }
+        });
+      }, { threshold: 0.3 });
+      io.observe(document.getElementById('treeSection'));
+      draw();
+    })();
+
+
+    // ===== 8. FOCUS LENS =====
+    (function() {
+      var canvas = document.getElementById('lensCanvas');
+      var ctx = canvas.getContext('2d');
+      var container = document.getElementById('lensSection');
+      var hintEl = container.querySelector('.lens-hint');
+      var W, H;
+      var mouseX = -200, mouseY = -200;
+      var words = [
+        'synergy','blockchain','leverage','disruption','paradigm','holistic','scalable',
+        'agile','ecosystem','stakeholder','alignment','methodology','framework','pipeline',
+        'bandwidth','deliverable','action item','circle back','deep dive','low-hanging fruit',
+        'move the needle','boil the ocean','touch base','value-add','best practice',
+        'core competency','thought leadership','vertical integration','change management'
+      ];
+      var scattered = [];
+      var LENS_R = 90;
+      var message = 'Build the right thing.';
+
+      function resize() {
+        var rect = container.getBoundingClientRect();
+        W = canvas.width = rect.width * 2;
+        H = canvas.height = rect.height * 2;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.scale(2, 2);
+        // Regenerate word positions
+        scattered = [];
+        for (var i = 0; i < words.length; i++) {
+          scattered.push({
+            word: words[i],
+            x: Math.random() * (rect.width - 100) + 20,
+            y: Math.random() * (rect.height - 30) + 15,
+            speed: 0.1 + Math.random() * 0.3,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+      resize();
+
+      container.addEventListener('mousemove', function(ev) {
+        var rect = container.getBoundingClientRect();
+        mouseX = ev.clientX - rect.left;
+        mouseY = ev.clientY - rect.top;
+        hintEl.style.opacity = '0';
+      });
+      container.addEventListener('mouseleave', function() {
+        mouseX = -200; mouseY = -200;
+        hintEl.style.opacity = '1';
+      });
+
+      var t = 0;
+      function draw() {
+        var rw = W / 2, rh = H / 2;
+        ctx.clearRect(0, 0, rw, rh);
+
+        // Draw scattered jargon
+        ctx.font = '300 11px "Jost", sans-serif';
+        for (var i = 0; i < scattered.length; i++) {
+          var w = scattered[i];
+          var wx = w.x + Math.sin(t * w.speed + w.phase) * 8;
+          var wy = w.y + Math.cos(t * w.speed * 0.7 + w.phase) * 5;
+          var dx = wx - mouseX, dy = wy - mouseY;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < LENS_R) {
+            // Inside lens — hide jargon
+            ctx.fillStyle = 'rgba(245,243,238,' + (0.03 * (dist / LENS_R)) + ')';
+          } else {
+            ctx.fillStyle = 'rgba(245,243,238,0.15)';
+          }
+          ctx.fillText(w.word, wx, wy);
+        }
+
+        // Draw lens area — show clarity inside
+        if (mouseX > 0 && mouseY > 0) {
+          // Lens circle border
+          ctx.beginPath();
+          ctx.arc(mouseX, mouseY, LENS_R, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(212,185,122,0.2)';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+
+          // Clear message inside lens
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(mouseX, mouseY, LENS_R - 5, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.font = 'italic 400 18px "Playfair Display", serif';
+          ctx.fillStyle = 'rgba(212,185,122,0.85)';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(message, mouseX, mouseY);
+          ctx.restore();
+        }
+
+        t += 0.016;
+        requestAnimationFrame(draw);
+      }
+      draw();
+
+      window.addEventListener('resize', resize);
+    })();
+
+
+    // ===== 9. ENTROPY REVERSAL =====
+    (function() {
+      var container = document.getElementById('entropySection');
+      var word = 'SIMPLIFY';
+      var letters = [];
+      var phase = 'scattered'; // scattered, ordering, ordered
+      var phaseTime = 0;
+      var started = false;
+
+      // Create letter elements
+      for (var i = 0; i < word.length; i++) {
+        var el = document.createElement('span');
+        el.className = 'entropy-letter';
+        el.textContent = word[i];
+        container.appendChild(el);
+        letters.push({
+          el: el,
+          targetX: 0, targetY: 0,
+          scatterX: 0, scatterY: 0,
+          rotation: 0
+        });
+      }
+
+      function scatter() {
+        var rect = container.getBoundingClientRect();
+        var w = rect.width, h = rect.height;
+        for (var i = 0; i < letters.length; i++) {
+          var l = letters[i];
+          l.scatterX = (Math.random() - 0.5) * (w * 0.8);
+          l.scatterY = (Math.random() - 0.5) * (h * 0.7);
+          l.rotation = (Math.random() - 0.5) * 180;
+          l.el.style.transition = 'none';
+          l.el.style.transform = 'translate(' + l.scatterX + 'px,' + l.scatterY + 'px) rotate(' + l.rotation + 'deg)';
+          l.el.style.opacity = '0.15';
+          l.el.classList.remove('ordered');
+        }
+        // Force reflow
+        container.offsetHeight;
+        // Re-enable transitions
+        setTimeout(function() {
+          for (var i = 0; i < letters.length; i++) {
+            letters[i].el.style.transition = 'all 2s cubic-bezier(0.25,0.1,0.25,1)';
+          }
+        }, 50);
+      }
+
+      function order() {
+        var spacing = 42;
+        var totalW = (letters.length - 1) * spacing;
+        for (var i = 0; i < letters.length; i++) {
+          var x = -totalW / 2 + i * spacing;
+          letters[i].el.style.transform = 'translate(' + x + 'px, 0) rotate(0deg)';
+          letters[i].el.style.opacity = '1';
+          letters[i].el.classList.add('ordered');
+        }
+      }
+
+      function animate() {
+        phaseTime += 0.016;
+        switch (phase) {
+          case 'scattered':
+            if (phaseTime > 3) { phase = 'ordering'; phaseTime = 0; order(); }
+            break;
+          case 'ordering':
+            if (phaseTime > 3) { phase = 'ordered'; phaseTime = 0; }
+            break;
+          case 'ordered':
+            if (phaseTime > 3) { phase = 'scattered'; phaseTime = 0; scatter(); }
+            break;
+        }
+        if (started) requestAnimationFrame(animate);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting && !started) {
+            started = true;
+            scatter();
+            animate();
+          }
+        });
+      }, { threshold: 0.3 });
+      io.observe(container);
+    })();
+
+
+    // ===== 10. REDACTION =====
+    (function() {
+      var container = document.getElementById('redactSection');
+      var redactables = container.querySelectorAll('.redactable');
+      var essentials = container.querySelectorAll('.essential');
+      var triggered = false;
+
+      function trigger() {
+        triggered = true;
+        // Stagger redactions
+        for (var i = 0; i < redactables.length; i++) {
+          (function(el, delay) {
+            setTimeout(function() { el.classList.add('struck'); }, delay);
+          })(redactables[i], 400 + i * 500);
+        }
+        // Highlight essentials after redactions
+        var essentialDelay = 400 + redactables.length * 500 + 300;
+        for (var i = 0; i < essentials.length; i++) {
+          (function(el, delay) {
+            setTimeout(function() { el.classList.add('highlight'); }, delay);
+          })(essentials[i], essentialDelay + i * 200);
+        }
+        // Reset after viewing
+        setTimeout(function() {
+          for (var i = 0; i < redactables.length; i++) redactables[i].classList.remove('struck');
+          for (var i = 0; i < essentials.length; i++) essentials[i].classList.remove('highlight');
+          triggered = false;
+        }, essentialDelay + essentials.length * 200 + 4000);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting && !triggered) trigger();
+        });
+      }, { threshold: 0.4 });
+      io.observe(container);
+    })();
+
+
+    // ===== 11. MAZE DISSOLVE =====
+    (function() {
+      var canvas = document.getElementById('mazeCanvas');
+      var ctx = canvas.getContext('2d');
+      var labelEl = document.getElementById('mazeLabel');
+      var W = 600, H = 400;
+      var COLS = 20, ROWS = 13;
+      var CW = W / COLS, CH = H / ROWS;
+      var started = false, t = 0, phase = 'maze', phaseTime = 0;
+
+      // Generate maze walls using recursive backtracker
+      var cells = [];
+      for (var r = 0; r < ROWS; r++) {
+        cells[r] = [];
+        for (var c = 0; c < COLS; c++) {
+          cells[r][c] = { visited: false, walls: { top:true, right:true, bottom:true, left:true } };
+        }
+      }
+
+      var stack = [{ r:0, c:0 }];
+      cells[0][0].visited = true;
+      while (stack.length > 0) {
+        var cur = stack[stack.length - 1];
+        var neighbors = [];
+        if (cur.r > 0 && !cells[cur.r-1][cur.c].visited) neighbors.push({ r:cur.r-1, c:cur.c, wall:'top', opp:'bottom' });
+        if (cur.c < COLS-1 && !cells[cur.r][cur.c+1].visited) neighbors.push({ r:cur.r, c:cur.c+1, wall:'right', opp:'left' });
+        if (cur.r < ROWS-1 && !cells[cur.r+1][cur.c].visited) neighbors.push({ r:cur.r+1, c:cur.c, wall:'bottom', opp:'top' });
+        if (cur.c > 0 && !cells[cur.r][cur.c-1].visited) neighbors.push({ r:cur.r, c:cur.c-1, wall:'left', opp:'right' });
+
+        if (neighbors.length > 0) {
+          var next = neighbors[Math.floor(Math.random() * neighbors.length)];
+          cells[cur.r][cur.c].walls[next.wall] = false;
+          cells[next.r][next.c].walls[next.opp] = false;
+          cells[next.r][next.c].visited = true;
+          stack.push({ r:next.r, c:next.c });
+        } else {
+          stack.pop();
+        }
+      }
+
+      // BFS shortest path from top-left to bottom-right
+      var pathCells = [];
+      (function() {
+        var q = [{ r:0, c:0, path:[{r:0,c:0}] }];
+        var vis = {};
+        vis['0,0'] = true;
+        while (q.length > 0) {
+          var cur = q.shift();
+          if (cur.r === ROWS-1 && cur.c === COLS-1) { pathCells = cur.path; return; }
+          var dirs = [
+            { dr:-1, dc:0, wall:'top' }, { dr:0, dc:1, wall:'right' },
+            { dr:1, dc:0, wall:'bottom' }, { dr:0, dc:-1, wall:'left' }
+          ];
+          for (var d = 0; d < dirs.length; d++) {
+            var nr = cur.r + dirs[d].dr, nc = cur.c + dirs[d].dc;
+            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && !vis[nr+','+nc] && !cells[cur.r][cur.c].walls[dirs[d].wall]) {
+              vis[nr+','+nc] = true;
+              q.push({ r:nr, c:nc, path:cur.path.concat({r:nr,c:nc}) });
+            }
+          }
+        }
+      })();
+
+      // Identify walls NOT on the path
+      var dissolvableWalls = [];
+      var pathSet = {};
+      for (var i = 0; i < pathCells.length; i++) pathSet[pathCells[i].r + ',' + pathCells[i].c] = true;
+
+      for (var r = 0; r < ROWS; r++) {
+        for (var c = 0; c < COLS; c++) {
+          var cell = cells[r][c];
+          if (cell.walls.top && r > 0) dissolvableWalls.push({ r:r, c:c, wall:'top', dissolved:false, time: Math.random() });
+          if (cell.walls.right && c < COLS-1) dissolvableWalls.push({ r:r, c:c, wall:'right', dissolved:false, time: Math.random() });
+        }
+      }
+      // Shuffle
+      for (var i = dissolvableWalls.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = dissolvableWalls[i]; dissolvableWalls[i] = dissolvableWalls[j]; dissolvableWalls[j] = tmp;
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var dissolveProgress = phase === 'dissolving' ? Math.min(1, phaseTime / 3) : (phase === 'clear' ? 1 : 0);
+        var wallsToShow = Math.floor((1 - dissolveProgress) * dissolvableWalls.length);
+
+        // Draw maze walls
+        ctx.strokeStyle = 'rgba(245,243,238,0.15)';
+        ctx.lineWidth = 1;
+        for (var r = 0; r < ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            var x = c * CW, y = r * CH;
+            var cell = cells[r][c];
+            if (cell.walls.top && r === 0) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x+CW, y); ctx.stroke(); }
+            if (cell.walls.left && c === 0) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y+CH); ctx.stroke(); }
+            if (r === ROWS-1 && cell.walls.bottom) { ctx.beginPath(); ctx.moveTo(x, y+CH); ctx.lineTo(x+CW, y+CH); ctx.stroke(); }
+            if (c === COLS-1 && cell.walls.right) { ctx.beginPath(); ctx.moveTo(x+CW, y); ctx.lineTo(x+CW, y+CH); ctx.stroke(); }
+          }
+        }
+
+        // Internal walls (with dissolve)
+        for (var i = 0; i < dissolvableWalls.length; i++) {
+          var w = dissolvableWalls[i];
+          var alpha = i < wallsToShow ? 0.15 : 0.15 * Math.max(0, 1 - (dissolveProgress - w.time) * 3);
+          if (alpha < 0.005) continue;
+          ctx.strokeStyle = 'rgba(245,243,238,' + alpha + ')';
+          ctx.beginPath();
+          var x = w.c * CW, y = w.r * CH;
+          if (w.wall === 'top') { ctx.moveTo(x, y); ctx.lineTo(x+CW, y); }
+          else { ctx.moveTo(x+CW, y); ctx.lineTo(x+CW, y+CH); }
+          ctx.stroke();
+        }
+
+        // Draw path
+        var pathAlpha = phase === 'clear' ? 1 : (phase === 'dissolving' ? dissolveProgress * 0.8 : 0.06);
+        ctx.strokeStyle = 'rgba(212,185,122,' + pathAlpha + ')';
+        ctx.lineWidth = phase === 'clear' ? 3 : 1.5;
+        ctx.beginPath();
+        ctx.moveTo(pathCells[0].c * CW + CW/2, pathCells[0].r * CH + CH/2);
+        for (var i = 1; i < pathCells.length; i++) {
+          ctx.lineTo(pathCells[i].c * CW + CW/2, pathCells[i].r * CH + CH/2);
+        }
+        if (phase === 'clear') {
+          ctx.shadowColor = 'rgba(212,185,122,0.4)';
+          ctx.shadowBlur = 10;
+        }
+        ctx.stroke();
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+
+        // Path particle
+        if (phase === 'clear') {
+          var pp = (t % 3) / 3;
+          var seg = pp * (pathCells.length - 1);
+          var si = Math.floor(seg), sf = seg - si;
+          if (si < pathCells.length - 1) {
+            var px = (pathCells[si].c + (pathCells[si+1].c - pathCells[si].c) * sf) * CW + CW/2;
+            var py = (pathCells[si].r + (pathCells[si+1].r - pathCells[si].r) * sf) * CH + CH/2;
+            ctx.beginPath();
+            ctx.arc(px, py, 4, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(245,243,238,0.9)';
+            ctx.shadowColor = 'rgba(212,185,122,0.7)';
+            ctx.shadowBlur = 12;
+            ctx.fill();
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+          }
+        }
+      }
+
+      function animate() {
+        t += 0.016; phaseTime += 0.016;
+        switch (phase) {
+          case 'maze': if (phaseTime > 3) { phase = 'dissolving'; phaseTime = 0; labelEl.textContent = 'The direct path'; labelEl.classList.add('active'); } break;
+          case 'dissolving': if (phaseTime > 3.5) { phase = 'clear'; phaseTime = 0; } break;
+          case 'clear': if (phaseTime > 5) { phase = 'maze'; phaseTime = 0; labelEl.textContent = 'The walls are assumptions'; labelEl.classList.remove('active'); } break;
+        }
+        draw();
+        if (started) requestAnimationFrame(animate);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting && !started) { started = true; animate(); } });
+      }, { threshold: 0.3 });
+      io.observe(document.getElementById('mazeSection'));
+      draw();
+    })();
+
+
+    // ===== 12. GRAVITY WELL =====
+    (function() {
+      var canvas = document.getElementById('gravityCanvas');
+      var ctx = canvas.getContext('2d');
+      var W = 600, H = 400;
+      var started = false, t = 0, phase = 'orbit', phaseTime = 0;
+      var center = { x: W/2, y: H/2 };
+
+      var particles = [];
+      for (var i = 0; i < 40; i++) {
+        var angle = Math.random() * Math.PI * 2;
+        var dist = 80 + Math.random() * 150;
+        particles.push({
+          x: center.x + Math.cos(angle) * dist,
+          y: center.y + Math.sin(angle) * dist,
+          ox: center.x + Math.cos(angle) * dist,
+          oy: center.y + Math.sin(angle) * dist,
+          angle: angle,
+          dist: dist,
+          speed: 0.3 + Math.random() * 0.7,
+          size: 2 + Math.random() * 4,
+          alpha: 0.1 + Math.random() * 0.2,
+          label: ['KPI','SLA','ROI','API','ETL','CRM','ERP','OKR','MVP','UAT','RACI','BAU','PMO','SDLC','CI/CD','ITSM'][i % 16]
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var pull = phase === 'collapsing' ? Math.min(1, phaseTime / 2.5) : (phase === 'collapsed' ? 1 : 0);
+
+        // Draw connecting lines (tangled)
+        if (pull < 0.95) {
+          for (var i = 0; i < particles.length; i++) {
+            for (var j = i + 1; j < particles.length; j++) {
+              if ((i + j) % 5 !== 0) continue;
+              var dx = particles[i].x - particles[j].x;
+              var dy = particles[i].y - particles[j].y;
+              var d = Math.sqrt(dx*dx + dy*dy);
+              if (d < 180) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = 'rgba(245,243,238,' + (0.04 * (1 - pull)) + ')';
+                ctx.lineWidth = 0.4;
+                ctx.stroke();
+              }
+            }
+          }
+        }
+
+        // Update and draw particles
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          if (pull < 1) {
+            p.angle += p.speed * 0.01;
+            var curDist = p.dist * (1 - pull * 0.95);
+            p.x = center.x + Math.cos(p.angle + t * p.speed * 0.3) * curDist;
+            p.y = center.y + Math.sin(p.angle + t * p.speed * 0.3) * curDist;
+          } else {
+            p.x = center.x;
+            p.y = center.y;
+          }
+
+          var alpha = pull > 0.9 ? p.alpha * (1 - (pull - 0.9) * 10) : p.alpha;
+          if (alpha > 0.01) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * (1 - pull * 0.5), 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(245,243,238,' + (alpha * 0.3) + ')';
+            ctx.strokeStyle = 'rgba(245,243,238,' + alpha + ')';
+            ctx.lineWidth = 0.5;
+            ctx.fill();
+            ctx.stroke();
+
+            // Labels
+            if (pull < 0.7) {
+              ctx.font = '9px "DM Mono", monospace';
+              ctx.fillStyle = 'rgba(245,243,238,' + (alpha * 0.6 * (1 - pull)) + ')';
+              ctx.textAlign = 'center';
+              ctx.fillText(p.label, p.x, p.y + p.size + 12);
+            }
+          }
+        }
+
+        // Central point (grows as particles collapse)
+        if (pull > 0.3) {
+          var coreAlpha = (pull - 0.3) / 0.7;
+          var coreR = 3 + coreAlpha * 8;
+          ctx.beginPath();
+          ctx.arc(center.x, center.y, coreR, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(212,185,122,' + (coreAlpha * 0.4) + ')';
+          ctx.strokeStyle = 'rgba(212,185,122,' + coreAlpha + ')';
+          ctx.lineWidth = 1.5;
+          ctx.shadowColor = 'rgba(212,185,122,' + (coreAlpha * 0.5) + ')';
+          ctx.shadowBlur = 20;
+          ctx.fill();
+          ctx.stroke();
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+
+          if (coreAlpha > 0.6) {
+            ctx.font = '500 10px "DM Mono", monospace';
+            ctx.fillStyle = 'rgba(212,185,122,' + ((coreAlpha - 0.6) / 0.4) + ')';
+            ctx.textAlign = 'center';
+            ctx.fillText('ONE METRIC', center.x, center.y + coreR + 18);
+          }
+        }
+      }
+
+      function animate() {
+        t += 0.016; phaseTime += 0.016;
+        switch (phase) {
+          case 'orbit': if (phaseTime > 4) { phase = 'collapsing'; phaseTime = 0; } break;
+          case 'collapsing': if (phaseTime > 3) { phase = 'collapsed'; phaseTime = 0; } break;
+          case 'collapsed': if (phaseTime > 4) { phase = 'orbit'; phaseTime = 0; } break;
+        }
+        draw();
+        if (started) requestAnimationFrame(animate);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting && !started) { started = true; animate(); } });
+      }, { threshold: 0.3 });
+      io.observe(document.getElementById('gravitySection'));
+      draw();
+    })();
+
+
+    // ===== 13. CODE REFACTOR =====
+    (function() {
+      var container = document.getElementById('refactorSection');
+      var lines = container.querySelectorAll('.refactor-line');
+      var result = container.querySelector('.refactor-result');
+      var triggered = false;
+
+      function trigger() {
+        triggered = true;
+        // Collapse lines one by one from top
+        for (var i = 0; i < lines.length; i++) {
+          (function(el, delay) {
+            setTimeout(function() { el.classList.add('collapsed'); }, delay);
+          })(lines[i], 600 + i * 150);
+        }
+        // Show result
+        setTimeout(function() {
+          result.classList.add('visible');
+        }, 600 + lines.length * 150 + 300);
+
+        // Reset
+        setTimeout(function() {
+          result.classList.remove('visible');
+          for (var i = 0; i < lines.length; i++) lines[i].classList.remove('collapsed');
+          triggered = false;
+        }, 600 + lines.length * 150 + 5000);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting && !triggered) trigger(); });
+      }, { threshold: 0.3 });
+      io.observe(container);
+    })();
+
+
+    // ===== 14. KNOT UNTANGLE =====
+    (function() {
+      var canvas = document.getElementById('knotCanvas');
+      var ctx = canvas.getContext('2d');
+      var labelEl = document.getElementById('knotLabel');
+      var W = 600, H = 400;
+      var started = false, t = 0, phase = 'tangled', phaseTime = 0;
+
+      // Points that form a tangled mess, then straighten to a clean line
+      var N = 12;
+      var points = [];
+      for (var i = 0; i < N; i++) {
+        var tx = 60 + (W - 120) * (i / (N - 1));
+        var ty = H / 2;
+        // Tangled positions — wild offsets
+        var kx = W / 2 + (Math.random() - 0.5) * 350;
+        var ky = H / 2 + (Math.random() - 0.5) * 280;
+        points.push({
+          tx: tx, ty: ty,    // target (straight)
+          kx: kx, ky: ky,    // knot (tangled)
+          x: kx, y: ky,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var untangle = phase === 'untangling' ? Math.min(1, phaseTime / 2.5) : (phase === 'straight' ? 1 : 0);
+        var ease = untangle < 1 ? untangle * untangle * (3 - 2 * untangle) : 1; // smoothstep
+
+        // Update positions
+        for (var i = 0; i < N; i++) {
+          var p = points[i];
+          var wobble = phase === 'tangled' ? Math.sin(t * 1.5 + p.phase) * 8 : 0;
+          p.x = p.kx + (p.tx - p.kx) * ease + wobble;
+          p.y = p.ky + (p.ty - p.ky) * ease + Math.cos(t * 1.2 + p.phase) * 5 * (1 - ease);
+        }
+
+        // Draw the line through all points
+        if (N > 1) {
+          // Tangled: draw as curvy spline
+          ctx.beginPath();
+          ctx.moveTo(points[0].x, points[0].y);
+          for (var i = 1; i < N; i++) {
+            var prev = points[i - 1];
+            var cur = points[i];
+            var mx = (prev.x + cur.x) / 2;
+            var my = (prev.y + cur.y) / 2;
+            ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
+          }
+          ctx.lineTo(points[N-1].x, points[N-1].y);
+
+          var lineAlpha = 0.2 + ease * 0.6;
+          ctx.strokeStyle = ease > 0.5 ? 'rgba(212,185,122,' + lineAlpha + ')' : 'rgba(245,243,238,' + lineAlpha + ')';
+          ctx.lineWidth = 1 + ease * 1.5;
+          if (ease > 0.8) {
+            ctx.shadowColor = 'rgba(212,185,122,0.3)';
+            ctx.shadowBlur = 8;
+          }
+          ctx.stroke();
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+        }
+
+        // Draw points
+        for (var i = 0; i < N; i++) {
+          var p = points[i];
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3 + ease, 0, Math.PI * 2);
+          ctx.fillStyle = ease > 0.5 ? 'rgba(212,185,122,' + (0.3 + ease * 0.4) + ')' : 'rgba(245,243,238,0.15)';
+          ctx.fill();
+        }
+
+        // Start and end markers when straight
+        if (ease > 0.7) {
+          var ea = (ease - 0.7) / 0.3;
+          ctx.font = '500 9px "DM Mono", monospace';
+          ctx.fillStyle = 'rgba(212,185,122,' + ea + ')';
+          ctx.textAlign = 'center';
+          ctx.fillText('A', points[0].x, points[0].y - 14);
+          ctx.fillText('B', points[N-1].x, points[N-1].y - 14);
+        }
+      }
+
+      function animate() {
+        t += 0.016; phaseTime += 0.016;
+        switch (phase) {
+          case 'tangled': if (phaseTime > 3.5) { phase = 'untangling'; phaseTime = 0; labelEl.textContent = 'Shortest distance'; labelEl.classList.add('active'); } break;
+          case 'untangling': if (phaseTime > 3) { phase = 'straight'; phaseTime = 0; } break;
+          case 'straight': if (phaseTime > 4) { phase = 'tangled'; phaseTime = 0; labelEl.textContent = 'Tangled dependencies'; labelEl.classList.remove('active'); } break;
+        }
+        draw();
+        if (started) requestAnimationFrame(animate);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting && !started) { started = true; animate(); } });
+      }, { threshold: 0.3 });
+      io.observe(document.getElementById('knotSection'));
+      draw();
+    })();
+
+
+    // ===== 15. FILTER FREQUENCIES =====
+    (function() {
+      var canvas = document.getElementById('freqCanvas');
+      var ctx = canvas.getContext('2d');
+      var labelEl = document.getElementById('freqLabel');
+      var W = 800, H = 300;
+      var started = false, t = 0, phase = 'noisy', phaseTime = 0;
+
+      // Multiple sine waves (noise frequencies + one signal)
+      var waves = [];
+      for (var i = 0; i < 12; i++) {
+        waves.push({
+          freq: 0.5 + Math.random() * 8,
+          amp: 10 + Math.random() * 30,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.5 + Math.random() * 2,
+          isSignal: false
+        });
+      }
+      // The signal wave — smooth, low frequency
+      waves.push({
+        freq: 0.8,
+        amp: 50,
+        phase: 0,
+        speed: 0.6,
+        isSignal: true
+      });
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var filterProgress = phase === 'filtering' ? Math.min(1, phaseTime / 2.5) : (phase === 'clean' ? 1 : 0);
+        var mid = H / 2;
+
+        // Draw each wave
+        for (var w = 0; w < waves.length; w++) {
+          var wave = waves[w];
+          var alpha, width;
+
+          if (wave.isSignal) {
+            alpha = 0.1 + filterProgress * 0.7;
+            width = 1 + filterProgress * 1.5;
+            ctx.strokeStyle = 'rgba(212,185,122,' + alpha + ')';
+          } else {
+            alpha = 0.08 * (1 - filterProgress);
+            width = 0.6;
+            if (alpha < 0.003) continue;
+            ctx.strokeStyle = 'rgba(245,243,238,' + alpha + ')';
+          }
+
+          ctx.lineWidth = width;
+          ctx.beginPath();
+          for (var x = 0; x < W; x += 2) {
+            var y = mid + Math.sin((x / W) * Math.PI * 2 * wave.freq + t * wave.speed + wave.phase) * wave.amp;
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          if (wave.isSignal && filterProgress > 0.8) {
+            ctx.shadowColor = 'rgba(212,185,122,0.3)';
+            ctx.shadowBlur = 8;
+          }
+          ctx.stroke();
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+        }
+
+        // Center line reference
+        ctx.beginPath();
+        ctx.moveTo(0, mid);
+        ctx.lineTo(W, mid);
+        ctx.strokeStyle = 'rgba(245,243,238,0.03)';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+
+      function animate() {
+        t += 0.016; phaseTime += 0.016;
+        switch (phase) {
+          case 'noisy': if (phaseTime > 3.5) { phase = 'filtering'; phaseTime = 0; labelEl.textContent = 'Signal isolated'; labelEl.classList.add('active'); } break;
+          case 'filtering': if (phaseTime > 3) { phase = 'clean'; phaseTime = 0; } break;
+          case 'clean': if (phaseTime > 4) { phase = 'noisy'; phaseTime = 0; labelEl.textContent = 'Noise floor'; labelEl.classList.remove('active'); } break;
+        }
+        draw();
+        if (started) requestAnimationFrame(animate);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting && !started) { started = true; animate(); } });
+      }, { threshold: 0.3 });
+      io.observe(document.getElementById('freqSection'));
+      draw();
+    })();
+
+
+    // ===== 16. EROSION =====
+    (function() {
+      var canvas = document.getElementById('erosionCanvas');
+      var ctx = canvas.getContext('2d');
+      var labelEl = document.getElementById('erosionLabel');
+      var W = 700, H = 350;
+      var started = false, t = 0, phase = 'solid', phaseTime = 0;
+
+      // Build a dense block of rectangles (over-engineered structure)
+      var blocks = [];
+      var seed = 31;
+      function sr() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+      for (var i = 0; i < 60; i++) {
+        var bx = 100 + sr() * (W - 200);
+        var by = 60 + sr() * (H - 120);
+        var bw = 20 + sr() * 80;
+        var bh = 15 + sr() * 50;
+        var essential = false;
+        // A few blocks in the center are "essential"
+        if (Math.abs(bx + bw/2 - W/2) < 80 && Math.abs(by + bh/2 - H/2) < 40 && blocks.filter(function(b){return b.essential;}).length < 3) {
+          essential = true;
+        }
+        blocks.push({
+          x: bx, y: by, w: bw, h: bh,
+          essential: essential,
+          erodeDelay: sr(),
+          alpha: 1
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var erode = phase === 'eroding' ? Math.min(1, phaseTime / 3) : (phase === 'core' ? 1 : 0);
+
+        for (var i = 0; i < blocks.length; i++) {
+          var b = blocks[i];
+          var a;
+          if (b.essential) {
+            a = 0.08 + erode * 0.5;
+            ctx.strokeStyle = erode > 0.5 ? 'rgba(212,185,122,' + a + ')' : 'rgba(245,243,238,' + a + ')';
+            ctx.fillStyle = erode > 0.5 ? 'rgba(212,185,122,' + (a * 0.15) + ')' : 'rgba(245,243,238,' + (a * 0.05) + ')';
+            ctx.lineWidth = 1 + erode;
+            if (erode > 0.8) {
+              ctx.shadowColor = 'rgba(212,185,122,0.2)';
+              ctx.shadowBlur = 8;
+            }
+          } else {
+            var erodeLocal = Math.max(0, (erode - b.erodeDelay * 0.5) / 0.5);
+            a = 0.12 * (1 - Math.min(1, erodeLocal));
+            if (a < 0.005) continue;
+            ctx.strokeStyle = 'rgba(245,243,238,' + a + ')';
+            ctx.fillStyle = 'rgba(245,243,238,' + (a * 0.03) + ')';
+            ctx.lineWidth = 0.5;
+          }
+
+          ctx.beginPath();
+          ctx.rect(b.x, b.y, b.w, b.h);
+          ctx.fill();
+          ctx.stroke();
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+        }
+      }
+
+      function animate() {
+        t += 0.016; phaseTime += 0.016;
+        switch (phase) {
+          case 'solid': if (phaseTime > 3) { phase = 'eroding'; phaseTime = 0; labelEl.textContent = 'Essential structure'; labelEl.classList.add('active'); } break;
+          case 'eroding': if (phaseTime > 3.5) { phase = 'core'; phaseTime = 0; } break;
+          case 'core': if (phaseTime > 4) { phase = 'solid'; phaseTime = 0; labelEl.textContent = 'Unnecessary structure'; labelEl.classList.remove('active'); } break;
+        }
+        draw();
+        if (started) requestAnimationFrame(animate);
+      }
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) { if (e.isIntersecting && !started) { started = true; animate(); } });
+      }, { threshold: 0.3 });
+      io.observe(document.getElementById('erosionSection'));
+      draw();
     })();
   </script>
 </body>
