@@ -38,8 +38,10 @@
     }
 
     /* CANVAS */
-    canvas#stars { position:fixed; inset:0; z-index:0; pointer-events:none; }
-    canvas#simplicity { position:fixed; inset:0; z-index:1; pointer-events:none; }
+    canvas#stars { position:fixed; inset:0; z-index:0; pointer-events:none; filter:blur(1.5px); }
+    .hero-vignette { position:fixed; inset:0; z-index:1; pointer-events:none;
+      background:radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, rgba(10,10,12,0.4) 60%, rgba(10,10,12,0.85) 100%);
+    }
 
     /* NAV */
     nav {
@@ -76,11 +78,18 @@
       opacity:0; animation:fadeUp 0.8s 0.3s ease forwards;
     }
     .hero-title {
-      font-family:var(--font-display); font-size:clamp(3.5rem,8vw,7.5rem);
-      font-weight:400; line-height:1.0; color:var(--paper); max-width:900px;
+      font-family:var(--font-display); font-weight:400; line-height:1.08;
+      color:var(--paper); max-width:960px;
       opacity:0; animation:fadeUp 0.9s 0.5s ease forwards;
     }
-    .hero-title em { font-style:italic; color:var(--amber); }
+    .hero-title .line1 {
+      display:block; font-size:clamp(3rem,7.5vw,6.5rem); font-weight:500;
+      color:var(--paper); margin-bottom:0.15em;
+    }
+    .hero-title .line2 {
+      display:block; font-size:clamp(2.6rem,6.5vw,5.5rem); font-weight:400;
+      color:#C6A45A;
+    }
     .hero-sub {
       margin-top:2rem; font-size:1.05rem; font-weight:300;
       color:rgba(245,243,238,0.55); max-width:520px; line-height:1.8;
@@ -309,7 +318,7 @@
 <body>
 
   <canvas id="stars"></canvas>
-  <canvas id="simplicity"></canvas>
+  <div class="hero-vignette"></div>
 
   <nav id="nav">
     <a href="/" class="nav-logo">occam</a>
@@ -329,7 +338,8 @@
   <section class="hero">
     <div class="hero-eyebrow">Business Engineering &middot; AI-Native Advisory</div>
     <h1 class="hero-title">
-      Operational complexity,<br/><em>engineered into clarity</em>
+      <span class="line1">Operational complexity</span>
+      <span class="line2">Engineered into clarity</span>
     </h1>
     <p class="hero-sub">We work with mid-market management teams to turn operational friction, fragmented systems, and scaling pressure into structured, AI-enabled performance.</p>
     <div class="hero-actions">
@@ -638,13 +648,13 @@
     }
 
     // --- Config ---
-    var COUNT     = 800;      // particle count
+    var COUNT     = 250;      // particle count (reduced for restraint)
     var SCALE     = 18;       // flow field grid cell size
-    var NOISE_SCL = 0.0035;   // noise spatial frequency
-    var SPEED     = 1.4;      // base particle speed
-    var FADE      = 0.025;    // trail fade (lower = longer trails)
-    var MOUSE_R   = 250;      // mouse influence radius
-    var MAX_LIFE  = 350;      // max frames before respawn
+    var NOISE_SCL = 0.0025;   // noise spatial frequency (gentler)
+    var SPEED     = 0.6;      // base particle speed (much slower)
+    var FADE      = 0.018;    // trail fade (lower = longer trails)
+    var MOUSE_R   = 180;      // mouse influence radius (subtler)
+    var MAX_LIFE  = 500;      // max frames before respawn (longer life)
 
     var cols, rows, field;
     var particles = [];
@@ -680,7 +690,7 @@
         px: 0, py: 0,
         speed: SPEED * (0.4 + Math.random() * 0.9),
         cr: c[0], cg: c[1], cb: c[2],
-        alpha: 0.06 + Math.random() * 0.12,
+        alpha: 0.03 + Math.random() * 0.06,
         life: Math.floor(Math.random() * MAX_LIFE),
         maxLife: MAX_LIFE * (0.6 + Math.random() * 0.4)
       };
@@ -707,7 +717,7 @@
       ctx.fillStyle = 'rgba(10,10,12,' + FADE + ')';
       ctx.fillRect(0, 0, W, H);
 
-      time += 0.003;
+      time += 0.001;
       computeField();
 
       // Smooth mouse
@@ -735,8 +745,8 @@
             inf = inf * inf;
             // Perpendicular swirl
             var vortexAngle = Math.atan2(mdy, mdx) + Math.PI * 0.55;
-            angle = angle * (1 - inf * 0.7) + vortexAngle * inf * 0.7;
-            p.speed = SPEED * (0.4 + Math.random() * 0.9) + inf * 2.5;
+            angle = angle * (1 - inf * 0.3) + vortexAngle * inf * 0.3;
+            p.speed = SPEED * (0.4 + Math.random() * 0.9) + inf * 0.8;
           }
 
           p.x += Math.cos(angle) * p.speed;
@@ -771,7 +781,7 @@
           p.life = 0;
           p.maxLife = MAX_LIFE * (0.6 + Math.random() * 0.4);
           p.cr = c[0]; p.cg = c[1]; p.cb = c[2];
-          p.alpha = 0.08 + Math.random() * 0.22;
+          p.alpha = 0.03 + Math.random() * 0.06;
           p.speed = SPEED * (0.4 + Math.random() * 0.9);
         }
       }
@@ -779,104 +789,6 @@
       requestAnimationFrame(loop);
     })();
 
-    // --- SIMPLICITY LINE ---
-    // A single deliberate line cutting through the complexity
-    (function() {
-      var sCanvas = document.getElementById('simplicity');
-      var sCtx = sCanvas.getContext('2d');
-      var sW, sH;
-
-      function sResize() {
-        sW = window.innerWidth; sH = window.innerHeight;
-        sCanvas.width = sW; sCanvas.height = sH;
-      }
-      sResize();
-      window.addEventListener('resize', sResize);
-
-      // The line stores a trail of recent positions
-      var TRAIL_LEN = 550;
-      var trail = [];
-      var LINE_SPEED = 1.2;
-      var LINE_NOISE_SCL = 0.0012; // much lower frequency = smoother path
-      var sTime = 0;
-
-      // Start from a random edge
-      var lx = 0, ly = Math.random() * sH;
-      var lpx = lx, lpy = ly;
-
-      // Heading — smoothed direction
-      var heading = 0;
-
-      function sLoop() {
-        // Clear with full transparency
-        sCtx.clearRect(0, 0, sW, sH);
-
-        sTime += 0.002;
-
-        // Compute a very smooth angle from low-frequency noise
-        var targetAngle = simplex2(
-          lx * LINE_NOISE_SCL + sTime * 0.3 + 100,
-          ly * LINE_NOISE_SCL + sTime * 0.2 + 100
-        ) * Math.PI * 0.8; // narrower angle range = more horizontal/purposeful
-
-        // Gently steer toward target — the line doesn't jerk
-        var diff = targetAngle - heading;
-        // Normalize angle difference
-        while (diff > Math.PI) diff -= Math.PI * 2;
-        while (diff < -Math.PI) diff += Math.PI * 2;
-        heading += diff * 0.015; // very slow turning = deliberate path
-
-        // Move
-        lpx = lx; lpy = ly;
-        lx += Math.cos(heading) * LINE_SPEED;
-        ly += Math.sin(heading) * LINE_SPEED;
-
-        // Store trail point
-        trail.push({ x: lx, y: ly });
-        if (trail.length > TRAIL_LEN) trail.shift();
-
-        // Respawn if offscreen
-        if (lx < -50 || lx > sW + 50 || ly < -50 || ly > sH + 50) {
-          // Re-enter from left or right edge
-          var side = Math.random();
-          if (side < 0.4) { lx = -5; ly = Math.random() * sH; heading = (Math.random() - 0.5) * 0.5; }
-          else if (side < 0.8) { lx = sW + 5; ly = Math.random() * sH; heading = Math.PI + (Math.random() - 0.5) * 0.5; }
-          else { lx = Math.random() * sW; ly = -5; heading = Math.PI * 0.5 + (Math.random() - 0.5) * 0.5; }
-          lpx = lx; lpy = ly;
-          trail = [{ x: lx, y: ly }];
-        }
-
-        // Draw trail as a gradient-fading line
-        if (trail.length > 2) {
-          for (var i = 1; i < trail.length; i++) {
-            var t = i / trail.length; // 0 at tail, 1 at head
-            var alpha = t * t * 0.35; // quadratic fade, peak 0.35
-            var width = 0.5 + t * 1.5; // thinner at tail, thicker at head
-
-            sCtx.beginPath();
-            sCtx.moveTo(trail[i - 1].x, trail[i - 1].y);
-            sCtx.lineTo(trail[i].x, trail[i].y);
-            sCtx.strokeStyle = 'rgba(245, 243, 238, ' + alpha + ')';
-            sCtx.lineWidth = width;
-            sCtx.lineCap = 'round';
-            sCtx.stroke();
-          }
-
-          // Subtle glow at the head
-          var head = trail[trail.length - 1];
-          var glow = sCtx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 8);
-          glow.addColorStop(0, 'rgba(245, 243, 238, 0.25)');
-          glow.addColorStop(1, 'rgba(245, 243, 238, 0)');
-          sCtx.beginPath();
-          sCtx.arc(head.x, head.y, 8, 0, Math.PI * 2);
-          sCtx.fillStyle = glow;
-          sCtx.fill();
-        }
-
-        requestAnimationFrame(sLoop);
-      }
-      sLoop();
-    })();
 
     // NAV SCROLL
     var nav = document.getElementById('nav');
